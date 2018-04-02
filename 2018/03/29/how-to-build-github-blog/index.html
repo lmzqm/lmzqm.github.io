@@ -99,20 +99,18 @@
 
 
 
-  <meta name="description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮组到你">
+  <meta name="description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮助到你">
 <meta name="keywords" content="Github Hexo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何构建一个Github的博客">
 <meta property="og:url" content="http://yoursite.com/2018/03/29/how-to-build-github-blog/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮组到你">
+<meta property="og:description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮助到你">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/Spoon2.gif">
-<meta property="og:updated_time" content="2018-04-02T03:56:31.000Z">
+<meta property="og:updated_time" content="2018-04-02T08:52:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何构建一个Github的博客">
-<meta name="twitter:description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮组到你">
-<meta name="twitter:image" content="http://yoursite.com/images/Spoon2.gif">
+<meta name="twitter:description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮助到你">
 
 
 
@@ -380,28 +378,92 @@
       
 
       
-        <p>摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮组到你</p>
+        <p>摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮助到你</p>
 <a id="more"></a>
 <p>这里先列出大概的要点：</p>
 <ul>
 <li>Git的安装</li>
-<li>npm的安装</li>
+<li>Node.js的安装</li>
 <li>Hexo 的安装和配置</li>
 <li>Hexo 的发布和测试</li>
 </ul>
-<h4 id="Git安装"><a href="#Git安装" class="headerlink" title="Git安装"></a>Git安装</h4><h4 id="npm的安装"><a href="#npm的安装" class="headerlink" title="npm的安装"></a>npm的安装</h4><h4 id="Hexo的安装和配置"><a href="#Hexo的安装和配置" class="headerlink" title="Hexo的安装和配置"></a>Hexo的安装和配置</h4><h5 id="Hexo-的安装"><a href="#Hexo-的安装" class="headerlink" title="Hexo 的安装"></a>Hexo 的安装</h5><pre><code>npm install -g hexo-cli //全局安装hexo的客户端
+<h4 id="Git安装"><a href="#Git安装" class="headerlink" title="Git安装"></a>Git安装</h4><p>  这里暂时没有涉及到后续补充</p>
+<h4 id="Node-js的安装"><a href="#Node-js的安装" class="headerlink" title="Node.js的安装"></a>Node.js的安装</h4><h4 id="Hexo的安装和配置"><a href="#Hexo的安装和配置" class="headerlink" title="Hexo的安装和配置"></a>Hexo的安装和配置</h4><h5 id="Hexo-的安装"><a href="#Hexo-的安装" class="headerlink" title="Hexo 的安装"></a>Hexo 的安装</h5><pre><code>npm install -g hexo-cli //全局安装hexo的客户端
 </code></pre><p>如果不成功的话可以加上sudo</p>
 <p>当这个执行成功后可以使用</p>
 <pre><code>hexo -v //查看是否安装成功
-</code></pre><h6 id="hexo-的初始化"><a href="#hexo-的初始化" class="headerlink" title="hexo 的初始化"></a>hexo 的初始化</h6><pre><code>hexo init //这里可以针对具体的文件夹进行初始化操作
+</code></pre><h5 id="hexo-的初始化"><a href="#hexo-的初始化" class="headerlink" title="hexo 的初始化"></a>hexo 的初始化</h5><pre><code>hexo init //这里可以针对具体的文件夹进行初始化操作
 npm install //安装相对应的依赖包
-</code></pre><p>下面简单介绍下hexo的命令：</p>
-<pre><code>hexo generate //
-</code></pre><p><img src="/images/Spoon2.gif" alt="alt git"></p>
-<p>这是一张gif的图片</p>
-<p><em>
-</em><br><em>
-</em></p>
+</code></pre><h5 id="hexo-框架简介"><a href="#hexo-框架简介" class="headerlink" title="hexo 框架简介"></a>hexo 框架简介</h5><p>  当hexo init 执行完成后，在当前的文件夹会增加框架的目录结构：</p>
+<blockquote>
+<ul>
+<li>_config.yml //网站的配置信息  </li>
+<li>package.json //项目包信息</li>
+<li>scaffolds //模板文件夹，hexo 根据scaffold中的模板来新建文件</li>
+<li>source //存放用户资源的地方<blockquote>
+<p>_drafts //存放草稿的地方<br>_posts //存放发布的文件  </p>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>themes  //主题文件夹</li>
+</ul>
+</blockquote>
+<h5 id="hexo-简单配置"><a href="#hexo-简单配置" class="headerlink" title="hexo 简单配置"></a>hexo 简单配置</h5><p>首先我们需要打开_config.yml文件,这里是hexo的主要配置文件：</p>
+<p>这里可以参考<a href="https://hexo.io/zh-cn/docs/configuration.html">Hexo配置</a></p>
+  <!-- 这里做一些简单的配置 -->
+<pre><code>title: lmzqm  //网站标题
+subtitle: iOS 开发者 //网站副标题
+description: just do it //网站描述
+keywords:    //网站的关键字
+author: lmzqm  //您的名字
+language: zh-CN //网站使用的语言
+timezone: Asia/Shanghai  //网站时区
+</code></pre><h5 id="hexo-命令"><a href="#hexo-命令" class="headerlink" title="hexo 命令"></a>hexo 命令</h5><p>下面简单介绍下hexo的命令：</p>
+<pre><code>hexo generate //简写 hexo g 生成静态文件，会在当前的目录下生成一个新的public的文件夹
+hexo server // 简写 hexo s 启动本地服务器，通过http://localhost:4000进行访问
+hexo deploy // 简写 hexo d 部署到远程，在_config.yml中配置
+hexo new post-name //简写 hexo n post-name 新建文章
+hexo new page page-name //简写 hexo n page page-name 新建页面 会在Source下新建一个相对应的目录
+</code></pre><p>组合命令：</p>
+<pre><code>hexo s -g //生成和预览
+hexo d -g //生成和部署
+</code></pre><p>草稿命令：</p>
+<pre><code>hexo new draft &lt;title&gt; //新建草稿，存放在source/_drafts  
+hexo public post &lt;title&gt; //发布操作草稿文章，文章将转移到source/_posts
+hexo s -g // 可以开始进行预览操作
+</code></pre><h5 id="部署到GitHub-pages"><a href="#部署到GitHub-pages" class="headerlink" title="部署到GitHub pages"></a>部署到GitHub pages</h5><p>  部署Hexo到GitHub 指的是将hexo -g生成的静态文件推送到github 对应的仓库中 因此我们需要在我们GitHub中做好相对应的准备</p>
+<p>  首先需要明确的是：</p>
+<ul>
+<li>每一个github的账号都有一个GitHub的pages;</li>
+<li>一个账号只能创建一个repository来存放GitHub pages;</li>
+<li>仓库的名字必须是username/username.github.io 这是固定的命名约定</li>
+<li>然后就可以通过 <a href="https://username.github.io">https://username.github.io</a> 来进行访问</li>
+<li>GitHub 创建的个人主页内容是在master分支下的</li>
+</ul>
+<p>当你在你的github下创建了这个repository后，就可以在本地</p>
+<p>  先安装一个扩展：</p>
+<pre><code>npm install hexo-deployer-git --save
+</code></pre><p>  修改 _config.yml中的配置：</p>
+<pre><code>deploy:
+type:git
+repo:https://github.com/username/username.github.io.git
+branch:master
+</code></pre><p>  这样的话就可以通过执行 <code>hexo d -g</code> 将静态网站提交到github网站上</p>
+<h5 id="hexo-主题"><a href="#hexo-主题" class="headerlink" title="hexo 主题"></a>hexo 主题</h5><pre><code>hexo clean //clean remove generated files and cache
+</code></pre><p>然后就可以选择你自己想要的主题：</p>
+<pre><code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
+</code></pre><p>这个完成后需要在根目录下的_config.yml中将主题变换成我们现在的主题：</p>
+<pre><code>theme: yilia
+</code></pre><p>这时候在theme的文件夹下就可以就会多出一个文件夹yilia着是主题的文件夹，进入后可以用git来进行操作，切换tag来针对不同的版本，当然对于不同版本的具体要求对应的网站上去查看下详情会比较好理解</p>
+<p>后期针对主题的设置，我们需要进入到相对应主题当中的_config.yml文件进行配置 这个可以在网上找到很多信息</p>
+<p>后期我们再专门弄个博客来进行阐述，这里就暂时先简单描述</p>
+<!-- ![alt git](/images/Spoon2.gif)
+
+这是一张gif的图片 -->
+<hr>
 
       
     </div>
@@ -605,7 +667,7 @@ npm install //安装相对应的依赖包
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Git安装"><span class="nav-number">1.</span> <span class="nav-text">Git安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#npm的安装"><span class="nav-number">2.</span> <span class="nav-text">npm的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hexo的安装和配置"><span class="nav-number">3.</span> <span class="nav-text">Hexo的安装和配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Hexo-的安装"><span class="nav-number">3.1.</span> <span class="nav-text">Hexo 的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#hexo-的初始化"><span class="nav-number">3.1.1.</span> <span class="nav-text">hexo 的初始化</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Git安装"><span class="nav-number">1.</span> <span class="nav-text">Git安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node-js的安装"><span class="nav-number">2.</span> <span class="nav-text">Node.js的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hexo的安装和配置"><span class="nav-number">3.</span> <span class="nav-text">Hexo的安装和配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Hexo-的安装"><span class="nav-number">3.1.</span> <span class="nav-text">Hexo 的安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hexo-的初始化"><span class="nav-number">3.2.</span> <span class="nav-text">hexo 的初始化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hexo-框架简介"><span class="nav-number">3.3.</span> <span class="nav-text">hexo 框架简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hexo-简单配置"><span class="nav-number">3.4.</span> <span class="nav-text">hexo 简单配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hexo-命令"><span class="nav-number">3.5.</span> <span class="nav-text">hexo 命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#部署到GitHub-pages"><span class="nav-number">3.6.</span> <span class="nav-text">部署到GitHub pages</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hexo-主题"><span class="nav-number">3.7.</span> <span class="nav-text">hexo 主题</span></a></li></ol></li></ol></div>
             
 
           </div>
