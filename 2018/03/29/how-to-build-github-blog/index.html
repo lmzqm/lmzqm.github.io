@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="lmzqm">
 <meta property="og:description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮助到你">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-02T08:52:21.000Z">
+<meta property="og:updated_time" content="2018-04-02T08:59:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何构建一个Github的博客">
 <meta name="twitter:description" content="摘要：关于如何构建一个Github的博客，这里我采用的是GitHub和Hexo组合的方案来进行，在这里我们将一步一步的进行构建，希望能够帮助到你">
@@ -452,14 +452,15 @@ type:git
 repo:https://github.com/username/username.github.io.git
 branch:master
 </code></pre><p>  这样的话就可以通过执行 <code>hexo d -g</code> 将静态网站提交到github网站上</p>
-<h5 id="hexo-主题"><a href="#hexo-主题" class="headerlink" title="hexo 主题"></a>hexo 主题</h5><pre><code>hexo clean //clean remove generated files and cache
+<h5 id="hexo-主题"><a href="#hexo-主题" class="headerlink" title="hexo 主题"></a>hexo 主题</h5><p>首先关于<a href="https://github.com/search?utf8=%E2%9C%93&amp;q=hexo+theme&amp;type=">hexo的主题</a>可以在github中进行查找，很方便就能找到一些主题，然后可以选择你所需要的主题，关于主题内部的具体配置，可以参照具体的网站来进行配置。</p>
+<pre><code>hexo clean //clean remove generated files and cache
 </code></pre><p>然后就可以选择你自己想要的主题：</p>
 <pre><code>git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
 </code></pre><p>这个完成后需要在根目录下的_config.yml中将主题变换成我们现在的主题：</p>
 <pre><code>theme: yilia
 </code></pre><p>这时候在theme的文件夹下就可以就会多出一个文件夹yilia着是主题的文件夹，进入后可以用git来进行操作，切换tag来针对不同的版本，当然对于不同版本的具体要求对应的网站上去查看下详情会比较好理解</p>
 <p>后期针对主题的设置，我们需要进入到相对应主题当中的_config.yml文件进行配置 这个可以在网上找到很多信息</p>
-<p>后期我们再专门弄个博客来进行阐述，这里就暂时先简单描述</p>
+<p>后期我们再专门弄个文章来进行阐述，这里就暂时先简单描述</p>
 <!-- ![alt git](/images/Spoon2.gif)
 
 这是一张gif的图片 -->
