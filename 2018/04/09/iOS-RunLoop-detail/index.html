@@ -99,24 +99,25 @@
 
 
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+  <meta name="description" content="摘要：    关于RunLoop 在iOS开发中经常都会涉及到它的运行，因为在iOS中所有的事件的产生都与它息息相关">
+<meta name="keywords" content="iOS RunLoop">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2018/03/29/hello-world/index.html">
+<meta property="og:title" content="iOS RunLoop 深入理解">
+<meta property="og:url" content="http://yoursite.com/2018/04/09/iOS-RunLoop-detail/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="摘要：    关于RunLoop 在iOS开发中经常都会涉及到它的运行，因为在iOS中所有的事件的产生都与它息息相关">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-02T03:41:06.000Z">
+<meta property="og:updated_time" content="2018-04-13T10:40:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="twitter:title" content="iOS RunLoop 深入理解">
+<meta name="twitter:description" content="摘要：    关于RunLoop 在iOS开发中经常都会涉及到它的运行，因为在iOS中所有的事件的产生都与它息息相关">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/29/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/09/iOS-RunLoop-detail/"/>
 
 
 
@@ -126,7 +127,7 @@
   };
 </script>
 
-  <title>Hello World | lmzqm</title>
+  <title>iOS RunLoop 深入理解 | lmzqm</title>
   
 
 
@@ -228,15 +229,6 @@
 </li>
 
       
-        
-        
-          
-  <li class="menu-item menu-item-ios">
-    <a href="/iOS" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />iOS</a>
-</li>
-
-      
 
       
     </ul>
@@ -246,9 +238,6 @@
     
 
     
-    
-      
-      
     
       
       
@@ -300,7 +289,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/29/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/iOS-RunLoop-detail/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lmzqm">
@@ -317,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">iOS RunLoop 深入理解</h1>
         
 
         <div class="post-meta">
@@ -329,7 +318,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T09:38:10+08:00">2018-03-29</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T18:23:53+08:00">2018-04-09</time>
             
 
             
@@ -347,9 +336,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/03/29/hello-world/#comments" itemprop="discussionUrl">
+                <a href="/2018/04/09/iOS-RunLoop-detail/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/03/29/hello-world/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/04/09/iOS-RunLoop-detail/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,17 +366,93 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        <p>摘要：</p>
+<blockquote>
+<p>  关于RunLoop 在iOS开发中经常都会涉及到它的运行，因为在iOS中所有的事件的产生都与它息息相关</p>
+</blockquote>
 <a id="more"></a>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a><br><!-- more --></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html">Deployment</a></p>
+<h4 id="RunLoop-概念"><a href="#RunLoop-概念" class="headerlink" title="RunLoop 概念"></a>RunLoop 概念</h4><p>正常情况下一个线程只能执行一个任务，当任务完成了，线程也就退出了。那么如何才能确保我们的线程能够随时能够处理事件并且不退出，直到我们主动要求线程退出的时候就退出？</p>
+<p>答案是有的，这就是我们今天的主角：RunLoop</p>
+<p>从字面意思上解析这是一个运行着的循环，我们大体实现下它的伪代码：</p>
+<pre><code>function loop(){
+  initialize();
+  do{
+    var message = getMessage();
+    processMessage(message);
+  }while{message != quit}
+}
+</code></pre><p>从伪代码中我们可以大体的了解到其中的一些逻辑处理</p>
+<p>首先由一个入口函数的操作，在这里采用do…while的操作，首先先从消息队列中获取消息，当然如果没有消息的话，这个循环也是会一直发生的，因为我们还没有发送quit的消息。同时在我们有一个消息到来的时候，我们可以获取对应的消息来做处理。</p>
+<p>总而言之就是一个一直运行着的事件循环操作</p>
+<h4 id="iOS中的RunLoop"><a href="#iOS中的RunLoop" class="headerlink" title="iOS中的RunLoop"></a>iOS中的RunLoop</h4><p>在 iOS 中为我们提供了两个这样的对象：NSRunLLoop 和 CFRunLoopRef</p>
+<p>CFRunLoopRef 是在CoreFoundation 框架中的，提供了纯C函数的API,所有的API都是线程安全的</p>
+<p>NSRunLoop 是基于CFRunLoopRef 的封装，提供了面向对象的API,但是这些API是线程不安全的</p>
+<p>下面我们从源码中来分析RunLoop:</p>
+<pre><code>void CFRunLoopRun(void){
+  int32_t result;
+  do{
+    result = CFRunLoopRunSpecific(CFRunloopGetCurrent(), kCFRunLoopDefaultMode, 1.0e10, false);
+    CHECK_FOR_FORK();
+   }while(kCFRunLoopRunStopped != result &amp;&amp; kCFRunLoopRunFinished != result)
+}
+</code></pre><p>下面再来分析下 <code>CFRunLoopRunSpecific(CFRunloopGetCurrent(), kCFRunLoopDefaultMode, 1.0e10, false);</code></p>
+<pre><code>首先回去CurrentMode
+CFRunLoopModeRef CurrentMode = __CFRunLoopFindMode(r1,modelName,false);
 
+然后对currentMode进行判断
+判断其是否存在或者是否为空
+if(currentMode == NULL || __CFRunLoopModelIsEmpty){
+  return finish;//返回完成 就退出了runloop
+}
+
+这里就是RunLoop结束的一个很重要的因素
+</code></pre><p>下面我们在看看其中最重要的部分：</p>
+<pre><code>if(currentMode-&gt;observerMask &amp; kCFRunLoopEntry) __CFRunLoopDoObservers(r1,currentMode,kCFRunLoopEntry);
+result = __CFRunLoopRun(r1,currentMode,seconds,returnAfterSourceHandled,previousMode);
+if(currentMode-&gt;observerMask &amp; kCFRunLoopExit) __CFRunLoopDoObservers(r1,currentMode,kCFRunLoopExit);
+</code></pre><p>下面借鉴网上的博客资源分析下：（采用伪代码）<br><a href="http://www.cnblogs.com/kenshincui/p/6823841.html">参照</a></p>
+<pre><code>int32_t __CFRunLoopRun(){
+  //通知即将进入runloop
+  __CFRunLoopDoObservers(kCFRunLoopEntry);
+
+  do{
+    //通知将要处理timer和source
+    __CFRunLoopDoObservers(kcfrunLoopBeforeTimers);
+    __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+
+    //处理非延迟的主线程调用
+    __CFRunLoopDoBlocks();
+
+    //处理source0事件
+    __CFRunLoopDoSource0();
+
+    if(sourceHandledThisRoop){
+      __CFRunLoopDoBlocks();
+    }
+
+    //如果有Source1 (基于Port) 处于ready状态，直接处理这个Source1 然后跳转去处理消息
+
+    if(__Source0DidDispatchProtLastTime){
+      Boolean hasMsg = __CFRunLoopServiceMachPort();
+      if(hasMsg){
+        goto handle_msg;
+      }
+    }
+
+    //通知 Observers 线程即将进入休眠
+    if(!sourceHandledThisRoop){
+      __CFRunLoopDoObservers(runloop,currentMode,KCFrunLoopBeforeWaiting);
+    }
+
+    //GCD dispatch main queue
+    CheckIfExistMessagesInMainDispatchQueue();
+
+    //即将进入休眠
+    __CFRunLoopDoObservers(KCFrunLoopBeforeWaiting);
+
+    //等待内核mach_msg事件
+    mach_port_t weakUpPort =
+</code></pre>
       
     </div>
 
@@ -415,6 +480,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-RunLoop/" rel="tag"><i class ="fa fa-tag"></i> iOS RunLoop</a>
+          
+        </div>
+      
 
       
       
@@ -424,14 +495,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/04/04/what-to-do-for-2018/" rel="next" title="2018个人计划">
+                <i class="fa fa-chevron-left"></i> 2018个人计划
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/29/how-to-build-github-blog/" rel="prev" title="如何构建一个Github的博客">
-                如何构建一个Github的博客 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/17/iOS-youhua-detail/" rel="prev" title="iOS性能优化总结">
+                iOS性能优化总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -516,7 +591,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -535,7 +610,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -580,7 +659,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#RunLoop-概念"><span class="nav-number">1.</span> <span class="nav-text">RunLoop 概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iOS中的RunLoop"><span class="nav-number">2.</span> <span class="nav-text">iOS中的RunLoop</span></a></li></ol></div>
             
 
           </div>
@@ -734,9 +813,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/03/29/hello-world/';
-        this.page.identifier = '2018/03/29/hello-world/';
-        this.page.title = 'Hello World';
+        this.page.url = 'http://yoursite.com/2018/04/09/iOS-RunLoop-detail/';
+        this.page.identifier = '2018/04/09/iOS-RunLoop-detail/';
+        this.page.title = 'iOS RunLoop 深入理解';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');
