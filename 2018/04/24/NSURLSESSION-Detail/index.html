@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：  关于NSUrlSession在网络的过程中我们经常会使用到这个，通过创建一个网络的会话，然后通过会话来实现一些任务。所以在针对iOS的网络操作中NSURLSession的熟悉是必不可少的。当然其也是比较简单，没有那么复杂。">
+<meta name="keywords" content="iOS  NSURLSession">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS NSURLSession 解析">
+<meta property="og:url" content="http://yoursite.com/2018/04/24/NSURLSESSION-Detail/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：  关于NSUrlSession在网络的过程中我们经常会使用到这个，通过创建一个网络的会话，然后通过会话来实现一些任务。所以在针对iOS的网络操作中NSURLSession的熟悉是必不可少的。当然其也是比较简单，没有那么复杂。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-03T07:40:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS NSURLSession 解析">
+<meta name="twitter:description" content="摘要：  关于NSUrlSession在网络的过程中我们经常会使用到这个，通过创建一个网络的会话，然后通过会话来实现一些任务。所以在针对iOS的网络操作中NSURLSession的熟悉是必不可少的。当然其也是比较简单，没有那么复杂。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/24/NSURLSESSION-Detail/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS NSURLSession 解析 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/24/NSURLSESSION-Detail/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS NSURLSession 解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-24T17:04:38+08:00">2018-04-24</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/24/NSURLSESSION-Detail/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/04/24/NSURLSESSION-Detail/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：<br>  关于NSUrlSession在网络的过程中我们经常会使用到这个，通过创建一个网络的会话，然后通过会话来实现一些任务。所以在针对iOS的网络操作中NSURLSession的熟悉是必不可少的。当然其也是比较简单，没有那么复杂。<br><a id="more"></a></p>
+<h4 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h4><p>这里构建一个简单的请求的例子</p>
+<pre><code>NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:smallPic]];
+NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc]init]];
+NSURLSessionDataTask *dataTask =  [session dataTaskWithRequest:request];
+[dataTask resume];
+</code></pre><p>从上的代码中我们可以大体的分析下，一个网络请求的过程中，我们分别需要的角色：</p>
+<blockquote>
+<ul>
+<li>NSURLRequest ：一个网络请求</li>
+<li>NSURLSession ： 一个会话</li>
+<li>NSURLSessionConfiguration ： 会话的配置项</li>
+<li>NSURLSessionDataTask : 会话中的任务</li>
+</ul>
+</blockquote>
+<p>一个会话需要会话的配置信息来进行创建，其中还存在着线程队列已经代理的设置<br>一个任务是会话通过请求的信息来进行创建，创建出来的任务只有执行resume后才开始执行任务</p>
+<p>下面我们将通过对这个所需的元素进行一一分析，来进一步的了解他们之间的关系，已经各个元素的一些属性和方法。</p>
+<p>首先针对AFNetworking的扩展，其实它的核心也是一个最基础的网络请求操作，后续再对这个简单的操作进行扩展，这样就会慢慢的可以通过用户添加一些block来对函数进行一些自定义的一些操作，这些都是后话。后期的话，我会针对AFNetworking进行源码解析，同时也希望自己能够写出实现自己的网络框架。</p>
+<h4 id="NSURLRequest"><a href="#NSURLRequest" class="headerlink" title="NSURLRequest"></a>NSURLRequest</h4><p>在iOS中关于请求的操作，其基类都是NSURLReqeust 当然还有一个可变的NSMutableURLReqeust当然对于可变和不可变的特性相对大家都已经比较理解了。下面我们来创建一个最基础的reqeust</p>
+<pre><code>[[NSURLRequest alloc] initWithURL:@&quot;url&quot;];
+</code></pre><p>最简单的组成就是一个url来创建，当然它还有一些特性，这些特性针对URLReqeust更多的是可读的属性但是对可变的URLRequest则是可读可写的</p>
+<h5 id="创建实例对象："><a href="#创建实例对象：" class="headerlink" title="创建实例对象："></a>创建实例对象：</h5><p>类方法：</p>
+<pre><code>//通过url来进行创建
++(instancetype)requestWithURL:(NSURL*)URL;
+
+// 通过url 以及缓存策略 还有网络超时时长来进行创建
++(instancetype)requestWithURL:(NSURL*)URL cacehPolicy:(NSURLRequestCachePolicy)cachePolicy timeooutInterval:(NSTimeInterval)timeoutInterval;
+</code></pre><p>实例方法：</p>
+<pre><code>- (instancetype)initWithURL:(NSURL *)URL;
+// 通过实例方法创建
+
+- (instancetype)initWithURL:(NSURL *)URL cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeoutInterval NS_DESIGNATED_INITIALIZER;
+</code></pre><h5 id="属性："><a href="#属性：" class="headerlink" title="属性："></a>属性：</h5><pre><code>@property (nullable, readonly, copy) NSURL *URL;// url
+
+@property (readonly) NSURLRequestCachePolicy cachePolicy;//缓存策略
+
+@property (readonly) NSTimeInterval timeoutInterval;//网络请求超时时间
+
+@property (nullable, readonly, copy) NSString *HTTPMethod;//请求的方法 有get post delete put 等等
+
+@property (nullable, readonly, copy) NSDictionary&lt;NSString *, NSString *&gt; *allHTTPHeaderFields; //请求头中的字段所存放的字典
+
+针对这字段有提供专门的方法来实现添加和查询的工作：
+
+- (nullable NSString *)valueForHTTPHeaderField:(NSString *)field;//根据字段名字查找对应的信息
+
+- (void)setValue:(nullable NSString *)value forHTTPHeaderField:(NSString *)field;//这是直接设置对应的信息
+
+- (void)addValue:(NSString *)value forHTTPHeaderField:(NSString *)field;//这里是添加对应的信息
+
+@property (nullable, copy) NSData *HTTPBody;//请求中的数据信息 也就是请求体重的信息
+</code></pre><p>这些是主要用到的信息，如果后期还有的话，会慢慢添加的。</p>
+<p>其实很多对网络特别是HTTP协议不是很理解的人，可能看得有点晕，没关系，这里我们贴下http的请求给大家看看就会便于理解了</p>
+<pre><code>GET /562f25980001b1b106000338.jpg HTTP/1.1
+Host    img.mukewang.com
+User-Agent    Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36
+Accept    image/webp,image/*,*/*;q=0.8
+Referer    http://www.imooc.com/
+Accept-Encoding    gzip, deflate, sdch
+Accept-Language    zh-CN,zh;q=0.8
+</code></pre><p>上面的代码中我们可以知道关于Request中的一些信息：</p>
+<pre><code>url:img.mukewang.com/562f25980001b1b106000338.jpg
+HTTPMethod:GET
+接下来就是请求头的一些字段：
+Accept : 表示客户端接受的一些格式
+Accept-Encoding：接受的压缩格式
+Accept-Language：接受的语言
+</code></pre><h4 id="NSURLSessionConfiguration"><a href="#NSURLSessionConfiguration" class="headerlink" title="NSURLSessionConfiguration"></a>NSURLSessionConfiguration</h4><p>关于会话的配置有三种模式：</p>
+<pre><code>//默认模式
+@property (class, readonly, strong) NSURLSessionConfiguration *defaultSessionConfiguration;
+
+// 临时会话模式
+@property (class, readonly, strong) NSURLSessionConfiguration *ephemeralSessionConfiguration;
+
+//后台模式
++ (NSURLSessionConfiguration *)backgroundSessionConfigurationWithIdentifier:(NSString *)identifier API_AVAILABLE(macos(10.10), ios(8.0), watchos(2.0), tvos(9.0));
+</code></pre><h5 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h5><pre><code>// 一个后台会话的标识符
+@property (nullable, readonly, copy) NSString *identifier;
+// 请求缓存策略
+@property NSURLRequestCachePolicy requestCachePolicy;
+// 网络请求超时时长
+@property NSTimeInterval timeoutIntervalForRequest;
+// 网络资源请求操作
+@property NSTimeInterval timeoutIntervalForResource;
+// 网络请求服务类型
+@property NSURLRequestNetworkServiceType networkServiceType;
+// 是否允许用蜂窝
+@property BOOL allowsCellularAccess;
+// 添加额外的请求头
+@property (nullable, copy) NSDictionary *HTTPAdditionalHeaders;
+</code></pre><h4 id="NSURLSession"><a href="#NSURLSession" class="headerlink" title="NSURLSession"></a>NSURLSession</h4><p>  这个类是关于会话的创建，会话的使用，会话的调度等等<br>  下面通过源代码来对这个类进一步了解：</p>
+<h5 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h5><pre><code>// 通过会话配置来进行创建
++(NSURLSession *)sessionWithConfiguration:(NSURLSessionConfiguration *)configuration;
+// 通过会话配置 还有代理 已经多线程队列进行创建
++(NSURLSession *)sessionWithConfiguration:(NSURLSessionConfiguration *)configuration delegate:(nullable id &lt;NSURLSessionDelegate&gt;)delegate delegateQueue:(nullable NSOperationQueue *)queue;
+</code></pre><h5 id="生成不同的Task"><a href="#生成不同的Task" class="headerlink" title="生成不同的Task"></a>生成不同的Task</h5><h6 id="dataTask"><a href="#dataTask" class="headerlink" title="dataTask"></a>dataTask</h6><pre><code>/* Creates a data task with the given request.  The request may have a body stream. */
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request;
+
+/* Creates a data task to retrieve the contents of the given URL. */
+- (NSURLSessionDataTask *)dataTaskWithURL:(NSURL *)url;
+</code></pre><h6 id="uploadTask"><a href="#uploadTask" class="headerlink" title="uploadTask"></a>uploadTask</h6><pre><code>/* Creates an upload task with the given request.  The body of the request will be created from the file referenced by fileURL */
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request fromFile:(NSURL *)fileURL;
+
+/* Creates an upload task with the given request.  The body of the request is provided from the bodyData. */
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request fromData:(NSData *)bodyData;
+
+/* Creates an upload task with the given request.  The previously set body stream of the request (if any) is ignored and the URLSession:task:needNewBodyStream: delegate will be called when the body payload is required. */
+- (NSURLSessionUploadTask *)uploadTaskWithStreamedRequest:(NSURLRequest *)request;
+</code></pre><h6 id="downTask"><a href="#downTask" class="headerlink" title="downTask"></a>downTask</h6><pre><code>/* Creates a download task with the given request. */
+- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request;
+
+/* Creates a download task to download the contents of the given URL. */
+- (NSURLSessionDownloadTask *)downloadTaskWithURL:(NSURL *)url;
+
+/* Creates a download task with the resume data.  If the download cannot be successfully resumed, URLSession:task:didCompleteWithError: will be called. */
+- (NSURLSessionDownloadTask *)downloadTaskWithResumeData:(NSData *)resumeData;
+</code></pre><h5 id="直接带返回回调的task"><a href="#直接带返回回调的task" class="headerlink" title="直接带返回回调的task"></a>直接带返回回调的task</h5><pre><code>/*
+* data task convenience methods.  These methods create tasks that
+* bypass the normal delegate calls for response and data delivery,
+* and provide a simple cancelable asynchronous interface to receiving
+* data.  Errors will be returned in the NSURLErrorDomain,
+* see &lt;Foundation/NSURLError.h&gt;.  The delegate, if any, will still be
+* called for authentication challenges.
+*/
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+- (NSURLSessionDataTask *)dataTaskWithURL:(NSURL *)url completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+
+/*
+* upload convenience method.
+*/
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request fromFile:(NSURL *)fileURL completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request fromData:(nullable NSData *)bodyData completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+
+/*
+* download task convenience methods.  When a download successfully
+* completes, the NSURL will point to a file that must be read or
+* copied during the invocation of the completion routine.  The file
+* will be removed automatically.
+*/
+- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+- (NSURLSessionDownloadTask *)downloadTaskWithURL:(NSURL *)url completionHandler:(void (^)(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+- (NSURLSessionDownloadTask *)downloadTaskWithResumeData:(NSData *)resumeData completionHandler:(void (^)(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+</code></pre><h5 id="属性和方法"><a href="#属性和方法" class="headerlink" title="属性和方法"></a>属性和方法</h5><h6 id="属性：-1"><a href="#属性：-1" class="headerlink" title="属性："></a>属性：</h6><pre><code>@property (readonly ,retain) NSOperationQueue *delegateQueue;
+@property (nullable,readonly,retain) id &lt;NSURLSessionDelegate&gt; delegate;
+@property (readonly ,copy) NSURLSessionConfiguration *configuration;
+
+//会话的描述
+@property (nullable,copy) NSString *sessionDescription;
+</code></pre><h6 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h6><pre><code>//完成所有任务后，将会话无效
+// returns immediately and existing tasks will be allowed to run to completion. New tasks may not be Created。The Session will continue to make delegate callbacks until URLSession:didBecomeInvalidWithError: has been issued;
+-(void)finishTasksAndInvalidate;
+
+// 会话无效后取消操作
+// issues cancel to all outstanding tasks for this session.
+-(void)invalidateAndCancel;
+
+
+//invoke completionHandler with outstanding data,upload and download tasks
+-(void)getTasksWithCompletionHandler:(void(^)(NSArray&lt;NSURLNSURLSessionDataTask*&gt;* dataTask,NSArray&lt;NSURLSessionUploadTask*&gt;* uploadTasks,NSArray&lt;NSURLSessionDownloadTask*&gt;*downloadTask))complcompletionHandler;
+</code></pre><h5 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h5><h6 id="NSURLSessionDelegate"><a href="#NSURLSessionDelegate" class="headerlink" title="NSURLSessionDelegate"></a>NSURLSessionDelegate</h6><pre><code>// 这是会话接收最后一条消息 当会话遇到系统级的错误 获取当会话无效的时候
+-(void)URLSession:(NSUrlSession*)session didBecomeInvalidWithError:(nullable NSError *)error;
+
+//当遇到需要用户权限验证的时候，或者HTTPS验证的时候会调用这个代理
+-(void)URLSession:(NSURLSession*)session didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge
+completionHandler:(void(^)(NSURLSessionAuthChallengeDispostion disposition NSURLCredential * _Nullable credential))completionHandler;
+
+//当applicaton 接收到application handleEvnetsForBackgroundURLSession:completionHandler 的消息的时候
+// 会话的代理会接受到这个消息来 处理后台消息
+-(void)URLSessionDidFinisheEventsForBackgroundURLSession:(NSURLSession*)session;
+</code></pre><h6 id="NSURLSessionTaskDelegate"><a href="#NSURLSessionTaskDelegate" class="headerlink" title="NSURLSessionTaskDelegate"></a>NSURLSessionTaskDelegate</h6><pre><code>// 网络请求重定向的时候 执行的操作 我们必须设置一个新的Request 然后传入到comoletionHandler中的request中
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                 willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+                                 newRequest:(NSURLRequest *)request
+                          completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler;
+
+// task接受到一个用户认证的请求，如果这个代理没有被实现的话，会话的认证将不会被调用
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                        didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+                          completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler;
+
+
+// 如果task的请求需要一个新的bodyStream的时候会调用 当认证请求失败时候，我们可以通过这个代理重新弄个bodyStream来实现
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                          needNewBodyStream:(void (^)(NSInputStream * _Nullable bodyStream))completionHandler;
+
+// 当上传数据的时候，会调用这个代理 主要是针对upload的请求的时候，可以获取到上传的进度
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                            didSendBodyData:(int64_t)bytesSent
+                             totalBytesSent:(int64_t)totalBytesSent
+                   totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
+
+// 当一个任务完成后，无论失败或者成功都会调用这个代理 如果成功的话 error 为nil
+ - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+                        didCompleteWithError:(nullable NSError *)error;
+</code></pre><h6 id="NSURLSessionDataTaskDelegate"><a href="#NSURLSessionDataTaskDelegate" class="headerlink" title="NSURLSessionDataTaskDelegate"></a>NSURLSessionDataTaskDelegate</h6><pre><code>//当一个task接受到返回的消息，当所有的信息都接受完毕后completionHanler会被调用。我们可以在这里取消一个请求或者将一个data的任务改为下载的task.如果你没有实现这个dialing，我们可以通过task的response属性获取对应的数据 后台模式中uploadtask不会调用给这个代理
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+                             didReceiveResponse:(NSURLResponse *)response
+                              completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
+
+// 一个dataTask 变为downloadTask
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+                            didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
+
+//当datatask可以用的时候，我们可以在这里获取data的数据
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+                                 didReceiveData:(NSData *)data;
+
+// 缓存completionHandler缓存data 或者传入nil 不需要缓存
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
+ willCacheResponse:(NSCachedURLResponse *)proposedResponse
+  completionHandler:(void (^)(NSCachedURLResponse * _Nullable cachedResponse))completionHandler;
+</code></pre><h6 id="NSURLSessionDownloadTaskDelegate"><a href="#NSURLSessionDownloadTaskDelegate" class="headerlink" title="NSURLSessionDownloadTaskDelegate"></a>NSURLSessionDownloadTaskDelegate</h6><pre><code>// 当一个downloadTask 任务完成后我们可以通过给的location 的路径值来保存文件或者移动文件
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location;
+
+// 获取下载的进度
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+                                       didWriteData:(int64_t)bytesWritten
+                                  totalBytesWritten:(int64_t)totalBytesWritten
+                          totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
+
+// 断点下载的操作 NSURLSessionDownloadTaskResumeData 这个字段里会告诉你
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+                                  didResumeAtOffset:(int64_t)fileOffset
+                                 expectedTotalBytes:(int64_t)expectedTotalBytes;
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-NSURLSession/" rel="tag"><i class ="fa fa-tag"></i> iOS  NSURLSession</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/17/iOS-youhua-detail/" rel="next" title="iOS性能优化总结">
+                <i class="fa fa-chevron-left"></i> iOS性能优化总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/03/iOS-AFNetworking-AFURLSessionManager/" rel="prev" title="iOS-AFNetworking-AFURLSessionManager">
+                iOS-AFNetworking-AFURLSessionManager <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一个简单的例子"><span class="nav-number">1.</span> <span class="nav-text">一个简单的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSURLRequest"><span class="nav-number">2.</span> <span class="nav-text">NSURLRequest</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建实例对象："><span class="nav-number">2.1.</span> <span class="nav-text">创建实例对象：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#属性："><span class="nav-number">2.2.</span> <span class="nav-text">属性：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSURLSessionConfiguration"><span class="nav-number">3.</span> <span class="nav-text">NSURLSessionConfiguration</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#属性"><span class="nav-number">3.1.</span> <span class="nav-text">属性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSURLSession"><span class="nav-number">4.</span> <span class="nav-text">NSURLSession</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建"><span class="nav-number">4.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#生成不同的Task"><span class="nav-number">4.2.</span> <span class="nav-text">生成不同的Task</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#dataTask"><span class="nav-number">4.2.1.</span> <span class="nav-text">dataTask</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#uploadTask"><span class="nav-number">4.2.2.</span> <span class="nav-text">uploadTask</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#downTask"><span class="nav-number">4.2.3.</span> <span class="nav-text">downTask</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#直接带返回回调的task"><span class="nav-number">4.3.</span> <span class="nav-text">直接带返回回调的task</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#属性和方法"><span class="nav-number">4.4.</span> <span class="nav-text">属性和方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#属性：-1"><span class="nav-number">4.4.1.</span> <span class="nav-text">属性：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法："><span class="nav-number">4.4.2.</span> <span class="nav-text">方法：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代理"><span class="nav-number">4.5.</span> <span class="nav-text">代理</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#NSURLSessionDelegate"><span class="nav-number">4.5.1.</span> <span class="nav-text">NSURLSessionDelegate</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#NSURLSessionTaskDelegate"><span class="nav-number">4.5.2.</span> <span class="nav-text">NSURLSessionTaskDelegate</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#NSURLSessionDataTaskDelegate"><span class="nav-number">4.5.3.</span> <span class="nav-text">NSURLSessionDataTaskDelegate</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#NSURLSessionDownloadTaskDelegate"><span class="nav-number">4.5.4.</span> <span class="nav-text">NSURLSessionDownloadTaskDelegate</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/04/24/NSURLSESSION-Detail/';
+        this.page.identifier = '2018/04/24/NSURLSESSION-Detail/';
+        this.page.title = 'iOS NSURLSession 解析';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
