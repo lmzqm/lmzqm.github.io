@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：  这里我们要给大家讲述下AFHTTPSessionManager中的知识点。首先要知道AFHTTPSessionManager是继承与AFURLSessionManager的，所以，创建Task的是可以完成的。AFHTTPSessionManager 更多是关注与HTTP的请求的操作，其核心更多是关于Request的构建，这个request主要用于task的创建。">
+<meta name="keywords" content="AFNetworking">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AFNetworking-AFHTTPSessionManager 详解">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/AFNetworking-AFHTTPSessionManager/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：  这里我们要给大家讲述下AFHTTPSessionManager中的知识点。首先要知道AFHTTPSessionManager是继承与AFURLSessionManager的，所以，创建Task的是可以完成的。AFHTTPSessionManager 更多是关注与HTTP的请求的操作，其核心更多是关于Request的构建，这个request主要用于task的创建。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/post.png">
+<meta property="og:updated_time" content="2018-05-08T06:31:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AFNetworking-AFHTTPSessionManager 详解">
+<meta name="twitter:description" content="摘要：  这里我们要给大家讲述下AFHTTPSessionManager中的知识点。首先要知道AFHTTPSessionManager是继承与AFURLSessionManager的，所以，创建Task的是可以完成的。AFHTTPSessionManager 更多是关注与HTTP的请求的操作，其核心更多是关于Request的构建，这个request主要用于task的创建。">
+<meta name="twitter:image" content="http://yoursite.com/images/post.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/AFNetworking-AFHTTPSessionManager/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>AFNetworking-AFHTTPSessionManager 详解 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/AFNetworking-AFHTTPSessionManager/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AFNetworking-AFHTTPSessionManager 详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T10:51:55+08:00">2018-05-08</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/08/AFNetworking-AFHTTPSessionManager/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/08/AFNetworking-AFHTTPSessionManager/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：<br>  这里我们要给大家讲述下AFHTTPSessionManager中的知识点。首先要知道AFHTTPSessionManager是继承与AFURLSessionManager的，所以，创建Task的是可以完成的。AFHTTPSessionManager 更多是关注与HTTP的请求的操作，其核心更多是关于Request的构建，这个request主要用于task的创建。</p>
+<a id="more"></a>
+<h4 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h4><pre><code>//这个是请求的基础URL 后续的可以使用拼接构成一个新的URL来进行请求的操作
+@property(readonly , nonatomic, strong, nullable) NSURL *baseURL;
+
+// 这是请求的序列化 主要针对请求的过程中进行reqeust的构建
+@property(nonatomic, strong) AFHTTPRequestSerializer &lt;AFURLReqeustSerialization&gt; *requestSerializer;
+
+// 这是响应的序列化 主要针对Response中数据的处理操作
+@property (nonatomic, strong) AFHTTPReponseSerializer &lt;AFURLResonseSerialization&gt; *responseSerializer;
+</code></pre><h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>这里的方法主要有初始化的方法，还有针对不同请求方式的方法</p>
+<h5 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h5><pre><code>/**
+ Creates and returns an `AFHTTPSessionManager` object.
+ */
++ (instancetype)manager;
+
+    /**
+ Initializes an `AFHTTPSessionManager` object with the specified base URL.
+
+ @param url The base URL for the HTTP client.
+
+ @return The newly-initialized HTTP client
+ */
+- (instancetype)initWithBaseURL:(nullable NSURL *)url;
+
+//
+- (instancetype)initWithBaseURL:(NSURL *)url
+         sessionConfiguration:(NSURLSessionConfiguration *)configuration
+{
+    //调用父类来创建一个实例
+    self = [super initWithSessionConfiguration:configuration];
+    if (!self) {
+        return nil;
+    }
+
+    // Ensure terminal slash for baseURL path, so that NSURL +URLWithString:relativeToURL: works as expected
+    if ([[url path] length] &gt; 0 &amp;&amp; ![[url absoluteString] hasSuffix:@&quot;/&quot;]) {
+        url = [url URLByAppendingPathComponent:@&quot;&quot;];
+    }
+
+    self.baseURL = url;
+    // 默认采用HTTPSErializer
+    self.requestSerializer = [AFHTTPRequestSerializer serializer];
+    // 默认采用JSONResonseSerilizer
+    self.responseSerializer = [AFJSONResponseSerializer serializer];
+
+    return self;
+}
+</code></pre><h5 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h5><pre><code>// 通过一个requst来创建并运行一个Get的请求
+
+- (nullable NSURLSessionDataTask*)GET:(NSString*)URLString parameters:(nullable id)parameters success:(nullable void(^)(NSURLSessionDataTask *_Nullable task ,id _Nullable responseObject ))success failure:(nullable void (^)(NSURLSessionDataTask *_Nullable task ,NSError *error))failure;
+
+- (nullable NSURLSessionDataTask *)GET:(NSString *)URLString
+                        parameters:(nullable id)parameters
+                          progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgress
+                           success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                           failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+</code></pre><h5 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h5><pre><code>- (nullable NSURLSessionDataTask *)HEAD:(NSString *)URLString
+                    parameters:(nullable id)parameters
+                       success:(nullable void (^)(NSURLSessionDataTask *task))success
+                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+</code></pre><h5 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h5><pre><code>- (nullable NSURLSessionDataTask *)POST:(NSString *)URLString
+                    parameters:(nullable id)parameters
+                       success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure DEPRECATED_ATTRIBUTE;
+
+
+ - (nullable NSURLSessionDataTask *)POST:(NSString *)URLString
+                              parameters:(nullable id)parameters
+                                progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
+                                 success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                                 failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+
+ - (nullable NSURLSessionDataTask *)POST:(NSString *)URLString
+                            parameters:(nullable id)parameters
+             constructingBodyWithBlock:(nullable void (^)(id &lt;AFMultipartFormData&gt; formData))block
+                              progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgress
+                               success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                               failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+</code></pre><h5 id="PUT"><a href="#PUT" class="headerlink" title="PUT"></a>PUT</h5><pre><code>- (nullable NSURLSessionDataTask *)PUT:(NSString *)URLString
+                   parameters:(nullable id)parameters
+                      success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                      failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+</code></pre><h5 id="PATCH"><a href="#PATCH" class="headerlink" title="PATCH"></a>PATCH</h5><pre><code>- (nullable NSURLSessionDataTask *)PATCH:(NSString *)URLString
+                     parameters:(nullable id)parameters
+                        success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+</code></pre><h5 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h5><pre><code>- (nullable NSURLSessionDataTask *)DELETE:(NSString *)URLString
+                    parameters:(nullable id)parameters
+                       success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
+                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+</code></pre><h5 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h5><pre><code>// 构建网络请求的操作 这里主要是针对一些比较简单的 除了带formData 的数据的处理
+- (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
+                                       URLString:(NSString *)URLString
+                                      parameters:(id)parameters
+                                  uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgress
+                                downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgress
+                                         success:(void (^)(NSURLSessionDataTask *, id))success
+                                         failure:(void (^)(NSURLSessionDataTask *, NSError *))failure
+{
+    // 这里进行序列化的操作 通过序列化获得到一个请求操作
+    NSError *serializationError = nil;
+
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&amp;serializationError];
+    // 如果序列化出错的处理操作
+    if (serializationError) {
+        if (failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored &quot;-Wgnu&quot;
+            dispatch_async(self.completionQueue ?: dispatch_get_main_queue(), ^{
+                failure(nil, serializationError);
+            });
+#pragma clang diagnostic pop
+        }
+
+        return nil;
+    }
+
+    // 获取task的操作
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [self dataTaskWithRequest:request
+                          uploadProgress:uploadProgress
+                        downloadProgress:downloadProgress
+                       completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+        if (error) {
+            if (failure) {
+                failure(dataTask, error);
+            }
+        } else {
+            if (success) {
+                success(dataTask, responseObject);
+            }
+        }
+    }];
+
+    return dataTask;
+}
+</code></pre><p>POST的操作方式</p>
+<pre><code>- (NSURLSessionDataTask *)POST:(NSString *)URLString
+                parameters:(id)parameters
+ constructingBodyWithBlock:(void (^)(id &lt;AFMultipartFormData&gt; formData))block
+                  progress:(nullable void (^)(NSProgress * _Nonnull))uploadProgress
+                   success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+                   failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
+{
+  NSError *serializationError = nil;
+  NSMutableURLRequest *request = [self.requestSerializer multipartFormRequestWithMethod:@&quot;POST&quot; URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters constructingBodyWithBlock:block error:&amp;serializationError];
+  NSDictionary *dic =  request.allHTTPHeaderFields;
+  //    NSData *data =  request.HTTPBodyStream;
+  //    id body =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+  NSLog(@&quot;%@&quot;,dic);
+  //    NSLog(@&quot;%@&quot;,body);
+  if (serializationError) {
+      if (failure) {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored &quot;-Wgnu&quot;
+          dispatch_async(self.completionQueue ?: dispatch_get_main_queue(), ^{
+              failure(nil, serializationError);
+          });
+  #pragma clang diagnostic pop
+      }
+
+      return nil;
+  }
+
+  __block NSURLSessionDataTask *task = [self uploadTaskWithStreamedRequest:request progress:uploadProgress completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+      if (error) {
+          if (failure) {
+              failure(task, error);
+          }
+      } else {
+          if (success) {
+              success(task, responseObject);
+          }
+      }
+  }];
+
+  [task resume];
+
+  return task;
+}
+</code></pre><h4 id="POST请求的常用格式"><a href="#POST请求的常用格式" class="headerlink" title="POST请求的常用格式"></a>POST请求的常用格式</h4><p>  在众多请求方法中POST的请求还是相对复杂点的，比如说比较常见的文件上传的请求操作，其中还会带带一些额外的参数，这样的话请求体的构建就会比较复杂点。</p>
+<h5 id="application-x-www-form-urlencoded-格式的POST请求"><a href="#application-x-www-form-urlencoded-格式的POST请求" class="headerlink" title="application/x-www-form-urlencoded 格式的POST请求"></a>application/x-www-form-urlencoded 格式的POST请求</h5><p>这是比较常见的POST提交数据的方式。浏览器原生表单，如果不设置的话，默认就会用这种方式提交。<br>如果以这种格式进行操作的话：提交的数据会按照 key1=val1&amp;key2=val2的方式进行编码。同时key和val都会进行URL转码</p>
+<p><img src="/images/post.png" alt="post"></p>
+<p>代码展示：</p>
+<pre><code>// 构建一个sessionConfig
+  NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+  config.HTTPAdditionalHeaders = @{};//可以添加额外的请求头信息
+  // 创建一个HTTPSessionManager
+  AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:_config.baseUrl] sessionConfiguration:config];
+  //创建一个请求的序列化操作
+  AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+  // 设置超时时间
+  serializer.timeoutInterval = 10;
+
+  // 可以添加一些请求头的信息
+  [serializer setValue:@&quot;&quot; forHTTPHeaderField:@&quot;Content-Type&quot;];
+  manager.requestSerializer = serializer;
+
+  NSMutableSet *mulSet = [NSMutableSet setWithSet:manager.responseSerializer.acceptableContentTypes];
+  [mulSet addObject:@&quot;application/json&quot;];
+  [mulSet addObject:@&quot;text/plain&quot;];
+  [mulSet addObject:@&quot;text/json&quot;];
+  [mulSet addObject:@&quot;text/html&quot;];
+
+  // 添加响应序列化操作
+  manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+  manager.responseSerializer.acceptableContentTypes = mulSet;
+  // 构建task的操作进行网络请求
+  [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+
+  } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+
+  }];
+</code></pre><h5 id="multipart-form-data格式的POST请求"><a href="#multipart-form-data格式的POST请求" class="headerlink" title="multipart/form-data格式的POST请求"></a>multipart/form-data格式的POST请求</h5><p>这种格式主要针对上传文件的操作，</p>
+<p>请求头和请求体的格式是比较特殊的<br>首先：content-Type的值必须是multipart/form-data<br>同时：同时还需要规定一个内容分割符来分割请求体重多个POST的内容</p>
+<p>请求头中信息中：<br>Content-Type:multipart/form-data ;boundary=xxxx</p>
+<p>请求体中的信息：</p>
+<pre><code>POST /upload HTTP/1.1
+Host: xxxxx.xxxx.com
+Content-Type:multipart/form-data ;boundary=xxxxxx
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Date: 2017-10-19 18:11:53 +0800
+Accept: */*
+User-Agent: GyennoMedical/4.0.0 (iPhone; iOS 11.0.3; Scale/3.00)
+Accept-Language: en-US
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcmdUeXBlIjoxLCJzdWIiOiIxMzgwMDEzODAwMyIsInVzZXJUeXBlIjoxLCJleHAiOjE1MDk1Mjk1MzYsInVzZXJJZCI6OTg2NTc5LCJvcmdJZCI6Mn0.CKxnt5f5uTRvUwuEybcN79RG-uf74pFbWwWbCFk8jJI
+Content-Length: 4556
+
+--xxxxxxx
+Content-Disposition:form-data;name=&quot;meta&quot;
+
+xxxxxxxxx 对应的字段内容
+--xxxxxxx
+Content-Disposition:form-data;name=&quot;fileupload&quot; filename=&quot;file1.jpeg&quot;
+Content-Type:image/jpeg
+
+XXXXXXXXXXXXXX //图片的数据
+
+--xxxxxxx--
+</code></pre><p>先构建下核心代码：</p>
+<pre><code>[manager POST:prefixUrlString parameters:@{@&quot;meta&quot;:str} constructingBodyWithBlock:^(id&lt;AFMultipartFormData&gt;  _Nonnull formData) {
+    NSData *data = UIImageJPEGRepresentation(image, 0.01);
+    [formData appendPartWithFileData:data name:@&quot;fileUpload&quot; fileName:@&quot;file1.jpeg&quot; mimeType:@&quot;image/jpeg&quot;];
+
+} progress:^(NSProgress * _Nonnull uploadProgress) {
+
+} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+
+
+    successBlock(responseDic);
+
+} failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+
+
+}];
+</code></pre><h5 id="application-json格式的POST请求"><a href="#application-json格式的POST请求" class="headerlink" title="application/json格式的POST请求"></a>application/json格式的POST请求</h5><p>这种格式的操作下会将数据采用json的格式进行组合</p>
+<p>这里需要注意的就是针对请求序列化操作的时候采用</p>
+<p>AFHTTPRequestSerializer *serializer = [AFJSONRequestSerializer serializer];</p>
+<p>这样就可以达到效果了。</p>
+<pre><code>POST /xxxxx/xxxxxx HTTP/1.1
+Host: xxxxx.xxxxx.com
+Content-Type: application/json
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Date: 2017-10-17 18:11:53 +0800
+Accept: */*
+User-Agent: GyennoMedical/4.0.0 (iPhone; iOS 11.0.3; Scale/3.00)
+Accept-Language: en-US
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcmdUeXBlIjoxLCJzdWIiOiIxMzgwMDEzODAwMyIsInVzZXJUeXBlIjoxLCJleHAiOjE1MDk1Mjk1MzYsInVzZXJJZCI6OTg2NTc5LCJvcmdJZCI6Mn0.CKxnt5f5uTRvUwuEybcN79RG-uf74pFbWwWbCFk8jJI
+Content-Length: 108
+
+{&quot;userId&quot;:&quot;xxxxxxx&quot;,&quot;pageNo&quot;:1,&quot;orgType&quot;:1,&quot;pageSize&quot;:5,&quot;orgId&quot;:2,&quot;userType&quot;:1,&quot;accountNumber&quot;:&quot;xxxxxxxxx&quot;}
+</code></pre><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>  通过上面的代码中的展示，我们可以清楚AFHTTPSessionManager主要是 RequestSerializer 和 AFURLSessionManger中的两个部分来构建：</p>
+<ul>
+<li>serilizer 主要是通过获取的参数来进行URLReqest的构建</li>
+<li><p>URLSessionManger 主要通过request来创建Task 并允许task</p>
+<p>所以将在下一篇分析下RequestSerializer 里面的东西 其中重点讲放在POST的请求中</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AFNetworking/" rel="tag"><i class ="fa fa-tag"></i> AFNetworking</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/03/design-create-model/" rel="next" title="设计模式">
+                <i class="fa fa-chevron-left"></i> 设计模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性"><span class="nav-number">1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#初始化"><span class="nav-number">2.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GET"><span class="nav-number">2.2.</span> <span class="nav-text">GET</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#HEAD"><span class="nav-number">2.3.</span> <span class="nav-text">HEAD</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#POST"><span class="nav-number">2.4.</span> <span class="nav-text">POST</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PUT"><span class="nav-number">2.5.</span> <span class="nav-text">PUT</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PATCH"><span class="nav-number">2.6.</span> <span class="nav-text">PATCH</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DELETE"><span class="nav-number">2.7.</span> <span class="nav-text">DELETE</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#核心"><span class="nav-number">2.8.</span> <span class="nav-text">核心</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#POST请求的常用格式"><span class="nav-number">3.</span> <span class="nav-text">POST请求的常用格式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#application-x-www-form-urlencoded-格式的POST请求"><span class="nav-number">3.1.</span> <span class="nav-text">application/x-www-form-urlencoded 格式的POST请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#multipart-form-data格式的POST请求"><span class="nav-number">3.2.</span> <span class="nav-text">multipart/form-data格式的POST请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#application-json格式的POST请求"><span class="nav-number">3.3.</span> <span class="nav-text">application/json格式的POST请求</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/05/08/AFNetworking-AFHTTPSessionManager/';
+        this.page.identifier = '2018/05/08/AFNetworking-AFHTTPSessionManager/';
+        this.page.title = 'AFNetworking-AFHTTPSessionManager 详解';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

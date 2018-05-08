@@ -99,17 +99,18 @@
 
 
 
-  <meta name="description" content="just do it">
+  <meta name="description" content="摘要：  关于iOS中的网络请求，在上一篇文章中已经大体了解了在网络请求的过程中的一些主要点，比如说一个NSURLRequest,一个NSURLSession，一个Task 等等,在我们的实际项目中我较多使用的是AFNetworking来作为我的网络请求模块，然后再对其进行封装下。个人认为对于第三进行封装是很有必要的，要不然当你切换一个新的第三方的时候，你需要在你的工程中找呀找，改呀该。">
+<meta name="keywords" content="AFNetworking">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS-AFNetworking-AFURLSessionManager">
+<meta property="og:title" content="AFNetworking-AFURLSessionManager详解">
 <meta property="og:url" content="http://yoursite.com/2018/05/03/iOS-AFNetworking-AFURLSessionManager/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="just do it">
+<meta property="og:description" content="摘要：  关于iOS中的网络请求，在上一篇文章中已经大体了解了在网络请求的过程中的一些主要点，比如说一个NSURLRequest,一个NSURLSession，一个Task 等等,在我们的实际项目中我较多使用的是AFNetworking来作为我的网络请求模块，然后再对其进行封装下。个人认为对于第三进行封装是很有必要的，要不然当你切换一个新的第三方的时候，你需要在你的工程中找呀找，改呀该。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-03T07:45:33.000Z">
+<meta property="og:updated_time" content="2018-05-08T06:29:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS-AFNetworking-AFURLSessionManager">
-<meta name="twitter:description" content="just do it">
+<meta name="twitter:title" content="AFNetworking-AFURLSessionManager详解">
+<meta name="twitter:description" content="摘要：  关于iOS中的网络请求，在上一篇文章中已经大体了解了在网络请求的过程中的一些主要点，比如说一个NSURLRequest,一个NSURLSession，一个Task 等等,在我们的实际项目中我较多使用的是AFNetworking来作为我的网络请求模块，然后再对其进行封装下。个人认为对于第三进行封装是很有必要的，要不然当你切换一个新的第三方的时候，你需要在你的工程中找呀找，改呀该。">
 
 
 
@@ -126,7 +127,7 @@
   };
 </script>
 
-  <title>iOS-AFNetworking-AFURLSessionManager | lmzqm</title>
+  <title>AFNetworking-AFURLSessionManager详解 | lmzqm</title>
   
 
 
@@ -305,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS-AFNetworking-AFURLSessionManager</h1>
+          <h1 class="post-title" itemprop="name headline">AFNetworking-AFURLSessionManager详解</h1>
         
 
         <div class="post-meta">
@@ -365,7 +366,599 @@
       
 
       
-        
+        <p>摘要：<br>  关于iOS中的网络请求，在上一篇文章中已经大体了解了在网络请求的过程中的一些主要点，比如说一个NSURLRequest,一个NSURLSession，一个Task 等等,在我们的实际项目中我较多使用的是AFNetworking来作为我的网络请求模块，然后再对其进行封装下。个人认为对于第三进行封装是很有必要的，要不然当你切换一个新的第三方的时候，你需要在你的工程中找呀找，改呀该。</p>
+  <a id="more"></a>
+<p>上面废话有点多了</p>
+<p>今天我会通过源代码给大家分享下，AFNetworking的核心，AFURLSessionManager ,其实如果对于NSURLSession比较了解的话，相信用该很请求这个Manager的主体核心的功能就是通过session来创建task ,然后利用代理来做请求的反馈的过程。ok 接下来让我们先了解下吧！</p>
+<h5 id="方法和属性"><a href="#方法和属性" class="headerlink" title="方法和属性"></a>方法和属性</h5><h6 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h6><pre><code>//manager的会话 很熟悉吧！
+@property (readonly, nonatomic, strong) NSURLSession *session;
+
+// 代理调用中用到的操作队列
+@property (readonly ,nonatomic ,strong) NSOperationQueue *operationQueue;
+
+//接收信息的序列化
+@property (nonatomic, strong) id &lt;AFURLResponseSerialization&gt; responseSerializer;
+
+// 会话的安全策略
+@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
+
+/**
+ The data, upload, and download tasks currently run by the managed session.
+ */
+@property (readonly, nonatomic, strong) NSArray &lt;NSURLSessionTask *&gt; *tasks;
+
+/**
+ The data tasks currently run by the managed session.
+ */
+@property (readonly, nonatomic, strong) NSArray &lt;NSURLSessionDataTask *&gt; *dataTasks;
+
+/**
+ The upload tasks currently run by the managed session.
+ */
+@property (readonly, nonatomic, strong) NSArray &lt;NSURLSessionUploadTask *&gt; *uploadTasks;
+
+/**
+ The download tasks currently run by the managed session.
+ */
+@property (readonly, nonatomic, strong) NSArray &lt;NSURLSessionDownloadTask *&gt; *downloadTasks;
+
+// 针对completionBlock的一个队列 如果为null的haul 使用main queue
+@property (nonatomic, strong, nullable) dispatch_queue_t completionQueue;
+
+// 针对组请求操作 completionBlock 的操作
+@property (nonatomic, strong, nullable) dispatch_group_t completionGroup;
+
+//如果后台会话中创建上传任务失败的话 会继续创建
+@property (nonatomic, assign) BOOL attemptsToRecreateUploadTasksForBackgroundSessions;
+</code></pre><h6 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h6><p> 初始化</p>
+<pre><code>// 一个配置项就可以初始化一个Manager
+ - (instancetype)initWithSessionConfiguration:(nullable NSURLSessionConfiguration *)configuration{
+    self = [super init];
+    if (!self) {
+     return nil;
+    }
+    //    如果有用户没有手动指定的话，就默认使用configuration来初始化
+    if (!configuration) {
+     configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    }
+    //    赋值给属性
+    self.sessionConfiguration = configuration;
+    // 初始化NSURLSession的task代理方法执行的队列
+    // 这里有一个关键的点就是task的代理执行的queue一次只能执行一个task 队列是串行队列
+    self.operationQueue = [[NSOperationQueue alloc] init];
+    self.operationQueue.maxConcurrentOperationCount = 1;
+    // 初始化NSURLSession 对象
+    self.session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
+    // 如果用户没有手动指定的话，默认返回的数据是JSON格式序列化
+    self.responseSerializer = [AFJSONResponseSerializer serializer];
+    // 指定https处理的安全策略
+    self.securityPolicy = [AFSecurityPolicy defaultPolicy];
+
+    #if !TARGET_OS_WATCH
+    //    初始化网络状态监听属性
+    self.reachabilityManager = [AFNetworkReachabilityManager sharedManager];
+    #endif
+    // 用于处理task和Delegate代理对象一一对应的关系 这个很关键
+    self.mutableTaskDelegatesKeyedByTaskIdentifier = [[NSMutableDictionary alloc] init];
+    // 初始化一个锁对象，关键操作加锁
+    self.lock = [[NSLock alloc] init];
+    self.lock.name = AFURLSessionManagerLockName;
+    /*
+    获取当前session正在执行的的所有task.同时为每一个Task添加‘Delegate’代理对象
+    这个代理对象主要用于管理uploadTask和downLoadTask的进度管理，并且在Task执行完毕后调用相对应的Block
+    同时发送Notification对象，实现Task数据或者状态改变的检测
+    **/
+    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+     for (NSURLSessionDataTask *task in dataTasks) {
+         [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
+     }
+
+     for (NSURLSessionUploadTask *uploadTask in uploadTasks) {
+         [self addDelegateForUploadTask:uploadTask progress:nil completionHandler:nil];
+     }
+
+     for (NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+         [self addDelegateForDownloadTask:downloadTask progress:nil destination:nil completionHandler:nil];
+     }
+    }];
+
+    return self;
+ }
+</code></pre><p>任务的创建：</p>
+<pre><code>//创建一个dataTask 通过特殊的request
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
+                          completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler;
+
+
+// 创建一个dataTask 并由uploadprogress 和downloadProgress的回调操作
+- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
+                             uploadProgress:(nullable void (^)(NSProgress *uploadProgress))uploadProgressBlock
+                           downloadProgress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
+                          completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler;
+
+
+// 通过request和 一个文件的路径来创建一个uploadTask
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request
+                                     fromFile:(NSURL *)fileURL
+                                     progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgressBlock
+                            completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject, NSError  * _Nullable error))completionHandler;
+
+// 通过一个bodyData和request来创建一个uploadTask
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request
+                                   fromData:(nullable NSData *)bodyData
+                                   progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgressBlock
+                          completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject, NSError * _Nullable error))completionHandler;
+
+// 通过一个特殊的请求来创建downLoadTask
+- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request
+                                 progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
+                              destination:(nullable NSURL * (^)(NSURL *targetPath, NSURLResponse *response))destination
+                        completionHandler:(nullable void (^)(NSURLResponse *response, NSURL * _Nullable filePath, NSError * _Nullable error))completionHandler;
+
+// 创建一个断点下载的downloadTask
+- (NSURLSessionDownloadTask *)downloadTaskWithResumeData:(NSData *)resumeData
+                    progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
+                 destination:(nullable NSURL * (^)(NSURL *targetPath, NSURLResponse *response))destination
+           completionHandler:(nullable void (^)(NSURLResponse *response, NSURL * _Nullable filePath, NSError * _Nullable error))completionHandler;
+</code></pre><p> 其他：</p>
+<pre><code>// 是否是会话无效 通过取消任务 一个是立即取消 一个是等任务完成后再取消
+- (void)invalidateSessionCancelingTasks:(BOOL)cancelPendingTasks{
+      dispatch_async(dispatch_get_main_queue(), ^{
+     if (cancelPendingTasks) {
+        //这个就是会话的方法啦
+         [self.session invalidateAndCancel];
+     } else {
+         [self.session finishTasksAndInvalidate];
+     }
+  });
+}
+</code></pre><p>各种回调的block:</p>
+<pre><code>- (void)setSessionDidBecomeInvalidBlock:(nullable void (^)(NSURLSession *session, NSError *error))block;
+
+- (void)setSessionDidReceiveAuthenticationChallengeBlock:(nullable NSURLSessionAuthChallengeDisposition (^)(NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * _Nullable __autoreleasing * _Nullable credential))block;
+
+- (void)setTaskNeedNewBodyStreamBlock:(nullable NSInputStream * (^)(NSURLSession *session, NSURLSessionTask *task))block;
+
+- (void)setTaskWillPerformHTTPRedirectionBlock:(nullable NSURLRequest * (^)(NSURLSession *session, NSURLSessionTask *task, NSURLResponse *response, NSURLRequest *request))block;
+
+- (void)setTaskDidReceiveAuthenticationChallengeBlock:(nullable NSURLSessionAuthChallengeDisposition (^)(NSURLSession *session, NSURLSessionTask *task, NSURLAuthenticationChallenge *challenge, NSURLCredential * _Nullable __autoreleasing * _Nullable credential))block;
+
+- (void)setTaskDidSendBodyDataBlock:(nullable void (^)(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend))block;
+
+- (void)setTaskDidCompleteBlock:(nullable void (^)(NSURLSession *session, NSURLSessionTask *task, NSError * _Nullable error))block;
+
+- (void)setDataTaskDidReceiveResponseBlock:(nullable NSURLSessionResponseDisposition (^)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response))block;
+
+- (void)setDataTaskDidBecomeDownloadTaskBlock:(nullable void (^)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask))block;
+
+- (void)setDataTaskDidReceiveDataBlock:(nullable void (^)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data))block;
+
+- (void)setDataTaskWillCacheResponseBlock:(nullable NSCachedURLResponse * (^)(NSURLSession *session, NSURLSessionDataTask *dataTask, NSCachedURLResponse *proposedResponse))block;
+
+- (void)setDidFinishEventsForBackgroundURLSessionBlock:(nullable void (^)(NSURLSession *session))block;
+
+- (void)setDownloadTaskDidFinishDownloadingBlock:(nullable NSURL * _Nullable  (^)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location))block;
+
+- (void)setDownloadTaskDidWriteDataBlock:(nullable void (^)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))block;
+
+
+- (void)setDownloadTaskDidResumeBlock:(nullable void (^)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t fileOffset, int64_t expectedTotalBytes))block;
+</code></pre><p>一看就已经很明白啦！都是针对代理的block</p>
+<h6 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h6><pre><code>AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+NSURLSessionDataTask *task =  [manager dataTaskWithRequest:reques completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+  if (error) {
+//            successBlock(())
+  }else{
+
+  }
+
+}];
+[task resume];
+</code></pre><p>下面我们来分析下dataTask创建中的代码：</p>
+<pre><code>- (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request
+                               uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
+                             downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+                            completionHandler:(nullable void (^)(NSURLResponse *response, id _Nullable responseObject,  NSError * _Nullable error))completionHandler {
+
+    __block NSURLSessionDataTask *dataTask = nil;
+    // 这里是一个同步的操作,当然它的方法也是简单的session场景dataTask的方法
+    url_session_manager_create_task_safely(^{
+        dataTask = [self.session dataTaskWithRequest:request];
+    });
+    // 给task添加代理 并将uploadProgressBlock 和 downloadProgressBlock 还有 completionHanler 也交给代理进行管理
+    [self addDelegateForDataTask:dataTask uploadProgress:uploadProgressBlock downloadProgress:downloadProgressBlock completionHandler:completionHandler];
+
+    return dataTask;
+}
+</code></pre><p>下面让我们来分析  addDelegateForDataTask 当中的操作<br>这里的主要操作是为Task设置一个代理对象，从而可以实现对进度处理，Block调用、Task完成返回数据的拼装的功能</p>
+<pre><code>- (void)addDelegateForDataTask:(NSURLSessionDataTask *)dataTask
+                uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
+              downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+             completionHandler:(void (^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
+{
+
+    // 这里创建一个代理的对象 delegate
+    AFURLSessionManagerTaskDelegate *delegate = [[AFURLSessionManagerTaskDelegate alloc] init];
+
+    // 赋值delegate的manager
+    delegate.manager = self;
+
+    // 赋值deleget的completionHandler 这个是针对Task的处理的回调
+    delegate.completionHandler = completionHandler;
+
+    //添加任务的描述 
+    dataTask.taskDescription = self.taskDescriptionForSessionTasks;
+
+    // 为task 添加代理
+    [self setDelegate:delegate forTask:dataTask];
+
+    //还有uploadblock 和 downloadblock
+    delegate.uploadProgressBlock = uploadProgressBlock;
+    delegate.downloadProgressBlock = downloadProgressBlock;
+}
+
+// Delegate 设置Task 状态改变的监听 主要是task的挂起或者重启的监听
+- (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
+            forTask:(NSURLSessionTask *)task
+{
+    NSParameterAssert(task);
+    NSParameterAssert(delegate);
+// 这里需要用到加锁的处理
+    [self.lock lock];
+//    为task设置与之代理方法关联关系。通过一个字典,便于后续通过task 来进行查找delegate 然后滴啊用deleget的对应的方法来进行操作
+    self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
+
+//    添加Task开始，重启，挂起状态的通知的接收 便于控制uploadProgress和downloadProgerss
+    [delegate setupProgressForTask:task];
+
+    [self addNotificationObserverForTask:task];
+    [self.lock unlock];
+}
+</code></pre><p>下面来分析下 AFURLSessionManagerTaskDelegate</p>
+<p>  创建：</p>
+<pre><code>  /*
+  初始化AFURLSessionManagerTaskDelegate
+*/
+- (instancetype)init {
+  self = [super init];
+  if (!self) {
+      return nil;
+  }
+// 这个属性用于存储Task下载过程中的数据
+  self.mutableData = [NSMutableData data];
+//    存储Task上传和下载的进度
+  self.uploadProgress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+  self.uploadProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;
+
+  self.downloadProgress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+  self.downloadProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;
+  return self;
+}
+
+- (void)setupProgressForTask:(NSURLSessionTask *)task {
+__weak __typeof__(task) weakTask = task;
+
+    self.uploadProgress.totalUnitCount = task.countOfBytesExpectedToSend;
+    self.downloadProgress.totalUnitCount = task.countOfBytesExpectedToReceive;
+    [self.uploadProgress setCancellable:YES];
+    //    当process对象取消的时候，取消task
+        [self.uploadProgress setCancellationHandler:^{
+            __typeof__(weakTask) strongTask = weakTask;
+            [strongTask cancel];
+        }];
+    //    当process暂停的时候，暂停task
+        [self.uploadProgress setPausable:YES];
+        [self.uploadProgress setPausingHandler:^{
+            __typeof__(weakTask) strongTask = weakTask;
+            [strongTask suspend];
+        }];
+
+    //    重启Task
+        if ([self.uploadProgress respondsToSelector:@selector(setResumingHandler:)]) {
+            [self.uploadProgress setResumingHandler:^{
+                __typeof__(weakTask) strongTask = weakTask;
+                [strongTask resume];
+            }];
+        }
+    //  针对取消progress的操作也是一样的
+        [self.downloadProgress setCancellable:YES];
+        [self.downloadProgress setCancellationHandler:^{
+            __typeof__(weakTask) strongTask = weakTask;
+            [strongTask cancel];
+        }];
+        [self.downloadProgress setPausable:YES];
+        [self.downloadProgress setPausingHandler:^{
+            __typeof__(weakTask) strongTask = weakTask;
+            [strongTask suspend];
+        }];
+
+        if ([self.downloadProgress respondsToSelector:@selector(setResumingHandler:)]) {
+            [self.downloadProgress setResumingHandler:^{
+                __typeof__(weakTask) strongTask = weakTask;
+                [strongTask resume];
+            }];
+        }
+    // kvo的操作 会调用 observeValueForKeyPath 的函数的操作 对NSURLSessionTask 的属性进行观察操作
+
+    //数据的接收，主要针对downloadTask
+        [task addObserver:self
+               forKeyPath:NSStringFromSelector(@selector(countOfBytesReceived))
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+        [task addObserver:self
+               forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToReceive))
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+    //数据的上传，主要针对uploadTask
+        [task addObserver:self
+               forKeyPath:NSStringFromSelector(@selector(countOfBytesSent))
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+        [task addObserver:self
+               forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToSend))
+                  options:NSKeyValueObservingOptionNew
+                  context:NULL];
+        // 为progress 添加kvo 针对 fractiongCompleted
+        [self.downloadProgress addObserver:self
+                                forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
+                                   options:NSKeyValueObservingOptionNew
+                                   context:NULL];
+        [self.uploadProgress addObserver:self
+                              forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
+                                 options:NSKeyValueObservingOptionNew
+                                 context:NULL];
+    }
+
+    这里是针对上面kvo的操作
+
+    - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary&lt;NSString *,id&gt; *)change context:(void *)context {
+if ([object isKindOfClass:[NSURLSessionTask class]] || [object isKindOfClass:[NSURLSessionDownloadTask class]]) {
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(countOfBytesReceived))]) {
+        self.downloadProgress.completedUnitCount = [change[NSKeyValueChangeNewKey] longLongValue];
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(countOfBytesExpectedToReceive))]) {
+        self.downloadProgress.totalUnitCount = [change[NSKeyValueChangeNewKey] longLongValue];
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(countOfBytesSent))]) {
+        self.uploadProgress.completedUnitCount = [change[NSKeyValueChangeNewKey] longLongValue];
+    } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(countOfBytesExpectedToSend))]) {
+        self.uploadProgress.totalUnitCount = [change[NSKeyValueChangeNewKey] longLongValue];
+    }
+}
+else if ([object isEqual:self.downloadProgress]) {
+//        更新下载的进度的BLock
+        if (self.downloadProgressBlock) {
+            self.downloadProgressBlock(object);
+        }
+    }
+    else if ([object isEqual:self.uploadProgress]) {
+//        更新上传进度的Block
+        if (self.uploadProgressBlock) {
+            self.uploadProgressBlock(object);
+        }
+    }
+}
+</code></pre><p>ok,这些前期的工作做完以后，我们就可以开始代理的工作了：</p>
+<p>这里的代理主要实现了几个方法：</p>
+<p>当任务完成以后：</p>
+<pre><code>#pragma mark - NSURLSessionTaskDelegate
+// 当task完成以后，会调用delegate对象的方法对返回的数据进行封装
+
+- (void)URLSession:(__unused NSURLSession *)session
+            task:(NSURLSessionTask *)task
+didCompleteWithError:(NSError *)error
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored &quot;-Wgnu&quot;
+//    获取Task对应的Manager对象
+  __strong AFURLSessionManager *manager = self.manager;
+// 要封装的responseObject对象
+  __block id responseObject = nil;
+//
+  __block NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+  userInfo[AFNetworkingTaskDidCompleteResponseSerializerKey] = manager.responseSerializer;
+//返回的数据
+  //Performance Improvement from #2672
+  NSData *data = nil;
+  if (self.mutableData) {
+      data = [self.mutableData copy];
+      //We no longer need the reference, so nil it out to gain back some memory.
+      self.mutableData = nil;
+  }
+//如果是downloadTask 就封装downloadFileUrl
+  if (self.downloadFileURL) {
+      userInfo[AFNetworkingTaskDidCompleteAssetPathKey] = self.downloadFileURL;
+  } else if (data) {
+      userInfo[AFNetworkingTaskDidCompleteResponseDataKey] = data;
+  }
+// 针对请求错误的封装
+  if (error) {
+      userInfo[AFNetworkingTaskDidCompleteErrorKey] = error;
+
+      dispatch_group_async(manager.completionGroup ?: url_session_manager_completion_group(), manager.completionQueue ?: dispatch_get_main_queue(), ^{
+//            如果task有completionHandler 就调用这个Block
+          if (self.completionHandler) {
+              self.completionHandler(task.response, responseObject, error);
+          }
+//   发送一个指定task结束的通知
+          dispatch_async(dispatch_get_main_queue(), ^{
+              [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingTaskDidCompleteNotification object:task userInfo:userInfo];
+          });
+      });
+  } else {//正确数据的封装
+      dispatch_async(url_session_manager_processing_queue(), ^{
+          NSError *serializationError = nil;
+//            返回数据的封装
+          responseObject = [manager.responseSerializer responseObjectForResponse:task.response data:data error:&amp;serializationError];
+
+          if (self.downloadFileURL) {
+              responseObject = self.downloadFileURL;
+          }
+
+          if (responseObject) {
+              userInfo[AFNetworkingTaskDidCompleteSerializedResponseKey] = responseObject;
+          }
+
+          if (serializationError) {
+              userInfo[AFNetworkingTaskDidCompleteErrorKey] = serializationError;
+          }
+// 如果Task有完成的Blokc，则调用这个Block
+          dispatch_group_async(manager.completionGroup ?: url_session_manager_completion_group(), manager.completionQueue ?: dispatch_get_main_queue(), ^{
+              if (self.completionHandler) {
+                  self.completionHandler(task.response, responseObject, serializationError);
+              }
+// 发送Task完成的通知
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingTaskDidCompleteNotification object:task userInfo:userInfo];
+              });
+          });
+      });
+  }
+#pragma clang diagnostic pop
+}
+</code></pre><p>NSURLSessionDataTaskDelegate 代理的操作</p>
+<pre><code>#pragma mark - NSURLSessionDataTaskDelegate
+
+- (void)URLSession:(__unused NSURLSession *)session
+          dataTask:(__unused NSURLSessionDataTask *)dataTask
+    didReceiveData:(NSData *)data
+{
+    // 这里主要做的是数据的拼接
+    [self.mutableData appendData:data];
+}
+</code></pre><p>NSURLSessionDownloadTaskDelegate 代理操作：</p>
+<pre><code>#pragma mark - NSURLSessionDownloadTaskDelegate
+
+- (void)URLSession:(NSURLSession *)session
+      downloadTask:(NSURLSessionDownloadTask *)downloadTask
+didFinishDownloadingToURL:(NSURL *)location
+{
+    NSError *fileManagerError = nil;
+    self.downloadFileURL = nil;
+
+    // 这里的location是缓存的url的地址
+
+    if (self.downloadTaskDidFinishDownloading) {
+      // 将获取文件的存放路径 然后将location的地址放入到存放的地址中进行文件的保存操作
+        self.downloadFileURL = self.downloadTaskDidFinishDownloading(session, downloadTask, location);
+        if (self.downloadFileURL) {
+        // 这里是存放的操作
+            [[NSFileManager defaultManager] moveItemAtURL:location toURL:self.downloadFileURL error:&amp;fileManagerError];
+
+            if (fileManagerError) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:AFURLSessionDownloadTaskDidFailToMoveFileNotification object:downloadTask userInfo:fileManagerError.userInfo];
+            }
+        }
+    }
+}
+</code></pre><p>这里是一个下载的例子，可以好好参考下：</p>
+<pre><code>    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:^(NSProgress *downloadProgress){
+    NSLog(@&quot;下载进度:%lld&quot;,downloadProgress.completedUnitCount);
+} destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+    NSURL *fileURL = [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+    NSLog(@&quot;fileURL:%@&quot;,[fileURL absoluteString]);
+    return fileURL;
+} completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+    NSLog(@&quot;File downloaded to: %@&quot;, filePath);
+}];
+</code></pre><p>其中有一个destination的block的操作：</p>
+<pre><code>- (void)addDelegateForDownloadTask:(NSURLSessionDownloadTask *)downloadTask
+                        progress:(void (^)(NSProgress *downloadProgress)) downloadProgressBlock
+                     destination:(NSURL * (^)(NSURL *targetPath, NSURLResponse *response))destination
+               completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler
+{
+//    根据指定的Task，初始化一个AFURLSessionManagerTaskDelegate 其实这里采用的是MVP模式
+  AFURLSessionManagerTaskDelegate *delegate = [[AFURLSessionManagerTaskDelegate alloc] init];
+  delegate.manager = self;
+//    设置task完成的回调你的BLOCK
+  delegate.completionHandler = completionHandler;
+
+  if (destination) {
+//        任务完成以后，调用destination 这个Block
+      delegate.downloadTaskDidFinishDownloading = ^NSURL * (NSURLSession * __unused session, NSURLSessionDownloadTask *task, NSURL *location) {
+          return destination(location, task.response);
+      };
+  }
+//  指定Task与taskDescriptionForSessionTasks的关联，方便后面的通知中做出对应的处理
+  downloadTask.taskDescription = self.taskDescriptionForSessionTasks;
+//  添加通知
+  [self setDelegate:delegate forTask:downloadTask];
+// 设置一个下载进度的block,以便在后面代理中调用
+  delegate.downloadProgressBlock = downloadProgressBlock;
+}
+</code></pre><p>后面有一个destination的操作，我们做的事情就是给它找一个合适的地方来进行存放，然后在completion中主要做的就是将文件的地址给我们的应用就可以了</p>
+<p>代理完成任务以后，我们要做什么？</p>
+<pre><code>- (void)URLSession:(NSURLSession *)session
+            task:(NSURLSessionTask *)task
+didCompleteWithError:(NSError *)error
+{
+// 当我们的task完成任务以后：
+  AFURLSessionManagerTaskDelegate *delegate = [self delegateForTask:task];
+
+  // delegate may be nil when completing a task in the background
+  if (delegate) {
+      [delegate URLSession:session task:task didCompleteWithError:error];
+
+      [self removeDelegateForTask:task];
+  }
+
+  if (self.taskDidComplete) {
+      self.taskDidComplete(session, task, error);
+  }
+}
+
+
+
+
+// 当移除Task对应的通知和对应的AFURLSessionManagerTaskDelegate代理对象
+- (void)removeDelegateForTask:(NSURLSessionTask *)task {
+    NSParameterAssert(task);
+
+    AFURLSessionManagerTaskDelegate *delegate = [self delegateForTask:task];
+    [self.lock lock];
+//    移除task对应的kvo
+    [delegate cleanUpProgressForTask:task];
+//    移除Task对应的delegate对象
+    [self removeNotificationObserverForTask:task];
+    [self.mutableTaskDelegatesKeyedByTaskIdentifier removeObjectForKey:@(task.taskIdentifier)];
+    [self.lock unlock];
+}
+</code></pre><p>  代理的清除操作：</p>
+<pre><code>- (void)cleanUpProgressForTask:(NSURLSessionTask *)task {
+[task removeObserver:self forKeyPath:NSStringFromSelector(@selector(countOfBytesReceived))];
+[task removeObserver:self forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToReceive))];
+[task removeObserver:self forKeyPath:NSStringFromSelector(@selector(countOfBytesSent))];
+[task removeObserver:self forKeyPath:NSStringFromSelector(@selector(countOfBytesExpectedToSend))];
+[self.downloadProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+[self.uploadProgress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+}
+</code></pre><h5 id="其中的MVP"><a href="#其中的MVP" class="headerlink" title="其中的MVP"></a>其中的MVP</h5><p>  在AFURLSessionManager中我们可以看到，这里针对每个task 都会有一个addDelegateForTask的方法，这里的针对每一个task 都创建一个AFURLSessionTaskDelegate 的代理，这个代理就是MVP中的Present 它处理View中的一些操作，然后将处理好的操作的数据，同时P中对于Manager使用的是Weak的操作 一个弱引用而不是强引用</p>
+<h5 id="特殊模块说明"><a href="#特殊模块说明" class="headerlink" title="特殊模块说明"></a>特殊模块说明</h5><p>AFURLSessionManager 实现了 NSSecureCoding 协议 让Manager可以归档和解档的操作</p>
+<h6 id="使用dispatch-semaphore-t信号量来控制对异步处理返回的结果控制"><a href="#使用dispatch-semaphore-t信号量来控制对异步处理返回的结果控制" class="headerlink" title="使用dispatch_semaphore_t信号量来控制对异步处理返回的结果控制"></a>使用dispatch_semaphore_t信号量来控制对异步处理返回的结果控制</h6><pre><code>// 用dispatch_semaphore_t 来控制对异步处理返回的结果的控制
+- (NSArray *)tasksForKeyPath:(NSString *)keyPath {
+    //获取session对应的task列表，通过disptch_semaphore_t来控制访问过程
+    __block NSArray *tasks = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        if ([keyPath isEqualToString:NSStringFromSelector(@selector(dataTasks))]) {
+            tasks = dataTasks;
+        } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(uploadTasks))]) {
+            tasks = uploadTasks;
+        } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(downloadTasks))]) {
+            tasks = downloadTasks;
+        } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(tasks))]) {
+            tasks = [@[dataTasks, uploadTasks, downloadTasks] valueForKeyPath:@&quot;@unionOfArrays.self&quot;];
+        }
+
+        dispatch_semaphore_signal(semaphore);
+    }];
+//  这里会一直等待信号量变为1
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+//  返回Task. 通过信号量控制，避免了方法结束的时候，tasks还没有正常获取的情况
+    return tasks;
+}
+</code></pre><h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>ok,在这里已经将AFURLSessionManager的主要的实现都已经涉及到了。<br>下面来</p>
+
       
     </div>
 
@@ -392,6 +985,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AFNetworking/" rel="tag"><i class ="fa fa-tag"></i> AFNetworking</a>
+          
+        </div>
       
 
       
@@ -473,8 +1072,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -489,7 +1097,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -518,7 +1126,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -553,6 +1163,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法和属性"><span class="nav-number">1.</span> <span class="nav-text">方法和属性</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#属性"><span class="nav-number">1.1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法"><span class="nav-number">1.2.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用流程"><span class="nav-number">1.3.</span> <span class="nav-text">使用流程</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其中的MVP"><span class="nav-number">2.</span> <span class="nav-text">其中的MVP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#特殊模块说明"><span class="nav-number">3.</span> <span class="nav-text">特殊模块说明</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#使用dispatch-semaphore-t信号量来控制对异步处理返回的结果控制"><span class="nav-number">3.1.</span> <span class="nav-text">使用dispatch_semaphore_t信号量来控制对异步处理返回的结果控制</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -703,7 +1329,7 @@
       var disqus_config = function () {
         this.page.url = 'http://yoursite.com/2018/05/03/iOS-AFNetworking-AFURLSessionManager/';
         this.page.identifier = '2018/05/03/iOS-AFNetworking-AFURLSessionManager/';
-        this.page.title = 'iOS-AFNetworking-AFURLSessionManager';
+        this.page.title = 'AFNetworking-AFURLSessionManager详解';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');
