@@ -99,24 +99,27 @@
 
 
 
-  <meta name="description" content="just do it">
-<meta property="og:type" content="website">
-<meta property="og:title" content="iOS">
-<meta property="og:url" content="http://yoursite.com/iOS/index.html">
+  <meta name="description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工厂方法模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/factior-method-pattern/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="just do it">
+<meta property="og:description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-02T01:49:22.000Z">
+<meta property="og:image" content="http://yoursite.com/images/factory_methor.png">
+<meta property="og:updated_time" content="2018-05-09T01:32:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS">
-<meta name="twitter:description" content="just do it">
+<meta name="twitter:title" content="工厂方法模式">
+<meta name="twitter:description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。">
+<meta name="twitter:image" content="http://yoursite.com/images/factory_methor.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/iOS/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/factior-method-pattern/"/>
 
 
 
@@ -126,7 +129,7 @@
   };
 </script>
 
-  <title>iOS | lmzqm</title>
+  <title>工厂方法模式 | lmzqm</title>
   
 
 
@@ -274,43 +277,216 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/factior-method-pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">iOS</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
+          <h1 class="post-title" itemprop="name headline">工厂方法模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T16:19:41+08:00">2018-05-08</time>
+            
+
+            
+            
+
+            
+          </span>
+
           
-        
-      </div>
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/08/factior-method-pattern/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/08/factior-method-pattern/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>摘要：<br>工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。<br><a id="more"></a></p>
+<h4 id="模式结构"><a href="#模式结构" class="headerlink" title="模式结构"></a>模式结构</h4><p>工厂方法模式包含如下角色：</p>
+<ul>
+<li>Product ：抽象产品</li>
+<li>ConcreteProduct : 具体角色</li>
+<li>Factory : 抽象工厂</li>
+<li>ConcreteFactory : 具体工厂</li>
+</ul>
+<p><img src="/images/factory_methor.png" alt="factory_methor"></p>
+<h4 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h4><p>需求分析：<br>  首先由一个文件导出操作，一个是导出PDF 一个是导出HTML的操作</p>
+<pre><code>// 抽象的工厂
+@protocol GYEFileFactory &lt;NSObject&gt;
+
+-(id&lt;GYEProduct&gt;) creatProduct;
+
+@end
+
+// 具体的工厂
+@interface GYEHtmlFileFactory:NSObject &lt;GYEFileFactory&gt;
+
+@end
+
+// 具体的工厂
+@interface GYEPDFFileFactory:NSObject &lt;GYEFileFactory&gt;
+
+@end
+</code></pre><p>在具体的工厂中创建具体的对象</p>
+<pre><code>@implementation GYEHtmlFileFactory
+
+-(id&lt;GYEProduct&gt;) creatProduct{
+  return [[GYEHtmlProduct alloc] init];
+}
+
+@end
+
+@implementation GYEPDFFileFactory
+
+-(id&lt;GYEProduct&gt;) creatProduct{
+  return [[GYEPDFPriduct alloc] init];
+}
+
+@end
+</code></pre><h4 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h4><p>  工厂方法模式是简单工厂模式的进一步抽象和推广。由于使用面向对象的多态性，工厂方法模式保持了简单工厂模式的特点，而且也克服了它的缺点。在工厂模式中不在负责所有产品的创建而是将具体的创建交给子类去做。这个核心类仅仅负责给出具体工厂必须实现的接口，而不是负责哪一个产品被实例化的细节，这使得工厂模式可以允许系统在不修改工厂角色的情况下引进新产品</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>  工厂方法模式的主要优点是增加了新的产品类的时候无需修改现有系统，并封装了产品对象的创建细节，系统有良好的灵活性和可扩展性；缺点在于增加新产品的同时需要增加新的工厂，导致系统类的个数成对的增加，在一定程度上增加了系统的复杂性</p>
+
       
     </div>
+
     
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设计模式/" rel="tag"><i class ="fa fa-tag"></i> 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/08/simple-factory-pattern/" rel="next" title="简单工厂模式">
+                <i class="fa fa-chevron-left"></i> 简单工厂模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/09/AFNetworking-AFURLRequestSerialization/" rel="prev" title="AFNetworking源码之AFURLRequestSerialization">
+                AFNetworking源码之AFURLRequestSerialization <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
 
 
 
-    
-    
-    
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -350,8 +526,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -434,6 +619,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#模式结构"><span class="nav-number">1.</span> <span class="nav-text">模式结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码分析"><span class="nav-number">2.</span> <span class="nav-text">代码分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式分析"><span class="nav-number">3.</span> <span class="nav-text">模式分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -582,9 +783,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/iOS/index.html';
-        this.page.identifier = 'iOS/index.html';
-        this.page.title = 'iOS';
+        this.page.url = 'http://yoursite.com/2018/05/08/factior-method-pattern/';
+        this.page.identifier = '2018/05/08/factior-method-pattern/';
+        this.page.title = '工厂方法模式';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');

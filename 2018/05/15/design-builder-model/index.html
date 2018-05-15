@@ -99,25 +99,28 @@
 
 
 
-  <meta name="description" content="摘要：设计模式分为三大类  创建型模式 结构型模式 行为型模式">
+  <meta name="description" content="摘要：  无论是在现实世界中还是在软件系统中，都存在一些比较复杂的对象，他们拥有多个组成部分，如汽车，它包括车轮，方向盘，发动机等各个部件。而对于大多数用户而言，无须知道这些部件的装配细节，也几乎不会使用单独某个部件，而是使用一个完整的汽车，可以通过建造者模式对其进行设计和描述。建造者模式可以将组件和其组装过程分开，一步一步创建一个复杂对象。用户只需要指定复杂对象的类型就可以得到该对象，而无须知">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式">
-<meta property="og:url" content="http://yoursite.com/2018/05/03/design-create-model/index.html">
+<meta property="og:title" content="建造者模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/15/design-builder-model/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：设计模式分为三大类  创建型模式 结构型模式 行为型模式">
+<meta property="og:description" content="摘要：  无论是在现实世界中还是在软件系统中，都存在一些比较复杂的对象，他们拥有多个组成部分，如汽车，它包括车轮，方向盘，发动机等各个部件。而对于大多数用户而言，无须知道这些部件的装配细节，也几乎不会使用单独某个部件，而是使用一个完整的汽车，可以通过建造者模式对其进行设计和描述。建造者模式可以将组件和其组装过程分开，一步一步创建一个复杂对象。用户只需要指定复杂对象的类型就可以得到该对象，而无须知">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-15T09:00:43.000Z">
+<meta property="og:image" content="http://yoursite.com/images/builder.png">
+<meta property="og:image" content="http://yoursite.com/images/seq_builder.png">
+<meta property="og:updated_time" content="2018-05-15T10:20:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式">
-<meta name="twitter:description" content="摘要：设计模式分为三大类  创建型模式 结构型模式 行为型模式">
+<meta name="twitter:title" content="建造者模式">
+<meta name="twitter:description" content="摘要：  无论是在现实世界中还是在软件系统中，都存在一些比较复杂的对象，他们拥有多个组成部分，如汽车，它包括车轮，方向盘，发动机等各个部件。而对于大多数用户而言，无须知道这些部件的装配细节，也几乎不会使用单独某个部件，而是使用一个完整的汽车，可以通过建造者模式对其进行设计和描述。建造者模式可以将组件和其组装过程分开，一步一步创建一个复杂对象。用户只需要指定复杂对象的类型就可以得到该对象，而无须知">
+<meta name="twitter:image" content="http://yoursite.com/images/builder.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/03/design-create-model/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/15/design-builder-model/"/>
 
 
 
@@ -127,7 +130,7 @@
   };
 </script>
 
-  <title>设计模式 | lmzqm</title>
+  <title>建造者模式 | lmzqm</title>
   
 
 
@@ -289,7 +292,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/design-create-model/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/15/design-builder-model/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lmzqm">
@@ -306,7 +309,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式</h1>
+          <h1 class="post-title" itemprop="name headline">建造者模式</h1>
         
 
         <div class="post-meta">
@@ -318,7 +321,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-03T18:31:21+08:00">2018-05-03</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-15T17:02:25+08:00">2018-05-15</time>
             
 
             
@@ -336,9 +339,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/05/03/design-create-model/#comments" itemprop="discussionUrl">
+                <a href="/2018/05/15/design-builder-model/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/03/design-create-model/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/05/15/design-builder-model/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,35 +369,42 @@
       
 
       
-        <p>摘要：<br>设计模式分为三大类</p>
-<ul>
-<li>创建型模式</li>
-<li>结构型模式</li>
-<li>行为型模式</li>
-</ul>
+        <p>摘要：<br>  无论是在现实世界中还是在软件系统中，都存在一些比较复杂的对象，他们拥有多个组成部分，如汽车，它包括车轮，方向盘，发动机等各个部件。而对于大多数用户而言，无须知道这些部件的装配细节，也几乎不会使用单独某个部件，而是使用一个完整的汽车，可以通过建造者模式对其进行设计和描述。建造者模式可以将组件和其组装过程分开，一步一步创建一个复杂对象。用户只需要指定复杂对象的类型就可以得到该对象，而无须知道其内部的具体的构造细节。</p>
 <a id="more"></a>
-<h5 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h5><p>创建型模式：对类的实例化过程进行了抽象，能够将软件模块中对象的创建和对象的使用分离。为了使软件的结构更加清晰，外界对这些对象只需要指定他们共同的接口，而不需要知道具体的实现细节，使整个系统设计更加符合单一职责的原则</p>
+<h5 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h5><p>这里我们将造车的操作引入到我们的需求中<br>这里首先我们需要创建车，这时候我们的建造者可以建造SUV,小轿车，由指挥者来指挥具体生成那种车型</p>
+<h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p>建造者模式：将一个复杂对象的构建于它的表示分离，是的同样的构建过程可以创建不同的表示</p>
+<p>建造者模式是一步一步创建一个复杂的对象，它允许用户只通过指定复杂的对象的类型和内容就可以构建他们，用户不需要指定内部的具体构建细节。建造者模式属于对象创建模式。</p>
+<h5 id="模式结构"><a href="#模式结构" class="headerlink" title="模式结构"></a>模式结构</h5><p>建造者模式包含如下角色：</p>
 <ul>
-<li>简单工厂模式 （simple Factory）</li>
-<li>工厂方法模式 （Factory Method）</li>
-<li>抽象工厂模式 （Abstract Factory）</li>
-<li>建造者模式   （Builder）</li>
-<li>原型模式    （Prototype）</li>
-<li>单例模式    （Singletion）</li>
+<li>Builder:抽象建造者</li>
+<li>ConcreteBuilder: 具体建造者</li>
+<li>Dierctor: 指挥者</li>
+<li>Product: 产品角色</li>
 </ul>
-<h5 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h5><h5 id="设计模式的六大原则："><a href="#设计模式的六大原则：" class="headerlink" title="设计模式的六大原则："></a>设计模式的六大原则：</h5><h6 id="1-开闭原则OCP"><a href="#1-开闭原则OCP" class="headerlink" title="1. 开闭原则OCP"></a>1. 开闭原则OCP</h6><p>   开闭原则说的是， 对扩展开放、对修改关闭 。在程序需要进行扩展的时候，不全修改原有的代码，这是为了使程序的扩展性更好，更易于升级和维护。</p>
-<h6 id="2-里氏代换原则LSP"><a href="#2-里氏代换原则LSP" class="headerlink" title="2. 里氏代换原则LSP"></a>2. 里氏代换原则LSP</h6><p>   在软件开发的时候使用基类替换它的子类对象，程序将不会产生任何错误和异常，反过来则不成立。如果一个软件实体使用的是一个子类对象的话，那么它一定不能使用基类对象。里氏代换原则的程序表现如下：在程序中尽量使用基类类型来对对象进行定义，而在运行的时候再确定其子类，用子类对象来替换父类。</p>
-<h6 id="3-控制反转原则IOC"><a href="#3-控制反转原则IOC" class="headerlink" title="3. 控制反转原则IOC"></a>3. 控制反转原则IOC</h6><p>   针对接口编程，依赖于抽象而不依赖于具体</p>
-<h6 id="4-接口隔离原则ISP"><a href="#4-接口隔离原则ISP" class="headerlink" title="4. 接口隔离原则ISP"></a>4. 接口隔离原则ISP</h6><p>   使用多个隔离的接口，比使用单个接口要好</p>
-<h6 id="5-迪米特法则DP"><a href="#5-迪米特法则DP" class="headerlink" title="5. 迪米特法则DP"></a>5. 迪米特法则DP</h6><p>   一个实体应当尽量少的与其他实体间发生作用，使得系统功能模块相对独立</p>
-<h6 id="6-合成复用原则"><a href="#6-合成复用原则" class="headerlink" title="6. 合成复用原则"></a>6. 合成复用原则</h6><p>   尽量使用组合/聚合的方式，而不是使用继承</p>
-<h5 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h5><h6 id="1-抽象化"><a href="#1-抽象化" class="headerlink" title="1.抽象化"></a>1.抽象化</h6><p>在众多的事物中提取出共同的、本质的特征，舍弃非本质的特征，就是抽象化。抽象化的过程就是一个剪裁的过程，抽象的时候同于不同取决于从什么角度上来抽象。抽象的角度取决于分析问题的目的</p>
-<h6 id="2-实现化"><a href="#2-实现化" class="headerlink" title="2.实现化"></a>2.实现化</h6><p>抽象类给出的具体的实现就是实现化<br>一个类的实例就是这个类的实例化，一个具体子类是它的抽象超类的实例化</p>
-<h6 id="3-解耦"><a href="#3-解耦" class="headerlink" title="3.解耦"></a>3.解耦</h6><p>所谓的耦合，就是两个实体的行为的某种强关联。而将它们之间的强关联去掉就是解耦。</p>
-<p>解耦是指将抽象化和实现化之间的耦合解开，或者说将它们之间的强关联改为弱关联</p>
-<p>所谓强关联，指的是在编译事情就已经确定的，无法再运行时期改变的关联，所谓弱关联就是可以动态的确定并且在运行时期动态的改变的关联。从这个定义上看，继承的关系是强关联，聚合的关系是弱关联</p>
-<h5 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h5><p><a href="http://www.cnblogs.com/xrq730/p/4896125.html">Java设计模式1：设计模式概论</a></p>
-<p><a href="http://design-patterns.readthedocs.io/zh_CN/latest/read_uml.html">看懂UML类图和时序图</a></p>
+<p><img src="/images/builder.png" alt="builder"></p>
+<p>通过上图我们可以分析下类之间的关系：</p>
+<p>concreteBuilder 与 product是关联的关系（这里也可以认为是一种组合关系，生命周期一样）<br>Director 和 Builder 之间是一个聚合的关系 （生命周期不一样,也是一种属性）<br>当然Builder和ConcreteBuilder 之间是一种实现关系</p>
+<h5 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h5><p><img src="/images/seq_builder.png" alt="seq_builder"></p>
+<h5 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h5><p>首先：产品 Product (车)</p>
+<p>Builder :抽象建造者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CarBuilder:</span><br><span class="line"></span><br><span class="line">-(void)buildCar;</span><br></pre></td></tr></table></figure></p>
+<p>具体的建造者：</p>
+<p>CarSuvBuilder: SUV的建造者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic ,strong) Car *carProduct;</span><br><span class="line"></span><br><span class="line">-(void)buildCar&#123;</span><br><span class="line"></span><br><span class="line">   carProduct  = [[carProduct alloc] init];</span><br><span class="line">   carProduct.name = @&quot;SUV&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CarMpvBuilder: MPV的建造者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic ,strong) Car *carProduct;</span><br><span class="line"></span><br><span class="line">-(void)buildCar&#123;</span><br><span class="line"></span><br><span class="line">   carProduct  = [[carProduct alloc] init];</span><br><span class="line">   carProduct.name = @&quot;MPV&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>指挥者：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CarDirector ：</span><br><span class="line"></span><br><span class="line">@Property(nonatomic ,strong) CarBuilder builder;</span><br><span class="line"></span><br><span class="line">-(Car*)createCar&#123;</span><br><span class="line">  [builder buildCar];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">CarDirector *director = [[CarBuilder alloc] init];</span><br><span class="line">director.builder  = [[CarSuvBuilder alloc] init];</span><br><span class="line">[director createCar];</span><br></pre></td></tr></table></figure></p>
+<h5 id="实例分析"><a href="#实例分析" class="headerlink" title="实例分析"></a>实例分析</h5><p>  在AFNetworking中我们的request的序列化的操作，就是采用建造者模式<br>  角色：</p>
+<p>  建造者：AFURLReqeustSerialization</p>
+<p>  具体建造者： AFHTTPRequestSerializer AFJSONRequestSerializer</p>
+<p>  指挥者：AFHTTPSessionManager</p>
+<p>  产品：NSURLReqeust</p>
+<h5 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h5><p>建造者模式和抽象工厂模式的比较：</p>
+<ul>
+<li>与抽象工厂模式想比，<strong>建造者模式模式返回的是一个组装好的完整的产品，而抽象工厂模式返回的是一系列相关的产品，这些产品位于不同的产品登记中，构成一个产品族</strong></li>
+<li>在抽象工厂模式中，客户端实例化工厂类，然后调用工厂方法获取所需的对象，而建造者模式中客户端可以不直接调用建造者模式的相关方法，而是通过指挥者类来指定如何生成对象，包括对象的组装过程和建造过程，它侧重于一步步构造一个复杂对象，返回一个完整的对象</li>
+<li>如果将抽象工厂模式看成一个汽车配件生成工厂，生成一个产品簇的产品，那么建造者模式就是一个汽车组装工厂，通过对不见的组装可以返回一个完整的汽车</li>
+</ul>
 
       
     </div>
@@ -438,8 +448,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/03/design-model/" rel="next" title="设计模式 开篇——读懂UML类图和时序图">
-                <i class="fa fa-chevron-left"></i> 设计模式 开篇——读懂UML类图和时序图
+              <a href="/2018/05/10/ios-debug-lldb/" rel="next" title="iOS LLDB 调试">
+                <i class="fa fa-chevron-left"></i> iOS LLDB 调试
               </a>
             
           </div>
@@ -447,10 +457,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/08/AFNetworking-AFHTTPSessionManager/" rel="prev" title="AFNetworking-AFHTTPSessionManager 详解">
-                AFNetworking-AFHTTPSessionManager 详解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -612,7 +618,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建型模式"><span class="nav-number">1.</span> <span class="nav-text">创建型模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结构型模式"><span class="nav-number">2.</span> <span class="nav-text">结构型模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设计模式的六大原则："><span class="nav-number">3.</span> <span class="nav-text">设计模式的六大原则：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-开闭原则OCP"><span class="nav-number">3.1.</span> <span class="nav-text">1. 开闭原则OCP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-里氏代换原则LSP"><span class="nav-number">3.2.</span> <span class="nav-text">2. 里氏代换原则LSP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-控制反转原则IOC"><span class="nav-number">3.3.</span> <span class="nav-text">3. 控制反转原则IOC</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-接口隔离原则ISP"><span class="nav-number">3.4.</span> <span class="nav-text">4. 接口隔离原则ISP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-迪米特法则DP"><span class="nav-number">3.5.</span> <span class="nav-text">5. 迪米特法则DP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-合成复用原则"><span class="nav-number">3.6.</span> <span class="nav-text">6. 合成复用原则</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关键字"><span class="nav-number">4.</span> <span class="nav-text">关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-抽象化"><span class="nav-number">4.1.</span> <span class="nav-text">1.抽象化</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-实现化"><span class="nav-number">4.2.</span> <span class="nav-text">2.实现化</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-解耦"><span class="nav-number">4.3.</span> <span class="nav-text">3.解耦</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义"><span class="nav-number">2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模式结构"><span class="nav-number">3.</span> <span class="nav-text">模式结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时序图"><span class="nav-number">4.</span> <span class="nav-text">时序图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码分析"><span class="nav-number">5.</span> <span class="nav-text">代码分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实例分析"><span class="nav-number">6.</span> <span class="nav-text">实例分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模式分析"><span class="nav-number">7.</span> <span class="nav-text">模式分析</span></a></li></ol></div>
             
 
           </div>
@@ -766,9 +772,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/05/03/design-create-model/';
-        this.page.identifier = '2018/05/03/design-create-model/';
-        this.page.title = '设计模式';
+        this.page.url = 'http://yoursite.com/2018/05/15/design-builder-model/';
+        this.page.identifier = '2018/05/15/design-builder-model/';
+        this.page.title = '建造者模式';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');

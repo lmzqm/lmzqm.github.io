@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：    在平常调试的时候，总是有一些是正常的调试无法满足的地方，比如说要修改参数的某个值，或者说要需要打印一些信息，以及针对界面中需要修改一些参数。正常情况下都是需要将代码修改，然后再重启应用才能开到效果。常规操作……">
+<meta name="keywords" content="LLDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS LLDB 调试">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/ios-debug-lldb/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：    在平常调试的时候，总是有一些是正常的调试无法满足的地方，比如说要修改参数的某个值，或者说要需要打印一些信息，以及针对界面中需要修改一些参数。正常情况下都是需要将代码修改，然后再重启应用才能开到效果。常规操作……">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/help.png">
+<meta property="og:image" content="http://yoursite.com/images/breakpoint.png">
+<meta property="og:image" content="http://yoursite.com/images/breakpoint-set.png">
+<meta property="og:image" content="http://yoursite.com/images/debug-step.png">
+<meta property="og:updated_time" content="2018-05-15T03:16:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS LLDB 调试">
+<meta name="twitter:description" content="摘要：    在平常调试的时候，总是有一些是正常的调试无法满足的地方，比如说要修改参数的某个值，或者说要需要打印一些信息，以及针对界面中需要修改一些参数。正常情况下都是需要将代码修改，然后再重启应用才能开到效果。常规操作……">
+<meta name="twitter:image" content="http://yoursite.com/images/help.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/10/ios-debug-lldb/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS LLDB 调试 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/ios-debug-lldb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS LLDB 调试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T16:48:24+08:00">2018-05-10</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/10/ios-debug-lldb/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/10/ios-debug-lldb/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：<br>    在平常调试的时候，总是有一些是正常的调试无法满足的地方，比如说要修改参数的某个值，或者说要需要打印一些信息，以及针对界面中需要修改一些参数。正常情况下都是需要将代码修改，然后再重启应用才能开到效果。常规操作……<br><a id="more"></a></p>
+<h4 id="LLDB-简介"><a href="#LLDB-简介" class="headerlink" title="LLDB 简介"></a>LLDB 简介</h4><p>Xcode中内嵌了LLDB控制台，就是我们正常使用NSLog()来打印信息的时候，所显示的地方。但是如果我们想要使用LLDB命令的时候，必须让程序进入暂停状态。</p>
+<h4 id="LLDB-语法"><a href="#LLDB-语法" class="headerlink" title="LLDB 语法"></a>LLDB 语法</h4><p>首先关于LLDB的使用，语法要先有所了解，接下来才能更好的大展拳脚呀！<br><code>&lt;command&gt; [&lt;subcommand&gt; [&lt;subcommand&gt;]] &lt;action&gt; [-options [option-value]] [argument]</code></p>
+<p>看上去似乎有点复杂点，但是这里需要明确两个&lt; &gt; 和 [] 符号，一个是必填一个是可填的参数</p>
+<p>所有这样就会相对简单了；</p>
+<ol>
+<li>\<command> 和 \<subcommand> :LLDB 调试的时候使用的命令，命令和子命令是按照层级结构来排列的：一个命令对象会为其指明了对象创建一个上下文 ，子命令还会为其子命令创建上下文 以此类推</li>
+<li>\<action> 执行命令的操作</li>
+<li>\<options> 命令的选项</li>
+<li>\<argument> 命令的参数</li>
+</ol>
+<p>举个例子：</p>
+<p><code>breakpoint set -f HelloWorld.m -n main -l 67</code></p>
+<p>对这个命令解析<br>command :breakpoint<br>action :set<br>options: -f -n -l<br>argument: HelloWorld.m main 67</p>
+<h5 id="原始命令"><a href="#原始命令" class="headerlink" title="原始命令"></a>原始命令</h5><p>LLDB支持不带命令选项的原始命令，原始命令会将命令后面的所有东西都当做参数来看待。当然原始命令也是可以带参数的的，需要在命令选项后面加–区分命令选项和参数</p>
+<p>eg:<br>  expr count<br>  expr -0 – count</p>
+<h5 id="唯一匹配原则"><a href="#唯一匹配原则" class="headerlink" title="唯一匹配原则"></a>唯一匹配原则</h5><p>LLDB的命令遵循唯一匹配原则：假如根据前n个字母已经能唯一匹配到某个命令，则只写前n个字母等于写下完整的命令</p>
+<p>比如说：</p>
+<p>breakpoint  br<br>expression expr</p>
+<h4 id="LLDB-命令"><a href="#LLDB-命令" class="headerlink" title="LLDB 命令"></a>LLDB 命令</h4><h5 id="help"><a href="#help" class="headerlink" title="help"></a>help</h5><p>个人认为这是最重要的一个命令啦！明白怎么使用这个，后续的问题就看你自己的了<br>首先可能刚接触LLDB 还不知怎么使用最简单的：</p>
+<p><img src="/images/help.png" alt="help"></p>
+<p>假如说你对breakpoint比较有兴趣 想要知道具体怎么用 </p>
+<p><img src="/images/breakpoint.png" alt="breakpoint"></p>
+<p>假如你对breakpoint 中的set 比较关注的话</p>
+<p><img src="/images/breakpoint-set.png" alt="breakpoint-set"></p>
+<p>这样一步一步的下来你就会对这个命令比较熟悉了。当然最主要的是你需要对一些常用的命令有所了解，这样扩展起来就会比较快速了。</p>
+<h5 id="expression"><a href="#expression" class="headerlink" title="expression"></a>expression</h5><p>expression 命令的作用是执行一个表达式，并将表达式的结构进行返回输出<br><code>expression &lt;cmd-options&gt; -- &lt;expr&gt;</code></p>
+<ol>
+<li>\<cmd-options>: 命令选项</li>
+<li>– 命令选项符结束，表示所有的命令选项已经设置完毕，如果没有命令选项，– 可以省略</li>
+<li>\<expr>表示要执行的表达式</li>
+</ol>
+<p>expression 可以说是LLDB中最重要的命令，主要实现了2个功能</p>
+<ul>
+<li><p>我们可以执行某个表达式，改变程序的运行轨迹。<br>expr self.view.backgroundColor = [UIColor redColor];  // 改变颜色<br>expr (void)[CATransaction flush];// 刷新界面</p>
+</li>
+<li><p>将返回值输出，可以打印信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) expr self</span><br><span class="line">(Class) $0 = _AFURLSessionTaskSwizzling</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="p-amp-Print-amp-call"><a href="#p-amp-Print-amp-call" class="headerlink" title="p &amp; Print &amp; call"></a>p &amp; Print &amp; call</h5><p>正常情况下，我们直接用expression还是比较少的，相对于打印操作的时候，更多的时候我们使用的是p、print、call 这三个命令其实都是expression – 的别名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Command Options Usage:</span><br><span class="line">  p &lt;expr&gt;</span><br><span class="line">&apos;p&apos; is an abbreviation for &apos;expression --&apos;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>print 表示打印某个东西，可以是变量和表达式</li>
+<li>p 可以看做是print的简写</li>
+<li>call 调用某个方法</li>
+</ol>
+<p>根据唯一匹配原则，如果你没有自己添加特殊的命令别名。e也可以表示expression的意思，原始命令默认没有命令选项，所以e也能带给你同样的效果</p>
+<h5 id="po"><a href="#po" class="headerlink" title="po"></a>po</h5><p>正常情况下打印出来的对象都是一个指针，而不是我们希望看到的对象的本身，这样的话，我们想要查看对象的一些属性的时候就无法满足我们的需求了，这时候可以使用po这个命令来进行打印一个OC的对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Command Options Usage:</span><br><span class="line">  po &lt;expr&gt;</span><br><span class="line">&apos;po&apos; is an abbreviation for &apos;expression -O  --&apos;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">(lldb) po self</span><br><span class="line">&lt;AFHTTPSessionManager: 0x16d581e0, baseURL: (null), session: &lt;__NSURLSessionLocal: 0x16d5e620&gt;, operationQueue: &lt;NSOperationQueue: 0x16d582a0&gt;&#123;name = &apos;NSOperationQueue 0x16d582a0&apos;&#125;&gt;</span><br><span class="line"></span><br><span class="line">(lldb) p self</span><br><span class="line">(AFHTTPSessionManager *) $10 = 0x16d581e0</span><br><span class="line">(lldb)</span><br></pre></td></tr></table></figure>
+<h5 id="thread"><a href="#thread" class="headerlink" title="thread"></a>thread</h5><p>是针对同一进程中一个或多个线程的操作的命令。</p>
+<h6 id="thread-backtrace-amp-bt"><a href="#thread-backtrace-amp-bt" class="headerlink" title="thread backtrace &amp; bt"></a>thread backtrace &amp; bt</h6><p>当我们想要了解当前线程的堆栈信息的时候，可以使用这个命令将堆栈信息给打印出来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread backtrace [-c &lt;count&gt;] [-s &lt;frame-index&gt;] [-e &lt;boolean&gt;]</span><br></pre></td></tr></table></figure></p>
+<p>thread backtrace 后面跟的都是命令选项</p>
+<ul>
+<li>-c :设置打印堆栈的帧数（frame）</li>
+<li>-s :设置从哪个帧开始打印</li>
+<li>-e :是否显示额外的回溯</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(lldb) thread backtrace</span><br><span class="line">* thread #1, queue = &apos;com.apple.main-thread&apos;, stop reason = breakpoint 149.1</span><br><span class="line">* frame #0: 0x002170d0 GyennoSpoon`-[AFURLSessionManager initWithSessionConfiguration:](self=0x16d581e0, _cmd=&quot;initWithSessionConfiguration:&quot;, configuration=0x16e5ff90) at AFURLSessionManager.m:555</span><br><span class="line">frame #1: 0x001f4e40 GyennoSpoon`-[AFHTTPSessionManager initWithBaseURL:sessionConfiguration:](self=0x00000000, _cmd=&quot;initWithBaseURL:sessionConfiguration:&quot;, url=@&quot;http://apptest.gyenno.com/service_im_test/v3/&quot;, configuration=0x16e5ff90) at AFHTTPSessionManager.m:69</span><br><span class="line">frame #2: 0x00128f74 GyennoSpoon`+[GYNetworking creatJsonManagerWithUrl:](self=GYNetworking, _cmd=&quot;creatJsonManagerWithUrl:&quot;, url=@&quot;http://apptest.gyenno.com/service_im_test/v3/&quot;) at GYNetworking.m:232</span><br><span class="line">frame #3: 0x0012b5ee GyennoSpoon`+[GYNetworking postV4RequestWithURL:paramters:onSuccess:onError:](self=GYNetworking, _cmd=&quot;postV4RequestWithURL:paramters:onSuccess:onError:&quot;, url=@&quot;user/signIn&quot;, paramters=3 key/value pairs, successBlock=0x00196e0d, errorBlock=0x00197811) at GYNetworking.m:421</span><br></pre></td></tr></table></figure>
+<p>在这里当我们的程序发生crash的时候，我们可以使用thread backtrace 查看堆栈调用<br>可以查看发生错误的对应的行数，这样就可以方便我们跟踪问题<br>当然在使用的时候可以使用bt 来替代thead backtrace 的操作</p>
+<h6 id="thread-return"><a href="#thread-return" class="headerlink" title="thread return"></a>thread return</h6><p>Debug的时候，也许会因为各种原因，我们不想让代码执行某个方法，或者要直接返回一个想要的值，这时候就该thread return 了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread return [&lt;expr&gt;]</span><br></pre></td></tr></table></figure>
+<p>thread return 可以接受一个表达式，调用命令之后直接从当前的frame返回表达式的值</p>
+<p>使用方法：<br>只需要在方法的开始的位置上加一个断点，当程序中断的时候，输入命令就可以了</p>
+<p><code>thread return NO</code><br>效果就相当于在断点位置直接调用return NO ，不会执行断点后面的代码</p>
+<h6 id="c-amp-n-amp-s-amp-finish"><a href="#c-amp-n-amp-s-amp-finish" class="headerlink" title="c &amp; n &amp; s &amp; finish"></a>c &amp; n &amp; s &amp; finish</h6><p>在我们调试程序的时候，这些都是比较常用的调试操作<br><img src="/images/debug-step.png" alt="debug-step"><br>LLDB也分别针对这些命令使用了不同的快捷键来标识相对应的操作</p>
+<ol>
+<li>c/continue/thread continue : 这三个命令效果相等于上图中的第一个按钮，表示程序继续运行</li>
+<li>n/next/thread step-over :这三个命令等同于上图中第二个按钮，表示单步运行</li>
+<li>s/step/thread step-in :这三个命令效果等同于第三个按钮 ，表示进入某个方法</li>
+<li>finish /thread step-out : 这两个命令等同于第四个按钮，表示直接走完当前方法，返回到上一层frame</li>
+</ol>
+<h6 id="thread-其他不常用的命令"><a href="#thread-其他不常用的命令" class="headerlink" title="thread 其他不常用的命令"></a>thread 其他不常用的命令</h6><p>thread 相关的还有一些其他不怎么常用的命令，</p>
+<ol>
+<li>thread jump : 直接让程序跳到某一行，由于ARC编译器实际插入不少retain,release命令，跳过一些代码不执行可能会造成对象内存混乱发生crash</li>
+<li>thread list : 列出所有的线程</li>
+<li>thread select：选择某个线程</li>
+<li>thread until ：传入一个line的参数，让程序执行到这行暂停</li>
+<li>thread info : 输出当前线程的信息</li>
+</ol>
+<h5 id="frame"><a href="#frame" class="headerlink" title="frame"></a>frame</h5><p>frame 对应的就是堆栈中的信息，当然我们可以查看到一些比较详细的信息</p>
+<h6 id="frame-veriable"><a href="#frame-veriable" class="headerlink" title="frame veriable"></a>frame veriable</h6><p>在我们平时进行debug的时候，主要的目的就是为了查看变量的值，但是通过frame variable命令我们可以打印冲当前frame的所有变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(lldb) frame variable</span><br><span class="line">(AppDelegate *) self = 0x16d16710</span><br><span class="line">(SEL) _cmd = &quot;loginInWindow:&quot;</span><br><span class="line">(NSConcreteNotification *) info = 0x16e47560 @&quot;loginIn&quot;</span><br></pre></td></tr></table></figure>
+<p>这里打印的是当前frame的所有的参数，如果需要打印是具体的参数的话，可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) frame variable method</span><br><span class="line">(__NSCFConstantString *) method = 0x003abe30 @&quot;GET&quot;</span><br><span class="line">(lldb)</span><br></pre></td></tr></table></figure>
+<h6 id="frame-不常用的命令"><a href="#frame-不常用的命令" class="headerlink" title="frame 不常用的命令"></a>frame 不常用的命令</h6><p>一般用frame来打印所有变量用的比较多，frame还有些不怎么常用的命令：</p>
+<p>frame info:查看当前frame的信息</p>
+<p>frame select:选择某个frame</p>
+<h5 id="breakpoint"><a href="#breakpoint" class="headerlink" title="breakpoint"></a>breakpoint</h5><p>调试的时候，我们用的最多的就是断点</p>
+<h6 id="breakpoint-set"><a href="#breakpoint-set" class="headerlink" title="breakpoint set"></a>breakpoint set</h6><p>breakpoint set 命令在于设置断点，LLDB提供了很多设置断点的方式：<br>使用 -n 根据方法名设置断点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">breakpoint set -n viewWillAppear:</span><br></pre></td></tr></table></figure></p>
+<p>使用-f 指定文件</p>
+<p>eg:我们需要给ViewController.m 中的viewDidLoad设置断点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">breakpoint set -f ViewController.m -n viewDidLoad</span><br></pre></td></tr></table></figure>
+<p>使用-l指定文件的某一行设置断点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">breakpoint set -f ViewController.m -l 38</span><br></pre></td></tr></table></figure></p>
+<p>使用-c 设置条件断点</p>
+<p>eg: text：方法接收一个ret的参数，我们想让ret == YES的时候，程序中断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">breakpoint set -n text: -c ret == YES</span><br></pre></td></tr></table></figure></p>
+<p>使用-o 设置单次断点<br>eg:如果某个断点我们只想让它中断一次：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">breakpoint set -n text: -o</span><br></pre></td></tr></table></figure></p>
+<h6 id="breakpoint-Command"><a href="#breakpoint-Command" class="headerlink" title="breakpoint Command"></a>breakpoint Command</h6><p>有时候我们可能需要给断点添加一些命令，比如每次走到这个断点的时候，我们需要打印self的对象。我们只需要给断点添加一个po self的命令，就不用每次断点再输出po self了</p>
+<p>breakpoint command add:</p>
+<p>breakpoint command add命令就是给断点添加命令的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">breakpoint command add -o &quot;po self.view&quot; 3</span><br></pre></td></tr></table></figure>
+<p>-o的写法是–one-liner 表示增加一条命令，3 表示的是id为3的breakpoint ;</p>
+<p>如果需要添加多个命令的话可以使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(lldb) breakpoint command add 237</span><br><span class="line">Enter your debugger command(s).  Type &apos;DONE&apos; to end.</span><br><span class="line">&gt; po self</span><br><span class="line">&gt; DONE</span><br></pre></td></tr></table></figure></p>
+<h6 id="breakpoint-command-list"><a href="#breakpoint-command-list" class="headerlink" title="breakpoint command list"></a>breakpoint command list</h6><p>如果你想要查看某个断点已有的命令，可以使用breakpoint command list .<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(lldb) breakpoint command list 237</span><br><span class="line">Breakpoint 237:</span><br><span class="line">    Breakpoint commands:</span><br><span class="line">      po self</span><br></pre></td></tr></table></figure></p>
+<h6 id="breakpoint-command-delete"><a href="#breakpoint-command-delete" class="headerlink" title="breakpoint command delete"></a>breakpoint command delete</h6><p>用于删除某个断点的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(lldb) breakpoint command delete 237</span><br><span class="line">(lldb) breakpoint command list</span><br><span class="line">error: No breakpoint specified for which to list the commands</span><br></pre></td></tr></table></figure>
+<h6 id="breakpoint-list"><a href="#breakpoint-list" class="headerlink" title="breakpoint list"></a>breakpoint list</h6><p>用于查看断点列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(lldb) breakpoint list</span><br><span class="line">Current breakpoints:</span><br><span class="line">1: file = &apos;/Users/lmzqm/GyennoSpoonIOS/GyennoSpoon/GyennoSpoon/NetWorkManager/NetWorkManager.m&apos;, line = 292, exact_match = 0, locations = 1, resolved = 1, hit count = 0</span><br><span class="line"></span><br><span class="line">  1.1: where = GyennoSpoon`__47-[NetWorkManager validateUser:success:failure:]_block_invoke + 32 at NetWorkManager.m:292, address = 0x00091aa0, resolved, hit count = 0</span><br><span class="line"></span><br><span class="line">2: file = &apos;/Users/lmzqm/GyennoSpoonIOS/GyennoSpoon/GyennoSpoon/NetWorkManager/NetWorkManager.m&apos;, line = 298, exact_match = 0, locations = 1, resolved = 1, hit count = 0</span><br></pre></td></tr></table></figure>
+<h6 id="breakpoint-disable-enable"><a href="#breakpoint-disable-enable" class="headerlink" title="breakpoint disable/enable"></a>breakpoint disable/enable</h6><p>让断点失效/生效的操作 后面跟参数也是断点的id </p>
+<h6 id="breakpoint-delete"><a href="#breakpoint-delete" class="headerlink" title="breakpoint delete"></a>breakpoint delete</h6><p>删除某个具体的断点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) breakpoint delete 237</span><br><span class="line">1 breakpoints deleted; 0 breakpoint locations disabled.</span><br></pre></td></tr></table></figure>
+<p>如果想要删除所有的断点 就不需要带参数就可以了</p>
+<h5 id="watchpoint"><a href="#watchpoint" class="headerlink" title="watchpoint"></a>watchpoint</h5><p>breakpoint 和watchpoint 最大的不同是一个是针对断点进行监控，一个是针对地址进行控制。使用watchpoint 来对地址进行观察，当地址里面的东西改变的时候，就让这个程序中断。</p>
+<h6 id="watchpoint-set"><a href="#watchpoint-set" class="headerlink" title="watchpoint set"></a>watchpoint set</h6><p>用于添加一个watchpoint .只要这个地址中的内容发生变化了，程序就会中断。</p>
+<p>watchpoint set variable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(lldb) watchpoint set variable wifiSSID</span><br><span class="line">Watchpoint created: Watchpoint 1: addr = 0x006e5428 size = 4 state = enabled type = w</span><br><span class="line">    declare @ &apos;/Users/lmzqm/GyennoSpoonIOS/GyennoSpoon/GyennoSpoon/Devices/Controller/GYEDeviceConnectViewController.m:134&apos;</span><br><span class="line">    watchpoint spec = &apos;wifiSSID&apos;</span><br><span class="line">    new value: 0x16eb8ab0</span><br></pre></td></tr></table></figure>
+<p>其中传入的是变量名称</p>
+<p>watchpoint set expression</p>
+<p>如果我们瞎用直接观察某个地址，我们可以使用watchpoint set expression:<br>可以先用p 打印地址，然后再监听这个地址</p>
+<h6 id="watchpoint-command"><a href="#watchpoint-command" class="headerlink" title="watchpoint command"></a>watchpoint command</h6><p>和breakpoint 类似，在watchpoint中也可以添加命令</p>
+<p>watchpoint command add</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(lldb) watchpoint command add -o &apos;bt&apos; 1</span><br></pre></td></tr></table></figure>
+<p>watchpoint command list</p>
+<p>watchpoint command delete</p>
+<h6 id="Watchpoint-list"><a href="#Watchpoint-list" class="headerlink" title="Watchpoint list"></a>Watchpoint list</h6><p>如果我们想要看所有的watchpoint,可以使用watchpoint list</p>
+<h6 id="watchpoint-disable"><a href="#watchpoint-disable" class="headerlink" title="watchpoint disable"></a>watchpoint disable</h6><p>当我们不想要让某个watchpoint生效的时候，可以使用watchpoint disable</p>
+<h6 id="watchpoint-enable"><a href="#watchpoint-enable" class="headerlink" title="watchpoint enable"></a>watchpoint enable</h6><p>当我们想要某个watchpoint 生效的时候</p>
+<h6 id="watchpoint-delete"><a href="#watchpoint-delete" class="headerlink" title="watchpoint delete"></a>watchpoint delete</h6><p>删除某个watchpoint 的操作</p>
+<h5 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h5><p>target modules lookup (image lookup)</p>
+<p>对于target这个命令，用的比较多的可能就是target modules lookup.由于LLDB给target modusles 取了个别名image ,所以这个命令我们又可以写成 image lookup</p>
+<h6 id="image-lookup-address"><a href="#image-lookup-address" class="headerlink" title="image lookup -address"></a>image lookup -address</h6><p>当我们有一个地址的时候，想要查找这个地址具体对应的文件位置，可以使用image lookup –address .可以简写为 image lookup -a<br>比如在我们程序奔溃的是，我们可以通过这个边界的地址，来查看具体是哪里发生了奔溃<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image lookup -a 0x0000000xxxx</span><br></pre></td></tr></table></figure></p>
+<h6 id="image-lookup-name"><a href="#image-lookup-name" class="headerlink" title="image lookup -name"></a>image lookup -name</h6><p>当我们需要查找一个方法或者符号信息，比如所在文件位置的时候，我们可以使用image lookup –name<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(lldb) image lookup -n userDetailAction</span><br><span class="line">2 matches found in /Users/lmzqm/Library/Developer/Xcode/DerivedData/GyennoSpoon-elemepertoodhifkmigcnotkwtxs/Build/Products/Debug-iphoneos/GyennoSpoon.app/GyennoSpoon:</span><br><span class="line">        Address: GyennoSpoon[0x0009de98] (GyennoSpoon.__TEXT.__text + 612160)</span><br><span class="line">        Summary: GyennoSpoon`-[GYENoSpoonViewController userDetailAction] at GYENoSpoonViewController.m:44        Address: GyennoSpoon[0x000bd6f8] (GyennoSpoon.__TEXT.__text + 741280)</span><br><span class="line">        Summary: GyennoSpoon`-[GYEMySpoonViewController userDetailAction] at GYEMySpoonViewController.m:42</span><br></pre></td></tr></table></figure></p>
+<p>可以通过这个迅速的查找到对应方法所在的位置</p>
+<h6 id="image-lookup-–-type"><a href="#image-lookup-–-type" class="headerlink" title="image lookup – type"></a>image lookup – type</h6><p>当我们需要查看一个类型的时候，可以使用image lookup –type</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(lldb) image lookup -t SpoonModel</span><br><span class="line">1 match found in /Users/lmzqm/Library/Developer/Xcode/DerivedData/GyennoSpoon-elemepertoodhifkmigcnotkwtxs/Build/Products/Debug-iphoneos/GyennoSpoon.app/GyennoSpoon:</span><br><span class="line">id = &#123;0x700000027&#125;, name = &quot;SpoonModel&quot;, byte-size = 12, decl = SpoonModel.h:11, compiler_type = &quot;@interface SpoonModel : NSObject&#123;</span><br><span class="line">    NSString * _prefix;</span><br><span class="line">    NSString * _detail;</span><br><span class="line">&#125;</span><br><span class="line">@property ( getter = prefix,setter = setPrefix:,readwrite,copy,nonatomic ) NSString * prefix;</span><br><span class="line">@property ( getter = detail,setter = setDetail:,readwrite,copy,nonatomic ) NSString * detail;</span><br><span class="line">@end&quot;</span><br></pre></td></tr></table></figure>
+<h6 id="target-stop-hook"><a href="#target-stop-hook" class="headerlink" title="target stop-hook"></a>target stop-hook</h6><p>target stop-hook命令是让你在可以在每次stop的时候去执行一些命令：<br>  target stop-hook 只对breakpoint 和 watchpoint 的程序的stop生效。点击xcode上的暂停是不会生效的</p>
+<p>target stop-hook add &amp; display</p>
+<p>假如我们想要在每次程序stop的时候，都用命令打印当前frame的所有变量，我们可以添加一个stop-hook</p>
+<p>target stop-hook list</p>
+<p>当添加完stop-hook之后，我们想看当前所有的stop-hook怎么办，可以使用stop-hook list</p>
+<p>target stop-hook delete &amp; undisplay</p>
+<p>有添加的命令就会有删除的命令 如果觉得命令有点长 可以直接使用 undisplay</p>
+<p>target stop-hook disable/enable</p>
+<p>如果我们想要让某个stop-hook失效的时候，我们可以使用 target stop-hook disable id</p>
+<p>当然有失效就会有生效 可以使用 target stop-hook enable id</p>
+<p>target symbols add (add-dsym)</p>
+<p>dsym文件，程序运行的时候，都会编译成二进制文件。因为计算机只识别二进制文件，那为什么我们还能在代码上打断点？</p>
+<p>这主要是因为在编译的时候xcode 会生成dsYM 文件记录了哪些代码对应着哪些二进制，这样我们对代码打断点就会对应到二进制上</p>
+<p>当Xcode找不到dsYM文件的时候，我们就无法对代码打断点。进行调试。target symbols add 命令的作用就是让我们可以手动的将dsYM 文件添加上去。LLDB 对这个命令起来一个别名：add-dsYM</p>
+<h4 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h4><p><a href="http://ios.jobbole.com/83393/">熟练使用 LLDB，让你调试事半功倍</a><br><a href="https://objccn.io/issue-19-2/">与调试器共舞 - LLDB 的华尔兹</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LLDB/" rel="tag"><i class ="fa fa-tag"></i> LLDB</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/09/AFNetworking-AFURLRequestSerialization/" rel="next" title="AFNetworking源码之AFURLRequestSerialization">
+                <i class="fa fa-chevron-left"></i> AFNetworking源码之AFURLRequestSerialization
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/15/design-builder-model/" rel="prev" title="建造者模式">
+                建造者模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#LLDB-简介"><span class="nav-number">1.</span> <span class="nav-text">LLDB 简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LLDB-语法"><span class="nav-number">2.</span> <span class="nav-text">LLDB 语法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原始命令"><span class="nav-number">2.1.</span> <span class="nav-text">原始命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#唯一匹配原则"><span class="nav-number">2.2.</span> <span class="nav-text">唯一匹配原则</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LLDB-命令"><span class="nav-number">3.</span> <span class="nav-text">LLDB 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#help"><span class="nav-number">3.1.</span> <span class="nav-text">help</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#expression"><span class="nav-number">3.2.</span> <span class="nav-text">expression</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#p-amp-Print-amp-call"><span class="nav-number">3.3.</span> <span class="nav-text">p &amp; Print &amp; call</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#po"><span class="nav-number">3.4.</span> <span class="nav-text">po</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#thread"><span class="nav-number">3.5.</span> <span class="nav-text">thread</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#thread-backtrace-amp-bt"><span class="nav-number">3.5.1.</span> <span class="nav-text">thread backtrace &amp; bt</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#thread-return"><span class="nav-number">3.5.2.</span> <span class="nav-text">thread return</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#c-amp-n-amp-s-amp-finish"><span class="nav-number">3.5.3.</span> <span class="nav-text">c &amp; n &amp; s &amp; finish</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#thread-其他不常用的命令"><span class="nav-number">3.5.4.</span> <span class="nav-text">thread 其他不常用的命令</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#frame"><span class="nav-number">3.6.</span> <span class="nav-text">frame</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#frame-veriable"><span class="nav-number">3.6.1.</span> <span class="nav-text">frame veriable</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#frame-不常用的命令"><span class="nav-number">3.6.2.</span> <span class="nav-text">frame 不常用的命令</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#breakpoint"><span class="nav-number">3.7.</span> <span class="nav-text">breakpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-set"><span class="nav-number">3.7.1.</span> <span class="nav-text">breakpoint set</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-Command"><span class="nav-number">3.7.2.</span> <span class="nav-text">breakpoint Command</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-command-list"><span class="nav-number">3.7.3.</span> <span class="nav-text">breakpoint command list</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-command-delete"><span class="nav-number">3.7.4.</span> <span class="nav-text">breakpoint command delete</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-list"><span class="nav-number">3.7.5.</span> <span class="nav-text">breakpoint list</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-disable-enable"><span class="nav-number">3.7.6.</span> <span class="nav-text">breakpoint disable/enable</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#breakpoint-delete"><span class="nav-number">3.7.7.</span> <span class="nav-text">breakpoint delete</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#watchpoint"><span class="nav-number">3.8.</span> <span class="nav-text">watchpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#watchpoint-set"><span class="nav-number">3.8.1.</span> <span class="nav-text">watchpoint set</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#watchpoint-command"><span class="nav-number">3.8.2.</span> <span class="nav-text">watchpoint command</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Watchpoint-list"><span class="nav-number">3.8.3.</span> <span class="nav-text">Watchpoint list</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#watchpoint-disable"><span class="nav-number">3.8.4.</span> <span class="nav-text">watchpoint disable</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#watchpoint-enable"><span class="nav-number">3.8.5.</span> <span class="nav-text">watchpoint enable</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#watchpoint-delete"><span class="nav-number">3.8.6.</span> <span class="nav-text">watchpoint delete</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Target"><span class="nav-number">3.9.</span> <span class="nav-text">Target</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#image-lookup-address"><span class="nav-number">3.9.1.</span> <span class="nav-text">image lookup -address</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#image-lookup-name"><span class="nav-number">3.9.2.</span> <span class="nav-text">image lookup -name</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#image-lookup-–-type"><span class="nav-number">3.9.3.</span> <span class="nav-text">image lookup – type</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#target-stop-hook"><span class="nav-number">3.9.4.</span> <span class="nav-text">target stop-hook</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#感谢"><span class="nav-number">4.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/05/10/ios-debug-lldb/';
+        this.page.identifier = '2018/05/10/ios-debug-lldb/';
+        this.page.title = 'iOS LLDB 调试';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

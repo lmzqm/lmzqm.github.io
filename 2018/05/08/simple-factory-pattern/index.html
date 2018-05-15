@@ -99,25 +99,27 @@
 
 
 
-  <meta name="description" content="摘要：设计模式分为三大类  创建型模式 结构型模式 行为型模式">
+  <meta name="description" content="摘要：   简单工厂模式又称为静态工厂方法模式。它属于创建型模式。在简单工厂模式中，可以根据参数的不同返回不同类的实例。简单工厂模式专门定义一个类来负责创建其他类的实例，被创建的实例通常具有共同的父类。">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式">
-<meta property="og:url" content="http://yoursite.com/2018/05/03/design-create-model/index.html">
+<meta property="og:title" content="简单工厂模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/simple-factory-pattern/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：设计模式分为三大类  创建型模式 结构型模式 行为型模式">
+<meta property="og:description" content="摘要：   简单工厂模式又称为静态工厂方法模式。它属于创建型模式。在简单工厂模式中，可以根据参数的不同返回不同类的实例。简单工厂模式专门定义一个类来负责创建其他类的实例，被创建的实例通常具有共同的父类。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-15T09:00:43.000Z">
+<meta property="og:image" content="http://yoursite.com/images/simple_factory_01.png">
+<meta property="og:updated_time" content="2018-05-09T01:32:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式">
-<meta name="twitter:description" content="摘要：设计模式分为三大类  创建型模式 结构型模式 行为型模式">
+<meta name="twitter:title" content="简单工厂模式">
+<meta name="twitter:description" content="摘要：   简单工厂模式又称为静态工厂方法模式。它属于创建型模式。在简单工厂模式中，可以根据参数的不同返回不同类的实例。简单工厂模式专门定义一个类来负责创建其他类的实例，被创建的实例通常具有共同的父类。">
+<meta name="twitter:image" content="http://yoursite.com/images/simple_factory_01.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/03/design-create-model/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/simple-factory-pattern/"/>
 
 
 
@@ -127,7 +129,7 @@
   };
 </script>
 
-  <title>设计模式 | lmzqm</title>
+  <title>简单工厂模式 | lmzqm</title>
   
 
 
@@ -289,7 +291,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/design-create-model/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/simple-factory-pattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lmzqm">
@@ -306,7 +308,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式</h1>
+          <h1 class="post-title" itemprop="name headline">简单工厂模式</h1>
         
 
         <div class="post-meta">
@@ -318,7 +320,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-03T18:31:21+08:00">2018-05-03</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T14:45:39+08:00">2018-05-08</time>
             
 
             
@@ -336,9 +338,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/05/03/design-create-model/#comments" itemprop="discussionUrl">
+                <a href="/2018/05/08/simple-factory-pattern/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/03/design-create-model/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/05/08/simple-factory-pattern/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,35 +368,191 @@
       
 
       
-        <p>摘要：<br>设计模式分为三大类</p>
+        <p>摘要：</p>
+<p>  简单工厂模式又称为静态工厂方法模式。它属于创建型模式。在简单工厂模式中，可以根据参数的不同返回不同类的实例。简单工厂模式专门定义一个类来负责创建其他类的实例，被创建的实例通常具有共同的父类。</p>
+  <a id="more"></a>
+<h4 id="模式结构"><a href="#模式结构" class="headerlink" title="模式结构"></a>模式结构</h4><p>  简单工厂模式包含如下角色：</p>
+<blockquote>
 <ul>
-<li>创建型模式</li>
-<li>结构型模式</li>
-<li>行为型模式</li>
+<li>Factory：工厂角色<br>  工厂角色服装实现穿甲所有实例的内部逻辑</li>
 </ul>
-<a id="more"></a>
-<h5 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h5><p>创建型模式：对类的实例化过程进行了抽象，能够将软件模块中对象的创建和对象的使用分离。为了使软件的结构更加清晰，外界对这些对象只需要指定他们共同的接口，而不需要知道具体的实现细节，使整个系统设计更加符合单一职责的原则</p>
+</blockquote>
+<blockquote>
 <ul>
-<li>简单工厂模式 （simple Factory）</li>
-<li>工厂方法模式 （Factory Method）</li>
-<li>抽象工厂模式 （Abstract Factory）</li>
-<li>建造者模式   （Builder）</li>
-<li>原型模式    （Prototype）</li>
-<li>单例模式    （Singletion）</li>
+<li>Product：抽象产品角色<br>  抽象产品角色是创建所有对象的父类，负责描述所有实例的公共接口</li>
 </ul>
-<h5 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h5><h5 id="设计模式的六大原则："><a href="#设计模式的六大原则：" class="headerlink" title="设计模式的六大原则："></a>设计模式的六大原则：</h5><h6 id="1-开闭原则OCP"><a href="#1-开闭原则OCP" class="headerlink" title="1. 开闭原则OCP"></a>1. 开闭原则OCP</h6><p>   开闭原则说的是， 对扩展开放、对修改关闭 。在程序需要进行扩展的时候，不全修改原有的代码，这是为了使程序的扩展性更好，更易于升级和维护。</p>
-<h6 id="2-里氏代换原则LSP"><a href="#2-里氏代换原则LSP" class="headerlink" title="2. 里氏代换原则LSP"></a>2. 里氏代换原则LSP</h6><p>   在软件开发的时候使用基类替换它的子类对象，程序将不会产生任何错误和异常，反过来则不成立。如果一个软件实体使用的是一个子类对象的话，那么它一定不能使用基类对象。里氏代换原则的程序表现如下：在程序中尽量使用基类类型来对对象进行定义，而在运行的时候再确定其子类，用子类对象来替换父类。</p>
-<h6 id="3-控制反转原则IOC"><a href="#3-控制反转原则IOC" class="headerlink" title="3. 控制反转原则IOC"></a>3. 控制反转原则IOC</h6><p>   针对接口编程，依赖于抽象而不依赖于具体</p>
-<h6 id="4-接口隔离原则ISP"><a href="#4-接口隔离原则ISP" class="headerlink" title="4. 接口隔离原则ISP"></a>4. 接口隔离原则ISP</h6><p>   使用多个隔离的接口，比使用单个接口要好</p>
-<h6 id="5-迪米特法则DP"><a href="#5-迪米特法则DP" class="headerlink" title="5. 迪米特法则DP"></a>5. 迪米特法则DP</h6><p>   一个实体应当尽量少的与其他实体间发生作用，使得系统功能模块相对独立</p>
-<h6 id="6-合成复用原则"><a href="#6-合成复用原则" class="headerlink" title="6. 合成复用原则"></a>6. 合成复用原则</h6><p>   尽量使用组合/聚合的方式，而不是使用继承</p>
-<h5 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h5><h6 id="1-抽象化"><a href="#1-抽象化" class="headerlink" title="1.抽象化"></a>1.抽象化</h6><p>在众多的事物中提取出共同的、本质的特征，舍弃非本质的特征，就是抽象化。抽象化的过程就是一个剪裁的过程，抽象的时候同于不同取决于从什么角度上来抽象。抽象的角度取决于分析问题的目的</p>
-<h6 id="2-实现化"><a href="#2-实现化" class="headerlink" title="2.实现化"></a>2.实现化</h6><p>抽象类给出的具体的实现就是实现化<br>一个类的实例就是这个类的实例化，一个具体子类是它的抽象超类的实例化</p>
-<h6 id="3-解耦"><a href="#3-解耦" class="headerlink" title="3.解耦"></a>3.解耦</h6><p>所谓的耦合，就是两个实体的行为的某种强关联。而将它们之间的强关联去掉就是解耦。</p>
-<p>解耦是指将抽象化和实现化之间的耦合解开，或者说将它们之间的强关联改为弱关联</p>
-<p>所谓强关联，指的是在编译事情就已经确定的，无法再运行时期改变的关联，所谓弱关联就是可以动态的确定并且在运行时期动态的改变的关联。从这个定义上看，继承的关系是强关联，聚合的关系是弱关联</p>
-<h5 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h5><p><a href="http://www.cnblogs.com/xrq730/p/4896125.html">Java设计模式1：设计模式概论</a></p>
-<p><a href="http://design-patterns.readthedocs.io/zh_CN/latest/read_uml.html">看懂UML类图和时序图</a></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>ConcreteProduct：具体产品角色<br>  具体的产品角色是创建的目标，所有创建的对象都充当这个角色的某一个具体类的实例</li>
+</ul>
+</blockquote>
+<p>  <img src="/images/simple_factory_01.png" alt="simple_factory_01"></p>
+<h4 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h4><p>  将根据产品，工厂，和使用方法来进行分析</p>
+<p>产品：</p>
+<pre><code>// 创建一个抽象的产品
+@protocol GYEProduct &lt;NSObject&gt;
+
+- (void)use;
+
+@end
+
+// 具体的产品A
+@interface GYESimpleProductA : NSObject &lt;GYEProduct&gt;
+
+@end
+
+// 具体的产品B
+@interface GYESimplePriductB : NSObject &lt;GYEProduct&gt;
+
+@end
+</code></pre><p>工厂类：</p>
+<pre><code>@implementation GYESimpleFactory
+
+-(id&lt;GYEProduct&gt; )createProduct:(NSString *)product{
+
+      if ([product isEqualToString:@&quot;A&quot;]) {
+          return [GYESimpleProductA new];
+      }else if([product isEqualToString:@&quot;B&quot;]){
+          return [[GYESimplePriductB alloc] init];
+      }else{
+          return nil;
+      }
+
+}
+</code></pre><p>使用：</p>
+<pre><code>-(void)test{
+
+  id &lt;GYEProduct&gt; product =  [self createProduct:@&quot;A&quot;];
+  [product use];
+
+
+}
+</code></pre><p>优化：</p>
+<p>  这里工厂类中，随着产品的增加 if…else…的操作会越来越多，慢慢的增加，一直这样下去将会越来越长<br>  这里可以使用runtime的方式来进行简化操作</p>
+<pre><code>//这里也可以采用runtime的方式来进行处理
+// 根据传入的的类的字符串来进行操作
+Class class = NSClassFromString(product);
+if ([class conformsToProtocol:NSProtocolFromString(@“GYEProduct”)]) {
+    //判断这个实例有没有实现GYEProduct这个协议
+    return  [[class alloc] init];
+}
+</code></pre><p>  在使用的时候也要进行修改：</p>
+<pre><code>-(void)test{
+  id &lt;GYEProduct&gt; product =  [self createProduct:NSStringFromClass([GYESimplePriductB class])];
+  [product use];
+}
+</code></pre><h4 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h4><ul>
+<li>将对象的创建和对象本身业务处理分离可以降低系统的耦合度，是的两者修改起来相对容易</li>
+<li>在对外部的使用过程中使用父类来替代子类，这样可以统一做处理，而且子类都需要实现父类的方法</li>
+<li>简单工厂模式主要在于工厂类中需要根据传入的参数然后创建对应的子类的实例化对象</li>
+<li>该方法屏蔽了实例化的过程，对于用户来说不需要知道如何创建的，只需要根据自己的需求来获取对应的实例就可以了</li>
+</ul>
+<h4 id="实例运用"><a href="#实例运用" class="headerlink" title="实例运用"></a>实例运用</h4><p>在AFNetworking中有一个序列化的操作：</p>
+<p>首先有一个协议 AFURLRequestSerialization</p>
+<blockquote>
+<p> @protocol AFURLRequestSerialization &lt;NSObject, NSSecureCoding, NSCopying&gt;</p>
+<p> 协议中有一个方法：<br> -(nullable NSURLRequest <em>)requestBySerializingRequest:(NSURLRequest </em>)request<br>                              withParameters:(nullable id)parameters<br>                                       error:(NSError <em> _Nullable __autoreleasing </em>)error</p>
+</blockquote>
+<p>AFHTTPRequestSerializer</p>
+<blockquote>
+<p>@interface AFHTTPRequestSerializer : NSObject <AFURLRequestSerialization></p>
+</blockquote>
+<pre><code>- (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
+                               withParameters:(id)parameters
+                                        error:(NSError *__autoreleasing *)error
+{
+    NSParameterAssert(request);
+
+    NSMutableURLRequest *mutableRequest = [request mutableCopy];
+// 对GET HEAD DELETE等方法中，直接使用父类的处理方式
+    [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
+//        将HttpRequstHeader中的值添加加入到请求头中
+        if (![request valueForHTTPHeaderField:field]) {
+            [mutableRequest setValue:value forHTTPHeaderField:field];
+        }
+    }];
+
+    NSString *query = nil;
+    if (parameters) {
+        if (self.queryStringSerialization) {
+            NSError *serializationError;
+            query = self.queryStringSerialization(request, parameters, &amp;serializationError);
+
+            if (serializationError) {
+                if (error) {
+                    *error = serializationError;
+                }
+
+                return nil;
+            }
+        } else {
+            switch (self.queryStringSerializationStyle) {
+                case AFHTTPRequestQueryStringDefaultStyle:
+                    query = AFQueryStringFromParameters(parameters);
+                    break;
+            }
+        }
+    }
+
+    if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
+        if (query &amp;&amp; query.length &gt; 0) {
+            mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @&quot;&amp;%@&quot; : @&quot;?%@&quot;, query]];
+        }
+    } else {
+        // #2864: an empty string is a valid x-www-form-urlencoded payload
+        if (!query) {
+            query = @&quot;&quot;;
+        }
+        if (![mutableRequest valueForHTTPHeaderField:@&quot;Content-Type&quot;]) {
+            [mutableRequest setValue:@&quot;application/x-www-form-urlencoded&quot; forHTTPHeaderField:@&quot;Content-Type&quot;];
+        }
+        [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+    }
+
+    return mutableRequest;
+}
+</code></pre><p>AFJSONRequestSerializer</p>
+<blockquote>
+<p> @interface AFJSONRequestSerializer : AFHTTPRequestSerializer</p>
+</blockquote>
+<pre><code>- (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
+                                         withParameters:(id)parameters
+                                                  error:(NSError *__autoreleasing *)error
+{
+    NSParameterAssert(request);
+// 对于GET HEAD DELETE等方法中，直接使用父类的处理方式
+    if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
+        return [super requestBySerializingRequest:request withParameters:parameters error:error];
+    }
+
+    NSMutableURLRequest *mutableRequest = [request mutableCopy];
+
+    [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
+        if (![request valueForHTTPHeaderField:field]) {
+            [mutableRequest setValue:value forHTTPHeaderField:field];
+        }
+    }];
+//  设置请求头的Content-Type类型
+    if (parameters) {
+        if (![mutableRequest valueForHTTPHeaderField:@&quot;Content-Type&quot;]) {
+            [mutableRequest setValue:@&quot;application/json&quot; forHTTPHeaderField:@&quot;Content-Type&quot;];
+        }
+
+        [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:self.writingOptions error:error]];
+    }
+
+    return mutableRequest;
+}
+</code></pre><p>在使用的时候：我们可以将其改造成简单工厂模式</p>
+<pre><code>NSError *serializationError = nil;
+NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method  URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&amp;serializationError];
+</code></pre><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>针对类的实例化过程进行了抽象，能够将对象的创建和对象的使用过程进行分离</li>
+<li>简单工厂模式由三个角色：工厂角色 负责创建所有实例的内部逻辑；抽象产品 是所创建的所有对象的父类，负责提供实例所有的共接口；具体的产品角色是创建目标</li>
+<li>简单工厂模式最大的优点就是实现了对象的创建和使用的分离，将对象的创建交给专门的工厂类负责，但是其最大的缺点在于工厂不够灵活，增加新的具体产品需要修改工厂类的相关逻辑代码而且随者产品的增加会越来越复杂</li>
+</ul>
+<p></p>
 
       
     </div>
@@ -438,8 +596,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/03/design-model/" rel="next" title="设计模式 开篇——读懂UML类图和时序图">
-                <i class="fa fa-chevron-left"></i> 设计模式 开篇——读懂UML类图和时序图
+              <a href="/2018/05/08/AFNetworking-AFHTTPSessionManager/" rel="next" title="AFNetworking-AFHTTPSessionManager 详解">
+                <i class="fa fa-chevron-left"></i> AFNetworking-AFHTTPSessionManager 详解
               </a>
             
           </div>
@@ -448,8 +606,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/08/AFNetworking-AFHTTPSessionManager/" rel="prev" title="AFNetworking-AFHTTPSessionManager 详解">
-                AFNetworking-AFHTTPSessionManager 详解 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/08/factior-method-pattern/" rel="prev" title="工厂方法模式">
+                工厂方法模式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -612,7 +770,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建型模式"><span class="nav-number">1.</span> <span class="nav-text">创建型模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结构型模式"><span class="nav-number">2.</span> <span class="nav-text">结构型模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设计模式的六大原则："><span class="nav-number">3.</span> <span class="nav-text">设计模式的六大原则：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-开闭原则OCP"><span class="nav-number">3.1.</span> <span class="nav-text">1. 开闭原则OCP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-里氏代换原则LSP"><span class="nav-number">3.2.</span> <span class="nav-text">2. 里氏代换原则LSP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-控制反转原则IOC"><span class="nav-number">3.3.</span> <span class="nav-text">3. 控制反转原则IOC</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-接口隔离原则ISP"><span class="nav-number">3.4.</span> <span class="nav-text">4. 接口隔离原则ISP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-迪米特法则DP"><span class="nav-number">3.5.</span> <span class="nav-text">5. 迪米特法则DP</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-合成复用原则"><span class="nav-number">3.6.</span> <span class="nav-text">6. 合成复用原则</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关键字"><span class="nav-number">4.</span> <span class="nav-text">关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-抽象化"><span class="nav-number">4.1.</span> <span class="nav-text">1.抽象化</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-实现化"><span class="nav-number">4.2.</span> <span class="nav-text">2.实现化</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-解耦"><span class="nav-number">4.3.</span> <span class="nav-text">3.解耦</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#模式结构"><span class="nav-number">1.</span> <span class="nav-text">模式结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码分析"><span class="nav-number">2.</span> <span class="nav-text">代码分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式分析"><span class="nav-number">3.</span> <span class="nav-text">模式分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例运用"><span class="nav-number">4.</span> <span class="nav-text">实例运用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -766,9 +924,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/05/03/design-create-model/';
-        this.page.identifier = '2018/05/03/design-create-model/';
-        this.page.title = '设计模式';
+        this.page.url = 'http://yoursite.com/2018/05/08/simple-factory-pattern/';
+        this.page.identifier = '2018/05/08/simple-factory-pattern/';
+        this.page.title = '简单工厂模式';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');
