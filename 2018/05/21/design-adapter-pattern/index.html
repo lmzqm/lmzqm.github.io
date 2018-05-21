@@ -99,25 +99,29 @@
 
 
 
-  <meta name="description" content="摘要：  关于block的简单描述和使用概述">
-<meta name="keywords" content="ios">
+  <meta name="description" content="摘要：   适配器的使用大家应该比较熟悉了吧！加入我们去欧洲旅游的时候，在我们传统的插座的时候，可能不一定能插入到他们的插座中，这时候需要用到适配器，适配器可以正确的插入到他们的操作中，我们的插头当然也可以正确的插入到适配器中。简而言之就是我们要使用某个方法，但是我们无法实现，或者说有一个类已经实现了该方法，那我们就可以采用适配的方法来完成，当然还有很多例子可以满足这个需求。">
+<meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS中Block的运用">
-<meta property="og:url" content="http://yoursite.com/2018/04/04/block-use-method/index.html">
+<meta property="og:title" content="适配器模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/21/design-adapter-pattern/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：  关于block的简单描述和使用概述">
+<meta property="og:description" content="摘要：   适配器的使用大家应该比较熟悉了吧！加入我们去欧洲旅游的时候，在我们传统的插座的时候，可能不一定能插入到他们的插座中，这时候需要用到适配器，适配器可以正确的插入到他们的操作中，我们的插头当然也可以正确的插入到适配器中。简而言之就是我们要使用某个方法，但是我们无法实现，或者说有一个类已经实现了该方法，那我们就可以采用适配的方法来完成，当然还有很多例子可以满足这个需求。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-23T10:23:55.000Z">
+<meta property="og:image" content="http://yoursite.com/images/class_adapter.png">
+<meta property="og:image" content="http://yoursite.com/images/adapter_classmodel.png">
+<meta property="og:image" content="http://yoursite.com/images/seq_adapter.png">
+<meta property="og:updated_time" content="2018-05-21T10:52:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS中Block的运用">
-<meta name="twitter:description" content="摘要：  关于block的简单描述和使用概述">
+<meta name="twitter:title" content="适配器模式">
+<meta name="twitter:description" content="摘要：   适配器的使用大家应该比较熟悉了吧！加入我们去欧洲旅游的时候，在我们传统的插座的时候，可能不一定能插入到他们的插座中，这时候需要用到适配器，适配器可以正确的插入到他们的操作中，我们的插头当然也可以正确的插入到适配器中。简而言之就是我们要使用某个方法，但是我们无法实现，或者说有一个类已经实现了该方法，那我们就可以采用适配的方法来完成，当然还有很多例子可以满足这个需求。">
+<meta name="twitter:image" content="http://yoursite.com/images/class_adapter.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/04/block-use-method/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/21/design-adapter-pattern/"/>
 
 
 
@@ -127,7 +131,7 @@
   };
 </script>
 
-  <title>iOS中Block的运用 | lmzqm</title>
+  <title>适配器模式 | lmzqm</title>
   
 
 
@@ -276,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/block-use-method/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/21/design-adapter-pattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lmzqm">
@@ -293,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS中Block的运用</h1>
+          <h1 class="post-title" itemprop="name headline">适配器模式</h1>
         
 
         <div class="post-meta">
@@ -305,7 +309,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T10:06:28+08:00">2018-04-04</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-21T18:06:57+08:00">2018-05-21</time>
             
 
             
@@ -323,9 +327,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/04/04/block-use-method/#comments" itemprop="discussionUrl">
+                <a href="/2018/05/21/design-adapter-pattern/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/04/block-use-method/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/05/21/design-adapter-pattern/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -353,121 +357,35 @@
       
 
       
-        <p>摘要：<br>  关于block的简单描述和使用概述</p>
-<a id="more"></a>
-<h4 id="block的概述"><a href="#block的概述" class="headerlink" title="block的概述"></a>block的概述</h4><blockquote>
-<p>Block：带有自动变量的匿名函数<br>匿名函数：没有函数名的函数，一对{}包裹的内容是匿名函数的作用域</p>
-</blockquote>
-<h5 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h5><blockquote>
-<p>声明：<br>  返回值(^名称)(参数列表)  </p>
-</blockquote>
-<pre><code>typedef int(^ClickBlock)(NSUInteger);
-
--(void)justAClick(ClickBlock)block{
-  NSLog(@&quot;Param:%@&quot;,block);
-}
-</code></pre><blockquote>
-<p>定义：<br>  ^返回值类型(参数列表){表达式}</p>
-</blockquote>
-<pre><code>^(NSUInteger count){
-  //这里是代码展示区
-  return count + 1;
-}
-</code></pre><h5 id="自动变量"><a href="#自动变量" class="headerlink" title="自动变量"></a>自动变量</h5><p>  Block可以截获所使用的自动变量的值；<br>  截获：保存自动变量的瞬间值<br>  因为是瞬间值，所以Block之后，即便Block外面修改自动变量的值，也不会对Block内部有影响<br>  如果需要对其的改变也会对变量产生影响的话，需要在变量的前面增加 __block</p>
-<h4 id="block的运用"><a href="#block的运用" class="headerlink" title="block的运用"></a>block的运用</h4><p>  在我们的代码中，经常会用到block，其中涉及到了很多方面，下面我们将列举一些比较常见的用法和大家分享。分别是链式编程、返回参数、获取信息等。如果后续还有新的会增加。</p>
-<h5 id="链式编程"><a href="#链式编程" class="headerlink" title="链式编程"></a>链式编程</h5><p>这个在我们很多地方我们应该都能够看到（这里针对OC），比如Masonry,还有BabyBluetooth的使用方面都会涉及到链式编程</p>
-<p>Masonry:<br>  make.top.equalto(self).offset(100);</p>
-<p>BabyBluetooth: baby.connecttoPeripherals().start();</p>
-<p>这样给人的感觉相对比较流畅和简洁很多。</p>
-<p>首先先针对点式操作：</p>
-<p>在OC中点语法就是一种语法糖，最终会调用对用属性的getter/setter的方法。</p>
-<pre><code>-(NSString*)hello{
-  return @&quot;hello&quot;;
-}
-
-self.hello; //会报 Property Access result unused;
-我们让它的结果利用就来就不会报警告了
-</code></pre><p>OK,针对点语法我们已经大概了解了，下面就针对链式中，为什么能够实现链式呢？</p>
-<p>  这就得从返回值上做文章了，首先我们可以肯定返回值肯定是自身，要不然的话，就无法调用后续的函数进行操作了。</p>
-<pre><code>-(Test*)hello{
-return self;
-}
-
-self.hello.hello;
-</code></pre><p>  这时候如果我们需要附带参数要如何实现：</p>
-<p>  很简单 block 动起来</p>
-<pre><code>-(Test*(^)(NSString*))hello{
-  return ^(NSString* str){
-    self.hello = str;
-    return self;
-  }
-}
-
-self.hello(@&quot;hello&quot;).hello(@&quot;str&quot;);
-
-NSLog(self.hello);
-</code></pre><h5 id="返回参数"><a href="#返回参数" class="headerlink" title="返回参数"></a>返回参数</h5><p>  参数的返回：很容易理解，就应该是利用返回值，来做判断的操作，或者利用返回值的数据，来进行一些操作。比如我们比较常用的UITabelView中针对Deletege 中的很多 比如rowCount</p>
-<pre><code>//tableViewItem
-
-typedef NSUInteger (^CellCountBlock)(void);
-
--(void)tableViewConfig{
-  if(self.CellCountBlock){
-    NSUInteger countNum =  self.CellCountBlock();
-    NSLog(@&quot;the countNum is %d&quot;,countNum);
-  }
-}
-
-
-//ViewController
-
-[tableViewItem tableViewConfig];
-tableViewItem.CellCountBlock = ^{
-  return 10;
-}
-
-当然这里我们也可以采用链式编程的方式来进行！
-</code></pre><h5 id="获取信息"><a href="#获取信息" class="headerlink" title="获取信息"></a>获取信息</h5><p>  信息的获取：我们主要是在文件上传的时候可以看到关于fromData的拼接</p>
-<pre><code>- (NSMutableURLRequest*)multipartFormRequestWithMethod:(NSString*)method
-                                            URLString:(NSString *)URLString
-                                           parameters:(NSDictionary *)parameters
-                            constructingBodyWithBlock:(void (^)(id &lt;AFMultipartFormData&gt; formData))block
-                                                error:(NSError *__autoreleasing *)error
-{
-  __block AFStreamingMultipartFormData *formData = [[AFStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
-  if (block) {
-        block(formData);
-    }
-
-  return [formData requestByFinalizingMultipartFormData];
-}
-</code></pre><p>这里将重要的代码贴出来：</p>
-<p>这里的formData 数据是将数据的拼接防盗调用方进行拼接的，拼接完成后再将数据进行上传操作</p>
-<p>所以这里的formData就是我们的重点</p>
-<!-- 定义 -->
-<pre><code>-(void)tableViewConfig:(void(^)(NSDictionary *))configBlock{
-
-__block NSMutableDictionary *config = [NSMutableDictionary dictionaryWithCapacity:0];
-
-if (configBlock) {
-    configBlock(config);
-}
-
-NSLog(@&quot;the config is %@&quot;,config);
-}
-
-//使用
-[[GYEBleManager shareManager] tableViewConfig:^(NSDictionary *config) {
-           [config setValue:@&quot;hello&quot; forKey:@&quot;key&quot;];
-}];
-
-//结果：
-the config is {
-key = hello;
-}
-</code></pre><hr>
-<p>链接：<br>  <a href="https://www.wangjiawen.com/ios/ios-block-usage-and-implementation">https://www.wangjiawen.com/ios/ios-block-usage-and-implementation</a><br>  <a href="https://www.jianshu.com/p/23c1bbe3c99d">https://www.jianshu.com/p/23c1bbe3c99d</a></p>
-<hr>
+        <p>摘要：<br>   适配器的使用大家应该比较熟悉了吧！加入我们去欧洲旅游的时候，在我们传统的插座的时候，可能不一定能插入到他们的插座中，这时候需要用到适配器，适配器可以正确的插入到他们的操作中，我们的插头当然也可以正确的插入到适配器中。简而言之就是我们要使用某个方法，但是我们无法实现，或者说有一个类已经实现了该方法，那我们就可以采用适配的方法来完成，当然还有很多例子可以满足这个需求。<br><a id="more"></a></p>
+<h4 id="模式动机"><a href="#模式动机" class="headerlink" title="模式动机"></a>模式动机</h4><ul>
+<li>在软件开发中采用类似于电源适配器的设计和编码技巧称为适配器模式；</li>
+<li>通常情况下，客户端可以通过目标类的接口访问它所提供的服务。有时候，现有的类可以满足客户的功能需求，但是他所提供的接口不一定是客户所期望的，这可能是因为现有的类中方法名与目标类中的方法名不一致所导致的；</li>
+<li>在这种情况下，现有的接口需要转化为客户类期望的接口，这样保证了对现有类的重用，如果不进行这样转化，客户端就不能利用现有类的功能，适配器模式可以完成这样的转化</li>
+<li>在适配器模式中可以定义一个包装类，包装不兼容接口的对象，这个包装类指的就是适配器（Adapter） ,它所包装的对象就是适配者 也就是被适配的类</li>
+<li>适配器提供客户类需要的接口，适配器的实现就是把客户类的请求转化为对适配者的相应接口的调用，也就是说：当客户类调用适配器的方法的时候，适配类中将调用适配者类的方法，而这个过程对客户类是透明的，客户类并不直接访问适配者类，因此，适配器可以使用由接口不兼容而不能交互的类可以一起工作</li>
+</ul>
+<h4 id="模式定义"><a href="#模式定义" class="headerlink" title="模式定义"></a>模式定义</h4><p>  适配器模式：将一个接口转换成为客户希望的另一个接口，适配器模式使接口不兼容的那些类可以一起工作，其别名是包装器。适配器模式可以作为类结构模式，也可以作为对象结构模式。</p>
+<h4 id="模式结构"><a href="#模式结构" class="headerlink" title="模式结构"></a>模式结构</h4><p>  适配器模式包含如下角色：</p>
+<pre><code>* target :目标抽象类
+* Adapter ： 适配器类
+* Adaptee ：适配者类
+* Client : 客户端
+</code></pre><p>  适配器分为对象适配器和类适配器</p>
+<p>  对象适配器：</p>
+<p><img src="/images/class_adapter.png" alt="  class_adapter"></p>
+<p>  类适配器：</p>
+<p><img src="/images/adapter_classmodel.png" alt="  adapter_classModel"></p>
+<h4 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h4><p><img src="/images/seq_adapter.png" alt="seq_Adapter"></p>
+<h4 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h4><p>通过UML图和时序图我们可以大体猜测出代码的逻辑</p>
+<p>先分析类之间的关系：</p>
+<p>Traget 和 Adapter 是继承的关系</p>
+<p>Adapter 和 Adaptee 是关联的关系</p>
+<p>首先构建：Target</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">target</span> ：<span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)request;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>适配者<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Adaptee</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)specificRequest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p> 适配器的定义<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Adapter</span> : <span class="title">target</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) Adaptee *adaptee;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  适配器的实现</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Adapter</span></span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">instancetype</span>)initWithAdaptee:(Adaptee *)adaptee&#123;</span><br><span class="line">  <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    <span class="keyword">self</span>.adaptee = adaptee;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  -(<span class="keyword">void</span>)request&#123;</span><br><span class="line">    [<span class="keyword">self</span>.adaptee specificRequest];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p> 使用<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Adaptee *adaptee = [Adaptee new];</span><br><span class="line">Adapter *adapter = [Adapter initWithAdaptee:adaptee];</span><br><span class="line">[adapter request];</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -498,7 +416,7 @@ key = hello;
       
         <div class="post-tags">
           
-            <a href="/tags/ios/" rel="tag"><i class ="fa fa-tag"></i> ios</a>
+            <a href="/tags/设计模式/" rel="tag"><i class ="fa fa-tag"></i> 设计模式</a>
           
         </div>
       
@@ -511,8 +429,8 @@ key = hello;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/29/Markdown-leaning/" rel="next" title="MarkDown 的基础使用">
-                <i class="fa fa-chevron-left"></i> MarkDown 的基础使用
+              <a href="/2018/05/21/design-sigleton-pattern/" rel="next" title="单例模式">
+                <i class="fa fa-chevron-left"></i> 单例模式
               </a>
             
           </div>
@@ -520,10 +438,6 @@ key = hello;
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/04/what-to-do-for-2018/" rel="prev" title="2018个人计划">
-                2018个人计划 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -687,7 +601,7 @@ key = hello;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#block的概述"><span class="nav-number">1.</span> <span class="nav-text">block的概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#语法："><span class="nav-number">1.1.</span> <span class="nav-text">语法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动变量"><span class="nav-number">1.2.</span> <span class="nav-text">自动变量</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#block的运用"><span class="nav-number">2.</span> <span class="nav-text">block的运用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#链式编程"><span class="nav-number">2.1.</span> <span class="nav-text">链式编程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#返回参数"><span class="nav-number">2.2.</span> <span class="nav-text">返回参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#获取信息"><span class="nav-number">2.3.</span> <span class="nav-text">获取信息</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#模式动机"><span class="nav-number">1.</span> <span class="nav-text">模式动机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式定义"><span class="nav-number">2.</span> <span class="nav-text">模式定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式结构"><span class="nav-number">3.</span> <span class="nav-text">模式结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#时序图"><span class="nav-number">4.</span> <span class="nav-text">时序图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码分析"><span class="nav-number">5.</span> <span class="nav-text">代码分析</span></a></li></ol></div>
             
 
           </div>
@@ -841,9 +755,9 @@ key = hello;
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/04/04/block-use-method/';
-        this.page.identifier = '2018/04/04/block-use-method/';
-        this.page.title = 'iOS中Block的运用';
+        this.page.url = 'http://yoursite.com/2018/05/21/design-adapter-pattern/';
+        this.page.identifier = '2018/05/21/design-adapter-pattern/';
+        this.page.title = '适配器模式';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');

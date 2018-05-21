@@ -99,25 +99,27 @@
 
 
 
-  <meta name="description" content="摘要：  关于block的简单描述和使用概述">
-<meta name="keywords" content="ios">
+  <meta name="description" content="摘要：  对于系统中的某些类来说，只有一个实例是很重要的。该实例可以很好的对数据进行管理和控制。同时也能够更好的控制显示和隐藏的操作等等。那如何才能保证一个类只有一个实例呢？并且比较重要的是，这个实例还比较容易访问到，定义一个全局的变量，可以确保对象随时都可以被访问，但是不能防止我们实例化多个对象。一个更好的办法就是让类自身负责保存它的唯一实例，这个类可以保证没有其他实例被创建，并且他可以">
+<meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS中Block的运用">
-<meta property="og:url" content="http://yoursite.com/2018/04/04/block-use-method/index.html">
+<meta property="og:title" content="单例模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/21/design-sigleton-pattern/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：  关于block的简单描述和使用概述">
+<meta property="og:description" content="摘要：  对于系统中的某些类来说，只有一个实例是很重要的。该实例可以很好的对数据进行管理和控制。同时也能够更好的控制显示和隐藏的操作等等。那如何才能保证一个类只有一个实例呢？并且比较重要的是，这个实例还比较容易访问到，定义一个全局的变量，可以确保对象随时都可以被访问，但是不能防止我们实例化多个对象。一个更好的办法就是让类自身负责保存它的唯一实例，这个类可以保证没有其他实例被创建，并且他可以">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-23T10:23:55.000Z">
+<meta property="og:image" content="http://yoursite.com/images/singletion.png">
+<meta property="og:updated_time" content="2018-05-21T10:52:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS中Block的运用">
-<meta name="twitter:description" content="摘要：  关于block的简单描述和使用概述">
+<meta name="twitter:title" content="单例模式">
+<meta name="twitter:description" content="摘要：  对于系统中的某些类来说，只有一个实例是很重要的。该实例可以很好的对数据进行管理和控制。同时也能够更好的控制显示和隐藏的操作等等。那如何才能保证一个类只有一个实例呢？并且比较重要的是，这个实例还比较容易访问到，定义一个全局的变量，可以确保对象随时都可以被访问，但是不能防止我们实例化多个对象。一个更好的办法就是让类自身负责保存它的唯一实例，这个类可以保证没有其他实例被创建，并且他可以">
+<meta name="twitter:image" content="http://yoursite.com/images/singletion.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/04/block-use-method/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/21/design-sigleton-pattern/"/>
 
 
 
@@ -127,7 +129,7 @@
   };
 </script>
 
-  <title>iOS中Block的运用 | lmzqm</title>
+  <title>单例模式 | lmzqm</title>
   
 
 
@@ -276,7 +278,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/block-use-method/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/21/design-sigleton-pattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lmzqm">
@@ -293,7 +295,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS中Block的运用</h1>
+          <h1 class="post-title" itemprop="name headline">单例模式</h1>
         
 
         <div class="post-meta">
@@ -305,7 +307,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T10:06:28+08:00">2018-04-04</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-21T17:33:22+08:00">2018-05-21</time>
             
 
             
@@ -323,9 +325,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/04/04/block-use-method/#comments" itemprop="discussionUrl">
+                <a href="/2018/05/21/design-sigleton-pattern/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/04/block-use-method/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/05/21/design-sigleton-pattern/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -353,121 +355,19 @@
       
 
       
-        <p>摘要：<br>  关于block的简单描述和使用概述</p>
+        <p>摘要：<br>  对于系统中的某些类来说，只有一个实例是很重要的。该实例可以很好的对数据进行管理和控制。同时也能够更好的控制显示和隐藏的操作等等。那如何才能保证一个类只有一个实例呢？并且比较重要的是，这个实例还比较容易访问到，定义一个全局的变量，可以确保对象随时都可以被访问，但是不能防止我们实例化多个对象。一个更好的办法就是让类自身负责保存它的唯一实例，这个类可以保证没有其他实例被创建，并且他可以提供一个方法该实例的方法。这就是单例模式。</p>
 <a id="more"></a>
-<h4 id="block的概述"><a href="#block的概述" class="headerlink" title="block的概述"></a>block的概述</h4><blockquote>
-<p>Block：带有自动变量的匿名函数<br>匿名函数：没有函数名的函数，一对{}包裹的内容是匿名函数的作用域</p>
-</blockquote>
-<h5 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h5><blockquote>
-<p>声明：<br>  返回值(^名称)(参数列表)  </p>
-</blockquote>
-<pre><code>typedef int(^ClickBlock)(NSUInteger);
-
--(void)justAClick(ClickBlock)block{
-  NSLog(@&quot;Param:%@&quot;,block);
-}
-</code></pre><blockquote>
-<p>定义：<br>  ^返回值类型(参数列表){表达式}</p>
-</blockquote>
-<pre><code>^(NSUInteger count){
-  //这里是代码展示区
-  return count + 1;
-}
-</code></pre><h5 id="自动变量"><a href="#自动变量" class="headerlink" title="自动变量"></a>自动变量</h5><p>  Block可以截获所使用的自动变量的值；<br>  截获：保存自动变量的瞬间值<br>  因为是瞬间值，所以Block之后，即便Block外面修改自动变量的值，也不会对Block内部有影响<br>  如果需要对其的改变也会对变量产生影响的话，需要在变量的前面增加 __block</p>
-<h4 id="block的运用"><a href="#block的运用" class="headerlink" title="block的运用"></a>block的运用</h4><p>  在我们的代码中，经常会用到block，其中涉及到了很多方面，下面我们将列举一些比较常见的用法和大家分享。分别是链式编程、返回参数、获取信息等。如果后续还有新的会增加。</p>
-<h5 id="链式编程"><a href="#链式编程" class="headerlink" title="链式编程"></a>链式编程</h5><p>这个在我们很多地方我们应该都能够看到（这里针对OC），比如Masonry,还有BabyBluetooth的使用方面都会涉及到链式编程</p>
-<p>Masonry:<br>  make.top.equalto(self).offset(100);</p>
-<p>BabyBluetooth: baby.connecttoPeripherals().start();</p>
-<p>这样给人的感觉相对比较流畅和简洁很多。</p>
-<p>首先先针对点式操作：</p>
-<p>在OC中点语法就是一种语法糖，最终会调用对用属性的getter/setter的方法。</p>
-<pre><code>-(NSString*)hello{
-  return @&quot;hello&quot;;
-}
-
-self.hello; //会报 Property Access result unused;
-我们让它的结果利用就来就不会报警告了
-</code></pre><p>OK,针对点语法我们已经大概了解了，下面就针对链式中，为什么能够实现链式呢？</p>
-<p>  这就得从返回值上做文章了，首先我们可以肯定返回值肯定是自身，要不然的话，就无法调用后续的函数进行操作了。</p>
-<pre><code>-(Test*)hello{
-return self;
-}
-
-self.hello.hello;
-</code></pre><p>  这时候如果我们需要附带参数要如何实现：</p>
-<p>  很简单 block 动起来</p>
-<pre><code>-(Test*(^)(NSString*))hello{
-  return ^(NSString* str){
-    self.hello = str;
-    return self;
-  }
-}
-
-self.hello(@&quot;hello&quot;).hello(@&quot;str&quot;);
-
-NSLog(self.hello);
-</code></pre><h5 id="返回参数"><a href="#返回参数" class="headerlink" title="返回参数"></a>返回参数</h5><p>  参数的返回：很容易理解，就应该是利用返回值，来做判断的操作，或者利用返回值的数据，来进行一些操作。比如我们比较常用的UITabelView中针对Deletege 中的很多 比如rowCount</p>
-<pre><code>//tableViewItem
-
-typedef NSUInteger (^CellCountBlock)(void);
-
--(void)tableViewConfig{
-  if(self.CellCountBlock){
-    NSUInteger countNum =  self.CellCountBlock();
-    NSLog(@&quot;the countNum is %d&quot;,countNum);
-  }
-}
-
-
-//ViewController
-
-[tableViewItem tableViewConfig];
-tableViewItem.CellCountBlock = ^{
-  return 10;
-}
-
-当然这里我们也可以采用链式编程的方式来进行！
-</code></pre><h5 id="获取信息"><a href="#获取信息" class="headerlink" title="获取信息"></a>获取信息</h5><p>  信息的获取：我们主要是在文件上传的时候可以看到关于fromData的拼接</p>
-<pre><code>- (NSMutableURLRequest*)multipartFormRequestWithMethod:(NSString*)method
-                                            URLString:(NSString *)URLString
-                                           parameters:(NSDictionary *)parameters
-                            constructingBodyWithBlock:(void (^)(id &lt;AFMultipartFormData&gt; formData))block
-                                                error:(NSError *__autoreleasing *)error
-{
-  __block AFStreamingMultipartFormData *formData = [[AFStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
-  if (block) {
-        block(formData);
-    }
-
-  return [formData requestByFinalizingMultipartFormData];
-}
-</code></pre><p>这里将重要的代码贴出来：</p>
-<p>这里的formData 数据是将数据的拼接防盗调用方进行拼接的，拼接完成后再将数据进行上传操作</p>
-<p>所以这里的formData就是我们的重点</p>
-<!-- 定义 -->
-<pre><code>-(void)tableViewConfig:(void(^)(NSDictionary *))configBlock{
-
-__block NSMutableDictionary *config = [NSMutableDictionary dictionaryWithCapacity:0];
-
-if (configBlock) {
-    configBlock(config);
-}
-
-NSLog(@&quot;the config is %@&quot;,config);
-}
-
-//使用
-[[GYEBleManager shareManager] tableViewConfig:^(NSDictionary *config) {
-           [config setValue:@&quot;hello&quot; forKey:@&quot;key&quot;];
-}];
-
-//结果：
-the config is {
-key = hello;
-}
-</code></pre><hr>
-<p>链接：<br>  <a href="https://www.wangjiawen.com/ios/ios-block-usage-and-implementation">https://www.wangjiawen.com/ios/ios-block-usage-and-implementation</a><br>  <a href="https://www.jianshu.com/p/23c1bbe3c99d">https://www.jianshu.com/p/23c1bbe3c99d</a></p>
-<hr>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>  单例模式： 单例模式确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类成为单例类，它提供全局访问的方法。</p>
+<p>  单例模式有三个要点：</p>
+<ul>
+<li>某个类只有一个实例</li>
+<li>它必须是自行创建这个实例</li>
+<li>必须向整个系统提供这个实例</li>
+</ul>
+<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p><img src="/images/singletion.png" alt="  Singletion"></p>
+<p>从上图中可以看出：<br>首先必须包含一个自身的变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">+(Singleton *)getInstance()&#123;</span><br><span class="line">  if (instance == null)&#123;</span><br><span class="line">    instance = [[Singleton alloc] init];</span><br><span class="line">  &#125;</span><br><span class="line">  return instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(void)operation&#123;</span><br><span class="line"></span><br><span class="line">  /*  */</span><br><span class="line">  NSLog(@&quot; singleton operation&quot;);</span><br><span class="line">  [[Singleton getInstance] addOperation];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)addOperation&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">---------操作-------</span><br><span class="line"></span><br><span class="line">[[Singleton getInstance] addOperation];</span><br></pre></td></tr></table></figure>
+<h4 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h4><p>单例模式的目的是保证一个类仅有一个实例，并提供一个访问它的全局访问点。单例模式包含角色只有一个，就是单例类 Singleton 。单例类拥有一个私有构造函数，确保用户无法通过new关键字直接实例化它，除此之外，该模式还包含一个静态私有成员变量与静态公有的工厂方法，该工厂方法负责检验实例的存在性病实例化自己，然后存在在静态成员的变量中，以确保一个实例被创建。</p>
 
       
     </div>
@@ -498,7 +398,7 @@ key = hello;
       
         <div class="post-tags">
           
-            <a href="/tags/ios/" rel="tag"><i class ="fa fa-tag"></i> ios</a>
+            <a href="/tags/设计模式/" rel="tag"><i class ="fa fa-tag"></i> 设计模式</a>
           
         </div>
       
@@ -511,8 +411,8 @@ key = hello;
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/29/Markdown-leaning/" rel="next" title="MarkDown 的基础使用">
-                <i class="fa fa-chevron-left"></i> MarkDown 的基础使用
+              <a href="/2018/05/16/ios-time-delay-method/" rel="next" title="iOS 延时操作">
+                <i class="fa fa-chevron-left"></i> iOS 延时操作
               </a>
             
           </div>
@@ -521,8 +421,8 @@ key = hello;
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/04/what-to-do-for-2018/" rel="prev" title="2018个人计划">
-                2018个人计划 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/21/design-adapter-pattern/" rel="prev" title="适配器模式">
+                适配器模式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -687,7 +587,7 @@ key = hello;
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#block的概述"><span class="nav-number">1.</span> <span class="nav-text">block的概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#语法："><span class="nav-number">1.1.</span> <span class="nav-text">语法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动变量"><span class="nav-number">1.2.</span> <span class="nav-text">自动变量</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#block的运用"><span class="nav-number">2.</span> <span class="nav-text">block的运用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#链式编程"><span class="nav-number">2.1.</span> <span class="nav-text">链式编程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#返回参数"><span class="nav-number">2.2.</span> <span class="nav-text">返回参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#获取信息"><span class="nav-number">2.3.</span> <span class="nav-text">获取信息</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构"><span class="nav-number">2.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式分析"><span class="nav-number">3.</span> <span class="nav-text">模式分析</span></a></li></ol></div>
             
 
           </div>
@@ -841,9 +741,9 @@ key = hello;
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/04/04/block-use-method/';
-        this.page.identifier = '2018/04/04/block-use-method/';
-        this.page.title = 'iOS中Block的运用';
+        this.page.url = 'http://yoursite.com/2018/05/21/design-sigleton-pattern/';
+        this.page.identifier = '2018/05/21/design-sigleton-pattern/';
+        this.page.title = '单例模式';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');
