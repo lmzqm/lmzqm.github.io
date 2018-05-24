@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：   首先了解架构的设计理念，架构主要是为了让我们的代码更好的组合起来。首先针对开发者来说能够很清楚的了解具体的代码会存放在哪里？哪些部分做哪些事情？不同部分之间的关联是什么？等等。个人对架构的归纳就是如何更好的组织你的代码文件，当然对于架构的熟练能够让我们很清楚自己需要在哪些地方处理哪些事情，而不会将代码弄得错乱也不便于其他开发人员的查看和修改添加等操作。">
+<meta name="keywords" content="iOS 架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVC MVP MVVM">
+<meta property="og:url" content="http://yoursite.com/2018/05/24/mvc-mvp-mvvm/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：   首先了解架构的设计理念，架构主要是为了让我们的代码更好的组合起来。首先针对开发者来说能够很清楚的了解具体的代码会存放在哪里？哪些部分做哪些事情？不同部分之间的关联是什么？等等。个人对架构的归纳就是如何更好的组织你的代码文件，当然对于架构的熟练能够让我们很清楚自己需要在哪些地方处理哪些事情，而不会将代码弄得错乱也不便于其他开发人员的查看和修改添加等操作。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/old_mvc.png">
+<meta property="og:image" content="http://yoursite.com/images/apple_mvc.png">
+<meta property="og:image" content="http://yoursite.com/images/apple_true_mvc.png">
+<meta property="og:image" content="http://yoursite.com/images/mvp.png">
+<meta property="og:image" content="http://yoursite.com/images/mvvm.png">
+<meta property="og:updated_time" content="2018-05-24T10:40:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MVC MVP MVVM">
+<meta name="twitter:description" content="摘要：   首先了解架构的设计理念，架构主要是为了让我们的代码更好的组合起来。首先针对开发者来说能够很清楚的了解具体的代码会存放在哪里？哪些部分做哪些事情？不同部分之间的关联是什么？等等。个人对架构的归纳就是如何更好的组织你的代码文件，当然对于架构的熟练能够让我们很清楚自己需要在哪些地方处理哪些事情，而不会将代码弄得错乱也不便于其他开发人员的查看和修改添加等操作。">
+<meta name="twitter:image" content="http://yoursite.com/images/old_mvc.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/24/mvc-mvp-mvvm/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MVC MVP MVVM | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/mvc-mvp-mvvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MVC MVP MVVM</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T10:57:57+08:00">2018-05-24</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/24/mvc-mvp-mvvm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/24/mvc-mvp-mvvm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：</p>
+<p>  首先了解架构的设计理念，架构主要是为了让我们的代码更好的组合起来。首先针对开发者来说能够很清楚的了解具体的代码会存放在哪里？哪些部分做哪些事情？不同部分之间的关联是什么？等等。个人对架构的归纳就是如何更好的组织你的代码文件，当然对于架构的熟练能够让我们很清楚自己需要在哪些地方处理哪些事情，而不会将代码弄得错乱也不便于其他开发人员的查看和修改添加等操作。</p>
+<a id="more"></a>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>假如你不关心架构，那么总有一天，需要在一个庞大的类中调试若干复杂的事情，你就会发现在这个条件下，根本不可能在这个类中快速的找到以及有效的修改任何的bug,当然将这个类想象成一个整体是困难的，因此，有可能一些重要的细节总是会在这个过程中被忽略。如果现在的你正处于这样一个开发环境，很可能具体的情况会像下面这样：</p>
+<ul>
+<li>这个类是一个UIViewController的子类</li>
+<li>数据直接在UIViewController中存储</li>
+<li>UIView 类几乎不做任何的事情</li>
+<li>Model 也仅仅是一个数据结构</li>
+<li>单元测试覆盖不了任何用例</li>
+</ul>
+<p>一个好的架构应该具备的特点：</p>
+<ol>
+<li>任务均衡分摊给具有清晰角色的实体</li>
+<li>可测性通常用于来自于一个合适的架构</li>
+<li>易用性和低成本维护</li>
+</ol>
+<p>当今我们已经有很多架构设计模式方面的选择：</p>
+<p><strong>MVC MVP MVVM VIPER</strong></p>
+<p>前面三种架构将一个应用中的实体分为以下三类：</p>
+<ul>
+<li>Models — 负责主要的数据或者操作数据的数据访问层</li>
+<li>Views — 负责展示层</li>
+<li>Controller/Presenter/ViewModel — 负责协调Model和View ,通常根据用户在View上的动作在Model上做出相对应的更改，同时将更改的信息返回到View上</li>
+</ul>
+<p>将实体进行划分给我们带来的以下好处：</p>
+<ol>
+<li>更好的理解它们之间的关系</li>
+<li>复用 （尤其是对View和Model）</li>
+<li>独立的测试</li>
+</ol>
+<h4 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h4><h5 id="传统的-MVC"><a href="#传统的-MVC" class="headerlink" title="传统的 MVC"></a>传统的 MVC</h5><p><img src="/images/old_mvc.png" alt="old_mvc"></p>
+<p>从上图中我们可以看出 Model,View,Controller三者紧密耦合。当用户在View 有动作的时候，View发送用户的action给Controller ，然后Controller 就会调用一个直接取代整个View的操作，同时也会将Model 进行更新的操作。Model变化了以后也会向View发送通知，然后View会或者改变的状态值。</p>
+<h5 id="苹果推荐的MVC-愿景"><a href="#苹果推荐的MVC-愿景" class="headerlink" title="苹果推荐的MVC - 愿景"></a>苹果推荐的MVC - 愿景</h5><p><img src="/images/apple_mvc.png" alt="apple_mvc"></p>
+<p>由于Controller是一个介于View 和 Model之间的协调器，所以View和Model之间没有任何直接的联系，Controller是最小可重用单元，这也就是我们写逻辑复杂度比较高的代码，而这些代码又不适合放在Model中。首先当View接收到用户的动作后将消息发送到Controller，然后Controller更新Model，或者当Model有变化了以后通知Controller 有变化，然后Controller就会去更行View的视图。</p>
+<p>理论上来说这种模式看起来非常直观，然而在我们的实际开发中…</p>
+<h5 id="苹果推荐的MVC-—-事实"><a href="#苹果推荐的MVC-—-事实" class="headerlink" title="苹果推荐的MVC — 事实"></a>苹果推荐的MVC — 事实</h5><p><img src="/images/apple_true_mvc.png" alt="apple_true_mvc"></p>
+<p>Cocoa的MVC 模式使我们写出了臃肿的视图控制器，因为他们经常被混杂到View的生命周期中，因此很难说View和ViewController是分离的。尽管仍可以将业务逻辑和数据切换到Model，但是大多数情况下当需要为View减负的时候我们就有些无能为力了，View的最大的任务就是向Controller传递用户的动作事件，ViewController不再承担一切代理和数据源的职责，通常指负责一些分发和取消网络请求以及一些其他任务。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h4><p>MVP 实现了Cocoa的MVC 的愿景</p>
+<p><img src="/images/mvp.png" alt="mvp"></p>
+<p>通过上面的结构图可以分析下，三者之间的关系，</p>
+<ul>
+<li>首先View和Presenter 中View 是拥有了Presenter ,并当用户有action的时候，将消息发送给Presenter ，交给Presenter进行处理，在Presenter中也对View 进行了弱引用的操作，这样Presenter 就可以对View 进行 update 的操作了。</li>
+<li>Presenter 与 Model 之间，Presenter 拥有Model 并且可以更新Model 的操作，并且当Model变化的时候可以通知Presenter 进行更新的操作。其实这里所谓的更新个人感觉可以理解为一个网络请求，然后当请求成功后，将Model 的值传回给Presenter 的操作，这样Presenter 还可以根据有没有哪些界面需要更新操作的，库进行更新的操作</li>
+</ul>
+<p>Presenter中根本没有和布局相关的代码，但是它且复杂更新View的数据和状态</p>
+<p>就MVP 而言，UIViewController 的子类实际上就是 Views 并不是Presenters 这点区别使得模式的可测性得到了极大的提高，付出的代价就是开发速度的一些降低，因为必须要做一些手动的数据和事件的绑定</p>
+<h5 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h5><p>这里需要确认哪些操作在哪里执行</p>
+<p>ViewS：</p>
+<ul>
+<li>页面的布局 和 页面的初始化操作 等</li>
+<li>将页面的动作交给Presenter 进行操作 ， 同时做好本地接收 更新的操作</li>
+<li>所有以页面相关的操作</li>
+</ul>
+<p>Presenter:</p>
+<ul>
+<li>首先 拥有了Model 并且对 ViewS 是一种弱引用 当需要使用的时候再使用强引用</li>
+<li>Presenter 对Model 进行控制 然后更多是为了进行网络的请求，然后将网络请求的数据返回回来给Presenter 进行处理，这时候 Presenter 的处理可以通过 将Model 展示到View中进行显示，这时候就会使用到 弱引用的Views 来进行更新的操作</li>
+</ul>
+<p>Models：</p>
+<ul>
+<li>主要负责首先model 的构建 也就是原型</li>
+<li>负责是关于数据的请求操作</li>
+</ul>
+<p>还有一点：这里可以使用协议的操作方法，因为很多时候，有一些通用的操作方法这样就可以进一步的规范代码的书写同时也便于对代码的理解操作，而不会出现说多人操作的时候，同一种操作出现了不同的函数名的现象。</p>
+<p>我们来看下MVP模式下的三个特性的分析：</p>
+<ul>
+<li>任务均摊 - 我们将最主要的任务划分到Presenter 和 Model 而View 的功能较少</li>
+<li>可测性 — 非常好，由于一个功能简单的View 层，所以测试大多数业务逻辑变得简单</li>
+<li>易用性 — 虽然代码量变大了，但是MVP的概念非常清晰</li>
+</ul>
+<h4 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h4><p><img src="/images/mvvm.png" alt="mvvm"></p>
+<p>从结构图中感觉和MVP看起来非常像：</p>
+<p>这里做了数据的绑定操作，当用户点击的时候，调用的是ViewModel 的操作，在ViewModel中操作的时候，会调用其自身的Block 来实现数据的传递，然后在View中会有ViewModel的属性，这个属性就会构造一个Blcok 来更新View中的数据，当用户点击的时候，ViewModel获取到数据，并返回给View 然后View就会给对应的视图更新界面来进行操作。</p>
+<p>首先这里也分析下三者之间的关系：</p>
+<p>首先View 还是要拥有ViewModel 的 只是在ViewModel中不需要对View 进行弱引用的操作，直接采用Block的回调的操作来实现就可以了。其中涉及到的数据绑定的时候。</p>
+<p>关于三个特性的评估：</p>
+<ul>
+<li><p>任务均摊 — MVVM的View 要比 MVP中的View 承担的责任更多，因为前者通过ViewModel来设置绑定以便更新状态，而后者只是监听Presenger的事件但是不会对自己有更新。</p>
+</li>
+<li><p>可测性 — ViewModel 不知道关于View 的任何事情，这运行我们就可以轻易的测试ViewModel的同时View也可以被测试，单数只属于UIKit的范畴，对他们的测试通常会被忽略。</p>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>没有最好的架构，只有最适合你应用的架构。</p>
+<h4 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h4><p><a href="http://ios.jobbole.com/83727/">iOS 架构模式–解密 MVC，MVP，MVVM以及VIPER架构</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-架构/" rel="tag"><i class ="fa fa-tag"></i> iOS 架构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/23/ios-autoreleasepool-detail/" rel="next" title="iOS 自动释放池">
+                <i class="fa fa-chevron-left"></i> iOS 自动释放池
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MVC"><span class="nav-number">2.</span> <span class="nav-text">MVC</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#传统的-MVC"><span class="nav-number">2.1.</span> <span class="nav-text">传统的 MVC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#苹果推荐的MVC-愿景"><span class="nav-number">2.2.</span> <span class="nav-text">苹果推荐的MVC - 愿景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#苹果推荐的MVC-—-事实"><span class="nav-number">2.3.</span> <span class="nav-text">苹果推荐的MVC — 事实</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MVP"><span class="nav-number">3.</span> <span class="nav-text">MVP</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#代码示例"><span class="nav-number">3.1.</span> <span class="nav-text">代码示例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MVVM"><span class="nav-number">4.</span> <span class="nav-text">MVVM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#感谢"><span class="nav-number">6.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/05/24/mvc-mvp-mvvm/';
+        this.page.identifier = '2018/05/24/mvc-mvp-mvvm/';
+        this.page.title = 'MVC MVP MVVM';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
