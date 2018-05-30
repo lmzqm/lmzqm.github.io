@@ -112,7 +112,7 @@
 <meta property="og:image" content="http://yoursite.com/images/select_localizations.png">
 <meta property="og:image" content="http://yoursite.com/images/new_fielse.png">
 <meta property="og:image" content="http://yoursite.com/images/file_strings.png">
-<meta property="og:updated_time" content="2018-05-25T11:00:29.000Z">
+<meta property="og:updated_time" content="2018-05-30T03:18:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS iPhone X 适配">
 <meta name="twitter:description" content="摘要：">
@@ -382,7 +382,7 @@
 <p>iPhone X的状态栏由原来的20变更为现在的44</p>
 <p>所以定义一个宏来做处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define SafeAreaTopHeight (ScreenHeight == 812.0 ? 88 : 64)</span><br></pre></td></tr></table></figure></p>
 <h5 id="纯代码适配iPhone-X-脚底"><a href="#纯代码适配iPhone-X-脚底" class="headerlink" title="纯代码适配iPhone X 脚底"></a>纯代码适配iPhone X 脚底</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define SafeAreaBottomHeight (ScreenHeight == 812.0 ? 34 : 0)</span><br></pre></td></tr></table></figure>
-<h4 id="国际化操作"><a href="#国际化操作" class="headerlink" title="国际化操作"></a>国际化操作</h4><h5 id="应用国际化"><a href="#应用国际化" class="headerlink" title="应用国际化"></a>应用国际化</h5><p>然后在Project-&gt;info-&gt;localizations 中添加你想要的实现国际化的语言</p>
+<h4 id="国际化操作"><a href="#国际化操作" class="headerlink" title="国际化操作"></a>国际化操作</h4><h5 id="应用名称国际化"><a href="#应用名称国际化" class="headerlink" title="应用名称国际化"></a>应用名称国际化</h5><p>然后在Project-&gt;info-&gt;localizations 中添加你想要的实现国际化的语言</p>
 <p><img src="/images/localizations.png" alt="localizations"></p>
 <p>首先新建一个Strings 的文件，取名为<code>infoPlist</code></p>
 <p><img src="/images/new_strings.png" alt="new_strings"></p>
@@ -451,6 +451,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/28/ios-mudulization/" rel="prev" title="iOS 组件化开发">
+                iOS 组件化开发 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -534,7 +538,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -577,7 +581,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -622,7 +628,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#启动页面的适配"><span class="nav-number">1.</span> <span class="nav-text">启动页面的适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#刷新框架适配"><span class="nav-number">2.</span> <span class="nav-text">刷新框架适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码宽高比适配"><span class="nav-number">3.</span> <span class="nav-text">纯代码宽高比适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配齐刘海"><span class="nav-number">4.</span> <span class="nav-text">纯代码适配齐刘海</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配iPhone-X-脚底"><span class="nav-number">5.</span> <span class="nav-text">纯代码适配iPhone X 脚底</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#国际化操作"><span class="nav-number"></span> <span class="nav-text">国际化操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用国际化"><span class="nav-number">1.</span> <span class="nav-text">应用国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码国际化"><span class="nav-number">2.</span> <span class="nav-text">代码国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图片国际化"><span class="nav-number">3.</span> <span class="nav-text">图片国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时间国际化"><span class="nav-number">4.</span> <span class="nav-text">时间国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#启动页面的适配"><span class="nav-number">1.</span> <span class="nav-text">启动页面的适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#刷新框架适配"><span class="nav-number">2.</span> <span class="nav-text">刷新框架适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码宽高比适配"><span class="nav-number">3.</span> <span class="nav-text">纯代码宽高比适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配齐刘海"><span class="nav-number">4.</span> <span class="nav-text">纯代码适配齐刘海</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配iPhone-X-脚底"><span class="nav-number">5.</span> <span class="nav-text">纯代码适配iPhone X 脚底</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#国际化操作"><span class="nav-number"></span> <span class="nav-text">国际化操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用名称国际化"><span class="nav-number">1.</span> <span class="nav-text">应用名称国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码国际化"><span class="nav-number">2.</span> <span class="nav-text">代码国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图片国际化"><span class="nav-number">3.</span> <span class="nav-text">图片国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时间国际化"><span class="nav-number">4.</span> <span class="nav-text">时间国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
             
 
           </div>

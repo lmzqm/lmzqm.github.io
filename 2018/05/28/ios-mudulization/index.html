@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要： 随着项目的增加，可能存在公共的模块比较多，比如说登陆模块,可能很多项目都是通用一个登陆的模块，即使不同也只体现在界面中，但是整体的流程还是一模一样的，这就导致，如果其中有个项目的模块已经渐渐完善了，但是其他项目要更新的话，就要一个一个的复制过去，这样就造成了很多不必要的工作,最主要的是效率太低下，作为一个程序员如果不能更灵活的做开发的话，那就太悲哀了。所以果断尝试模块化我的项目。">
+<meta name="keywords" content="iOS 组件化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 组件化开发">
+<meta property="og:url" content="http://yoursite.com/2018/05/28/ios-mudulization/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要： 随着项目的增加，可能存在公共的模块比较多，比如说登陆模块,可能很多项目都是通用一个登陆的模块，即使不同也只体现在界面中，但是整体的流程还是一模一样的，这就导致，如果其中有个项目的模块已经渐渐完善了，但是其他项目要更新的话，就要一个一个的复制过去，这样就造成了很多不必要的工作,最主要的是效率太低下，作为一个程序员如果不能更灵活的做开发的话，那就太悲哀了。所以果断尝试模块化我的项目。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-30T06:49:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 组件化开发">
+<meta name="twitter:description" content="摘要： 随着项目的增加，可能存在公共的模块比较多，比如说登陆模块,可能很多项目都是通用一个登陆的模块，即使不同也只体现在界面中，但是整体的流程还是一模一样的，这就导致，如果其中有个项目的模块已经渐渐完善了，但是其他项目要更新的话，就要一个一个的复制过去，这样就造成了很多不必要的工作,最主要的是效率太低下，作为一个程序员如果不能更灵活的做开发的话，那就太悲哀了。所以果断尝试模块化我的项目。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/28/ios-mudulization/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS 组件化开发 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ios-mudulization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS 组件化开发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T10:15:12+08:00">2018-05-28</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/28/ios-mudulization/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/28/ios-mudulization/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：</p>
+<p>随着项目的增加，可能存在公共的模块比较多，比如说登陆模块,可能很多项目都是通用一个登陆的模块，即使不同也只体现在界面中，但是整体的流程还是一模一样的，这就导致，如果其中有个项目的模块已经渐渐完善了，但是其他项目要更新的话，就要一个一个的复制过去，这样就造成了很多不必要的工作,最主要的是效率太低下，作为一个程序员如果不能更灵活的做开发的话，那就太悲哀了。所以果断尝试模块化我的项目。</p>
+<a id="more"></a>
+<h4 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h4><p>当前的模块化开发主流就只有两种，一个是Casa 的基于target-action的方法，还有一个是基于MGJ的URL的方案。其实对两种方案大体查看了下，个人比较推崇Casa的方案，首先我们的项目更多的已经是发布过的，也就是模块都已经有了，只是之间的耦合没有解开，而且其不需要对整体APP进行改造，可以一个一个的分离出来处理，而MGJ的方案，一开始就要注册整个APP的URL 要不然就走不下去了，这样改动就要全部一起动，工程量大不适合我当前的工作，毕竟没有单独的时间来做这些操作。</p>
+<h4 id="中间人-（CTMediator）"><a href="#中间人-（CTMediator）" class="headerlink" title="中间人 （CTMediator）"></a>中间人 （CTMediator）</h4><p>ok，既然选择了<a href="https://github.com/casatwy/CTMediator/tree/master/CTMediator">CTMediator</a>的方案，那首先就要先了解其实现的原理.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">CTMedaitor</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">+(interface)shareInterface;</span><br><span class="line"><span class="comment">// 远程APP调用入口</span></span><br><span class="line">-(<span class="keyword">id</span>)performActionWithUrl:(<span class="built_in">NSURL</span> *)url completion:(<span class="keyword">void</span>(^)(<span class="built_in">NSDictionary</span>*)info)completion;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  本地组件调用入口</span></span><br><span class="line">-(<span class="keyword">id</span>)perforTarget:(<span class="built_in">NSString</span>*)targetName action:(<span class="built_in">NSString</span> *)actionName params:(<span class="built_in">NSDictionary</span> *)params shouldCacheTarget:(<span class="built_in">BOOL</span>)shouldCacheTarget;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)releaseCachedTargetWithTargetName:(<span class="built_in">NSString</span> *)targetName;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现</span></span><br><span class="line"></span><br><span class="line">这里是用来缓存target的操作 ，这样就不需要每次都重新创建一个target了</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span> ) <span class="built_in">NSMutableDictionary</span> *cacheTarget;</span><br><span class="line"></span><br><span class="line"><span class="meta">#pargma mark - getting and setters</span></span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSMutableDictionary</span> *)cacheTarget&#123;</span><br><span class="line">  <span class="keyword">if</span>(_cahceTarget == <span class="literal">nil</span>)&#123;</span><br><span class="line">    _cacheTarget = [[<span class="built_in">NSMutableDictionary</span> alloc] init];</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">  retutn _cachedTarget;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#paragma mark - public methods</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 核心</span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">id</span>)performTarget:(<span class="built_in">NSString</span>*)targetName action:(<span class="built_in">NSString</span> *)actionName params:(<span class="built_in">NSDictionary</span> *)params shouldCacheTarget:(<span class="built_in">BOOL</span>)shouldCacheTarget&#123;</span><br><span class="line">  <span class="comment">// 这里是采用RunTime的方法来进行解耦的操作</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">NSString</span> *targetClassString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"Target_%@"</span>,targetName];</span><br><span class="line">  <span class="built_in">NSStirng</span> *actionString = [<span class="built_in">NSStirng</span> stringWithFormat:<span class="string">@"Action_%@"</span>,actionName];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这里拼接了 target 和 Action 的名称，首先一个target 就表示我们需要一个新的文件，比如我们的target 是A 那我们就要创建一个Target_A的文件，然后里面要实现Action_cationName的方法</span></span><br><span class="line"></span><br><span class="line"> Class targetClass;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">NSObject</span> *target = <span class="keyword">self</span>.cacheTarget[targetClassString];</span><br><span class="line">  <span class="keyword">if</span>(target == <span class="literal">nil</span>)&#123;</span><br><span class="line">    targetClass = <span class="built_in">NSClassFromString</span>(targetClassString);</span><br><span class="line">    target = [][targetClass alloc] init];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  SEL action = <span class="built_in">NSSelectorFromString</span>(actionString);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(target == <span class="literal">nil</span>)&#123;</span><br><span class="line">    <span class="comment">// 说明没有实现这个类</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="keyword">if</span> (shouldCacheTarget)&#123;</span><br><span class="line">    <span class="keyword">self</span>.cacheTarget[targetClassString] = target;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断类是否实现action的操作</span></span><br><span class="line">  <span class="keyword">if</span>([target responseToSelector:action])&#123;</span><br><span class="line">    [<span class="keyword">self</span> safePerformAction:action target:target parems:params ];</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">// 有可能target 是Swift对象</span></span><br><span class="line">    actionString = [<span class="built_in">NSStirng</span> stringWithFormat:<span class="string">@"Action_@WithParams:"</span>,actionName];</span><br><span class="line">    action = <span class="built_in">NSSelectorFormString</span>(actionString);</span><br><span class="line">    <span class="keyword">if</span>([target responseToSelector:action])&#123;</span><br><span class="line">      <span class="keyword">return</span> [<span class="keyword">self</span> safePerformAction:action target:target params:patams];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="comment">// 这里是处理无响应请求的地方，如果无响应，则尝试调用target的notFound方法统一处理</span></span><br><span class="line">      SEL action = <span class="built_in">NSSelectorFormString</span>(<span class="string">@"notFound:"</span>);</span><br><span class="line">      <span class="keyword">if</span> ([target responseToSelector:action])&#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">self</span> safePerformAction:action target:target patams:patams];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的代码，我们大概能够得知CTMediator的实现的方法，<br>首先会将我们传入的target action 进行字符串的扩展，这样就要求我们实现target和具体的action的。也就是我们要在我们的组件中实现对用的方法。</p>
+<h4 id="实施方案"><a href="#实施方案" class="headerlink" title="实施方案"></a>实施方案</h4><h5 id="创建私有仓库"><a href="#创建私有仓库" class="headerlink" title="创建私有仓库"></a>创建私有仓库</h5><h6 id="创建私有代码仓库"><a href="#创建私有代码仓库" class="headerlink" title="创建私有代码仓库"></a>创建私有代码仓库</h6><p>  首先创建一个托管当前组件的私有代码仓库，然后将仓库<code>Clone</code>下来，把模块的代码<code>push</code>上去，这就是一个最简单的组件化代码的创建，后面还需要针对CTMediator进行修改，先单独出一个工程出来</p>
+<h6 id="创建私有Spec仓库"><a href="#创建私有Spec仓库" class="headerlink" title="创建私有Spec仓库"></a>创建私有Spec仓库</h6><p>  创建私有<code>Spec</code>仓库。<br>  首先在我们使用GitHub中的CocoaPod的时候，我们是从<code>source &#39;https://github.com/CocoaPods/Specs.git&#39;</code>中获取的，但是我们针对我们的私有组件的代码，放在这里显然就不是私有了，就变成公开了。所以我们也需要有一个私有的<code>Spec</code>来管理我们的组件。还是和原来创建仓库一样，先创建一个工程就可以了。这个不需要<code>Clone</code>操作，因为这里的主要是存放针对相同的组件仓库的不同版本的podspec的描述。<br>  然后执行：</p>
+<p>  <code>pod repo add [私有Pod源仓库名字] [私有Pod源的repo地址]</code></p>
+<h5 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h5><h6 id="创建-podspec文件"><a href="#创建-podspec文件" class="headerlink" title="创建.podspec文件"></a>创建.podspec文件</h6><p>找到私有仓库所在的目录，在这个目录下通过下面的命令，创建一个新的<code>.podspec</code>文件,在这个文件中对私有仓库进行一些配置的工作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod sepc create GyennoLogin</span><br><span class="line"></span><br><span class="line">Specification created at GyennoLogin.podspec</span><br></pre></td></tr></table></figure></p>
+<p>创建完这个文件后，需要修改里面的一些东西，</p>
+<p>这里列举我修改后的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 名称</span><br><span class="line">s.name         = &quot;GyennoLogin&quot;</span><br><span class="line">// 版本号</span><br><span class="line">s.version      = &quot;0.0.1&quot;</span><br><span class="line">// 简要概述</span><br><span class="line">s.summary      = &quot;登录模块，主要负责登录的操作&quot;</span><br><span class="line">// 描述</span><br><span class="line">s.description  = &lt;&lt;-DESC</span><br><span class="line">                  这是一个Gyenno的登录模块</span><br><span class="line">                  DESC</span><br><span class="line">// 主页</span><br><span class="line">s.homepage     = &quot;http://gitlab.xxxxx.com/xxxx/GyennoLoginModule&quot;</span><br><span class="line">// 认证</span><br><span class="line">s.license      = &#123; :type =&gt; &quot;MIT&quot;, :file =&gt; &quot;LICENSE&quot; &#125;</span><br><span class="line">// 作者</span><br><span class="line">s.author             = &#123; &quot;xxxxxx&quot; =&gt; &quot;xxxxxx@xxxxx.com&quot; &#125;</span><br><span class="line">// 平台</span><br><span class="line">s.platform     = :ios</span><br><span class="line">// 代码源</span><br><span class="line">s.source       = &#123; :git =&gt; &quot;http://gitlab.xxxx.com/xxxxx/GyennoLoginModule.git&quot;, :tag =&gt; &quot;#&#123;s.version&#125;&quot; &#125;</span><br><span class="line">// 包含文件</span><br><span class="line">s.source_files  = &quot;GyennoLogin/*.&#123;h,m&#125;&quot;</span><br><span class="line">// 排除文件</span><br><span class="line">s.exclude_files = &quot;GyennoLogin/AppDelegate.&#123;h,m&#125;&quot;,&quot;GyennoLogin/main.m&quot;</span><br><span class="line"></span><br><span class="line">s.requires_arc = true</span><br></pre></td></tr></table></figure></p>
+<p>其中我们需要创建一个LICENSE文件</p>
+<h5 id="开发过程"><a href="#开发过程" class="headerlink" title="开发过程"></a>开发过程</h5><h6 id="验证podspec文件"><a href="#验证podspec文件" class="headerlink" title="验证podspec文件"></a>验证podspec文件</h6><p>先用<code>pod</code>命令验证下这个.podspec文件有没有问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod lib lint</span><br></pre></td></tr></table></figure>
+<p>如果没有问题会提示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XXXXX passed validation.</span><br></pre></td></tr></table></figure></p>
+<p>如果没有问题，就将私有工程的代码提交到私有服务器上，连同生成的.podspec文件也要一起提交上去</p>
+<h6 id="关联podspec到Spec私有仓库"><a href="#关联podspec到Spec私有仓库" class="headerlink" title="关联podspec到Spec私有仓库"></a>关联podspec到Spec私有仓库</h6><p>通过下面的命令，添加远程Spec长裤到本地，相当于建立一个连接关系。（这里是Spec的地址）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod repo add GyennoSpec &apos;url for spec&apos;</span><br></pre></td></tr></table></figure></p>
+<p>添加完后，用下面的命令检查下是否成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod repo lint</span><br></pre></td></tr></table></figure>
+<h6 id="提交代码到Spec私有仓库"><a href="#提交代码到Spec私有仓库" class="headerlink" title="提交代码到Spec私有仓库"></a>提交代码到Spec私有仓库</h6><p>如果上面的命令没有问题，这就代表组件的私有仓库和其对应的<code>Spec</code>仓库，已经可以提交并向外提供代码了，这时候我们就可以进行代码开发了，开发完成以后通过下面的代码提交或者更新到<code>spec</code>仓库。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod repo push GyennoSpec GyennoLogin.podspec</span><br></pre></td></tr></table></figure></p>
+<p>提交给<code>Spec</code>私有仓库的文件，可以通过.podspec 文件的s.source_files字段进行过滤，符合过滤条件的文件都会被提交到Spec 仓库</p>
+<h5 id="使用私有仓库代码"><a href="#使用私有仓库代码" class="headerlink" title="使用私有仓库代码"></a>使用私有仓库代码</h5><p>当<code>Spec</code>私有仓库有可用的代码后，就可以通过<code>CocoaPods</code>命令来使用组件代码了，在<code>podfile</code>文件中需要声明私有仓库的地址，例如如下的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">platform :ios, &apos;9.0&apos;</span><br><span class="line"></span><br><span class="line">// 我们的私有源Spec 的地址</span><br><span class="line">source &apos;http://gitlab.gyenno.com/xxxx/GyennoSpec.git&apos;</span><br><span class="line">source &apos;https://github.com/CocoaPods/Specs.git&apos;</span><br><span class="line"></span><br><span class="line">pod ‘GyennoLogin’,&apos;0.0.1&apos;</span><br></pre></td></tr></table></figure>
+<p>在配置好环境后，之后的开发只需要执行上面的<code>pod repo push</code>的操作就可以了。根据业务的需求发布指定的组件版本，并将组件<code>push</code>到<code>spec</code>私有仓库供其他人使用就可以了。</p>
+<p>版本控制也非常简单，值需要在<code>podfile</code>中指定某个私有仓库的版本号就可以了</p>
+<h4 id="组件实践"><a href="#组件实践" class="headerlink" title="组件实践"></a>组件实践</h4><h5 id="CocoaPod-和-Xcode冲突"><a href="#CocoaPod-和-Xcode冲突" class="headerlink" title="CocoaPod 和 Xcode冲突"></a>CocoaPod 和 Xcode冲突</h5><p>在使用Pod的时候，一直无法正确的使用Pod的相关操作，后面发现是CocoaPod 和Xcode冲突了，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">### Error</span><br><span class="line"></span><br><span class="line">```</span><br><span class="line">RuntimeError - [Xcodeproj] Unknown object version.</span><br><span class="line">/Users/lmzqm/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/xcodeproj-1.5.2/lib/xcodeproj/project.rb:217:in `initialize_from_file&apos;</span><br></pre></td></tr></table></figure>
+<p>查看当前CocoaPod的源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gem souece -l</span><br><span class="line"></span><br><span class="line">*** CURRENT SOURCES ***</span><br><span class="line"></span><br><span class="line">https://ruby.taobao.org</span><br></pre></td></tr></table></figure>
+<p>删除该映像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem source --remove https://ruby.taobao.org</span><br></pre></td></tr></table></figure>
+<p>添加新的映像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem source -a https://gems.ruby-china.org</span><br></pre></td></tr></table></figure></p>
+<p>安装最先的CocoaPod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install -n /usr/local/bin cocoapods –pre</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以了</p>
+<h5 id="创建一个CTMediator的扩展工程"><a href="#创建一个CTMediator的扩展工程" class="headerlink" title="创建一个CTMediator的扩展工程"></a>创建一个CTMediator的扩展工程</h5><p>步骤和上面的步骤一样，但是这里需要注意的是，这里需要添加依赖</p>
+<h4 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h4><p><a href="https://github.com/DeveloperErenLiu/ComponentArchitecture">私有Pod源仓库的创建</a></p>
+<p><a href="http://www.voidcn.com/article/p-hmyjudfu-bro.html">cocoapods 和 XCode 版本冲突</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-组件化/" rel="tag"><i class ="fa fa-tag"></i> iOS 组件化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/25/ios-iphonex-config/" rel="next" title="iOS iPhone X 适配">
+                <i class="fa fa-chevron-left"></i> iOS iPhone X 适配
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/30/design-observer-module/" rel="prev" title="观察者模式">
+                观察者模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概要"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中间人-（CTMediator）"><span class="nav-number">2.</span> <span class="nav-text">中间人 （CTMediator）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实施方案"><span class="nav-number">3.</span> <span class="nav-text">实施方案</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建私有仓库"><span class="nav-number">3.1.</span> <span class="nav-text">创建私有仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#创建私有代码仓库"><span class="nav-number">3.1.1.</span> <span class="nav-text">创建私有代码仓库</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#创建私有Spec仓库"><span class="nav-number">3.1.2.</span> <span class="nav-text">创建私有Spec仓库</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#搭建环境"><span class="nav-number">3.2.</span> <span class="nav-text">搭建环境</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#创建-podspec文件"><span class="nav-number">3.2.1.</span> <span class="nav-text">创建.podspec文件</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#开发过程"><span class="nav-number">3.3.</span> <span class="nav-text">开发过程</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#验证podspec文件"><span class="nav-number">3.3.1.</span> <span class="nav-text">验证podspec文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#关联podspec到Spec私有仓库"><span class="nav-number">3.3.2.</span> <span class="nav-text">关联podspec到Spec私有仓库</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#提交代码到Spec私有仓库"><span class="nav-number">3.3.3.</span> <span class="nav-text">提交代码到Spec私有仓库</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用私有仓库代码"><span class="nav-number">3.4.</span> <span class="nav-text">使用私有仓库代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件实践"><span class="nav-number">4.</span> <span class="nav-text">组件实践</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CocoaPod-和-Xcode冲突"><span class="nav-number">4.1.</span> <span class="nav-text">CocoaPod 和 Xcode冲突</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建一个CTMediator的扩展工程"><span class="nav-number">4.2.</span> <span class="nav-text">创建一个CTMediator的扩展工程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/05/28/ios-mudulization/';
+        this.page.identifier = '2018/05/28/ios-mudulization/';
+        this.page.title = 'iOS 组件化开发';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
