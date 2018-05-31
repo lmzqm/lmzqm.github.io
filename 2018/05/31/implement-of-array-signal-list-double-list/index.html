@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要： 线性表是一种线性结构，它具有相同类型的n(n&amp;gt;=0)个数据元素组成有序列表。这次主要介绍线性表中的几个组成部分：数组、单向链表、双向链表">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数组、单链表和双链表介绍及实现">
+<meta property="og:url" content="http://yoursite.com/2018/05/31/implement-of-array-signal-list-double-list/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要： 线性表是一种线性结构，它具有相同类型的n(n&amp;gt;=0)个数据元素组成有序列表。这次主要介绍线性表中的几个组成部分：数组、单向链表、双向链表">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/array.png">
+<meta property="og:image" content="http://yoursite.com/images/sigle_list.png">
+<meta property="og:image" content="http://yoursite.com/images/list_delete.png">
+<meta property="og:image" content="http://yoursite.com/images/list_add.png">
+<meta property="og:image" content="http://yoursite.com/images/double_list.png">
+<meta property="og:image" content="http://yoursite.com/images/double_list_delete.png">
+<meta property="og:image" content="http://yoursite.com/images/double_list_add.png">
+<meta property="og:updated_time" content="2018-05-31T06:49:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数组、单链表和双链表介绍及实现">
+<meta name="twitter:description" content="摘要： 线性表是一种线性结构，它具有相同类型的n(n&amp;gt;=0)个数据元素组成有序列表。这次主要介绍线性表中的几个组成部分：数组、单向链表、双向链表">
+<meta name="twitter:image" content="http://yoursite.com/images/array.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/31/implement-of-array-signal-list-double-list/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>数组、单链表和双链表介绍及实现 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/implement-of-array-signal-list-double-list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数组、单链表和双链表介绍及实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T09:40:17+08:00">2018-05-31</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/31/implement-of-array-signal-list-double-list/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/31/implement-of-array-signal-list-double-list/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：</p>
+<p>线性表是一种线性结构，它具有相同类型的n(n&gt;=0)个数据元素组成有序列表。<br>这次主要介绍线性表中的几个组成部分：数组、单向链表、双向链表</p>
+<a id="more"></a>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>数组是有上界和下界的，数组的元素在上下界中是连续的</p>
+<p>存储10，20，30，40，50的数组的示意图如下：</p>
+<p><img src="/images/array.png" alt="array"></p>
+<h5 id="内存的布局："><a href="#内存的布局：" class="headerlink" title="内存的布局："></a>内存的布局：</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">NSArray</span> *array1 = @[<span class="string">@"10"</span>,<span class="string">@"20"</span>,<span class="string">@"30"</span>,<span class="string">@"40"</span>,<span class="string">@"50"</span>];</span><br><span class="line">[array1 enumerateObjectsUsingBlock:^(<span class="keyword">id</span>  _Nonnull obj, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * _Nonnull stop) &#123;</span><br><span class="line">   <span class="built_in">NSLog</span>(<span class="string">@" the obj is %@ address %p"</span>,obj,obj);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>打印出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2018-05-30 22:30:50.454716-0400 GYEBLEManager[255:41494]  the obj is 10 address 0xa4e2c</span><br><span class="line">2018-05-30 22:30:50.454824-0400 GYEBLEManager[255:41494]  the obj is 20 address 0xa4e3c</span><br><span class="line">2018-05-30 22:30:50.454880-0400 GYEBLEManager[255:41494]  the obj is 30 address 0xa4e4c</span><br><span class="line">2018-05-30 22:30:50.454932-0400 GYEBLEManager[255:41494]  the obj is 40 address 0xa4e5c</span><br><span class="line">2018-05-30 22:30:50.454983-0400 GYEBLEManager[255:41494]  the obj is 50 address 0xa4e6c</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：这里目前只是针对字符串进行打印，其他的打印出来貌似不是顺序的，可以存在使用链表的方式来进行存储，还需要考究下。</p>
+</blockquote>
+<p>数组的特点：<strong>数组是联系的；随机访问速度快。</strong><br>数组中稍微复杂一点的就是多维数组。对于C语言而言，多维数组本质上也是通过一维数组来实现的。还有就是动态数组，也就是数组的容量能动态的增加的数组。在Objective-C 中有<code>NSMutableArray</code>来实现。</p>
+<h5 id="iOS-多维数组的实现方法"><a href="#iOS-多维数组的实现方法" class="headerlink" title="iOS 多维数组的实现方法"></a>iOS 多维数组的实现方法</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加一个对象</span></span><br><span class="line">-(<span class="keyword">void</span>)addObject:(ObjectType)anObject;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在某个位置添加对象</span></span><br><span class="line">-(<span class="keyword">void</span>)insertObject:(ObjectType)anObject atIndex:(<span class="built_in">NSUInteger</span>)index;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 移除最后一个对象</span></span><br><span class="line">-(<span class="keyword">void</span>)removeLastObject;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用某个对象取代某个位置的对象</span></span><br><span class="line">-(<span class="keyword">void</span>)repalceObjectAtIndex:(<span class="built_in">NSUInteger</span>)index withObject:(ObjectType)anObject;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加一个数组的对象</span></span><br><span class="line">-(<span class="keyword">void</span>)addObjectsFromArray:(<span class="built_in">NSArray</span>&lt;ObjectType&gt; *)otherArray;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 移除所有的对象</span></span><br><span class="line">-(<span class="keyword">void</span>)removeAllObjects;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 移除某个位置的对象</span></span><br><span class="line">-(<span class="keyword">void</span>)removeObjectAtIndex:(<span class="built_in">NSUInteger</span>)index;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 移除某个对象</span></span><br><span class="line">-(<span class="keyword">void</span>)removeObject:(ObjectType)anObject;</span><br></pre></td></tr></table></figure>
+<p>这里只是部分举例，如果需要更加详细的需要查看文档。</p>
+<h4 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h4><p>单链表是链表的一种，它是由节点组成，每个节点都包含下一个节点的指针。</p>
+<p>单链表的示意图如下：</p>
+<p><img src="/images/sigle_list.png" alt="sigle_list"></p>
+<p>标头为空，标头的后继节点是“节点10”，然后依次是“节点20”，“节点30”…</p>
+<p>我们知道链表中的对象都是存放着后续节点的指针，而且每个对象在内存中的布局是零散的，不是连续的，这样要进行查找起来的话，就需要跳转来找到对应的指针区域。<br>所以大体可以推算出针对链表来说插入和删除会比较容易点，但是针对其做遍历的话可能就会比素组麻烦点。</p>
+<h5 id="单链表删除节点"><a href="#单链表删除节点" class="headerlink" title="单链表删除节点"></a>单链表删除节点</h5><p><img src="/images/list_delete.png" alt="list_delete"></p>
+<p>删除“节点30”<br>删除之前：‘节点20’的后继节点是“节点30”，‘节点30’的后继节点是“节点40”<br>删除之后：“节点20”的后继节点是“节点40”</p>
+<h5 id="单链表添加节点"><a href="#单链表添加节点" class="headerlink" title="单链表添加节点"></a>单链表添加节点</h5><p><img src="/images/list_add.png" alt="list_add"></p>
+<p>添加“节点15”<br>添加之前：”节点10”的后继节点是“节点20”<br>添加之后：”节点10”的后继节点是“节点15”，”节点15”的后继节点是”节点20”</p>
+<p>单链表的特点：<strong>节点的链接方向是单向的；相对于数组来说，单链表的随机访问速度慢，但是删除和添加的效率很高。</strong></p>
+<h4 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h4><p>双链表是链表的一种，和单链表一样也是由节点组成，它的每个数据节点都有两个指针，分别指向直接后继和直接前驱。所以从双向链表的人员一个节点都可以很方便的访问它的前驱和后继节点，这样就构成了双向循环的链表。</p>
+<p><img src="/images/double_list.png" alt="double_list"></p>
+<h5 id="双链表删除节点"><a href="#双链表删除节点" class="headerlink" title="双链表删除节点"></a>双链表删除节点</h5><p><img src="/images/double_list_delete.png" alt="double_list_delete"></p>
+<h5 id="双链表添加节点"><a href="#双链表添加节点" class="headerlink" title="双链表添加节点"></a>双链表添加节点</h5><p><img src="/images/double_list_add.png" alt="double_list_add"></p>
+<h4 id="代码实现双向链表"><a href="#代码实现双向链表" class="headerlink" title="代码实现双向链表"></a>代码实现双向链表</h4><h5 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">GYENode</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) GYENode *preNode;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) GYENode *next;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) <span class="keyword">id</span> value;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h5 id="双链表-1"><a href="#双链表-1" class="headerlink" title="双链表"></a>双链表</h5><p>.h文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">GYEDoubleList</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)addObject:(<span class="keyword">id</span>)object;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)addObject:(<span class="keyword">id</span>)object atIndex:(<span class="built_in">NSUInteger</span>)index;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)removeObject:(<span class="keyword">id</span>)object;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">id</span>)getObjectAtIndex:(<span class="built_in">NSUInteger</span>)index;</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">BOOL</span>)isEmpty;</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSUInteger</span>)size;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)replaceObject:(<span class="keyword">id</span>)object atIndex:(<span class="built_in">NSUInteger</span>)index;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)removeObjectAtIndex:(<span class="built_in">NSUInteger</span>)index;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure></p>
+<p>.m文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"GYEDoubleList.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"GYENode.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">GYEDoubleList</span> ()</span>&#123;</span><br><span class="line">    <span class="keyword">int</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) GYENode *headNode;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) GYENode *lastNode;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">strong</span>) GYENode *currentNode;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">GYEDoubleList</span></span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">instancetype</span>) init&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        [<span class="keyword">self</span> createHead];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    初始化的时候。创建头部，也就是一个新的双向链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">-(<span class="keyword">void</span>)createHead&#123;</span><br><span class="line"></span><br><span class="line">    _headNode = [<span class="keyword">self</span> createNode:<span class="literal">nil</span>];</span><br><span class="line">    _currentNode = _headNode;</span><br><span class="line">    _lastNode = _headNode;</span><br><span class="line">    count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(GYENode*)createNode:(<span class="keyword">id</span>)object&#123;</span><br><span class="line"></span><br><span class="line">    GYENode *node = [[GYENode alloc] init];</span><br><span class="line">    node.value = object;</span><br><span class="line"></span><br><span class="line">    node.next = node;</span><br><span class="line">    node.preNode = node;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(GYENode*)objectAtIndex:(<span class="built_in">NSUInteger</span>)index&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断是否超出范围</span></span><br><span class="line">    <span class="keyword">if</span> (index &gt; count) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (index &gt; count/<span class="number">2</span>) &#123;</span><br><span class="line">        <span class="comment">// 从后面开始查找</span></span><br><span class="line">         GYENode *node = _headNode.preNode;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = count; i&lt;index; i--) &#123;</span><br><span class="line">            node = node.preNode;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 从head开始查找</span></span><br><span class="line">        GYENode *node = _headNode.next;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;index; i++) &#123;</span><br><span class="line">            node = node.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    添加对象的操作</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)appendNode:(GYENode *)addNode &#123;</span><br><span class="line"></span><br><span class="line">    addNode.preNode = _currentNode;</span><br><span class="line">    <span class="keyword">if</span>(_currentNode == _headNode)&#123;</span><br><span class="line"></span><br><span class="line">       addNode.next = _currentNode;</span><br><span class="line">        _currentNode.preNode = addNode;</span><br><span class="line"></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        addNode.next = _currentNode.next;</span><br><span class="line">        _currentNode.next.preNode = addNode;</span><br><span class="line">    &#125;</span><br><span class="line">    _currentNode.next = addNode;</span><br><span class="line"></span><br><span class="line">    count++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)addObject:(<span class="keyword">id</span>)object&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    [<span class="keyword">self</span> addObject:object atIndex:count];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)addObject:(<span class="keyword">id</span>)object atIndex:(<span class="built_in">NSUInteger</span>)index&#123;</span><br><span class="line"></span><br><span class="line">    GYENode *node = [<span class="keyword">self</span> objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">nil</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    _currentNode = node;</span><br><span class="line">    GYENode *addNode = [<span class="keyword">self</span> createNode:object];</span><br><span class="line">    [<span class="keyword">self</span> appendNode:addNode];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> 移除对象的操作</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)removeObject:(<span class="keyword">id</span>)object&#123;</span><br><span class="line"></span><br><span class="line">    GYENode *node =  _headNode.next;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;count; i++) &#123;</span><br><span class="line">        GYENode *selectNode =  node.next;</span><br><span class="line">        <span class="keyword">if</span> (selectNode.value == object) &#123;</span><br><span class="line">            [<span class="keyword">self</span> deleteNode:selectNode];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)removeObjectAtIndex:(<span class="built_in">NSUInteger</span>)index&#123;</span><br><span class="line">    GYENode * node = [<span class="keyword">self</span> objectAtIndex:index+<span class="number">1</span>];</span><br><span class="line">    [<span class="keyword">self</span> deleteNode:node];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)removeAllObjects&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i= <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">        [<span class="keyword">self</span> removeObjectAtIndex:i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)deleteNode:(GYENode*)node&#123;</span><br><span class="line">    <span class="comment">// 删除node的操作</span></span><br><span class="line">    node.preNode.next  =  node.next;</span><br><span class="line">    node.next.preNode = node.preNode;</span><br><span class="line">    count--;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    替换</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">-(<span class="keyword">void</span>)replaceObject:(<span class="keyword">id</span>)object atIndex:(<span class="built_in">NSUInteger</span>)index&#123;</span><br><span class="line">    GYENode *node = [<span class="keyword">self</span> objectAtIndex:index+<span class="number">1</span>];</span><br><span class="line">    node.value = object;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    判断是否为空</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">-(<span class="built_in">BOOL</span>)isEmpty&#123;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">-(<span class="built_in">NSUInteger</span>)size&#123;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    获取具体的值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">id</span>)getObjectAtIndex:(<span class="built_in">NSUInteger</span>)index&#123;</span><br><span class="line">    GYENode *node =  [<span class="keyword">self</span> objectAtIndex:index+<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">return</span> node.value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="结构体和类的区分"><a href="#结构体和类的区分" class="headerlink" title="结构体和类的区分"></a>结构体和类的区分</h4><h4 id="单链表中的操作-添加-删除-修改"><a href="#单链表中的操作-添加-删除-修改" class="headerlink" title="单链表中的操作 添加 删除 修改"></a>单链表中的操作 添加 删除 修改</h4>
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"><i class ="fa fa-tag"></i> 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/30/design-observer-module/" rel="next" title="观察者模式">
+                <i class="fa fa-chevron-left"></i> 观察者模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#内存的布局："><span class="nav-number">1.1.</span> <span class="nav-text">内存的布局：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#iOS-多维数组的实现方法"><span class="nav-number">1.2.</span> <span class="nav-text">iOS 多维数组的实现方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单链表"><span class="nav-number">2.</span> <span class="nav-text">单链表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#单链表删除节点"><span class="nav-number">2.1.</span> <span class="nav-text">单链表删除节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#单链表添加节点"><span class="nav-number">2.2.</span> <span class="nav-text">单链表添加节点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双链表"><span class="nav-number">3.</span> <span class="nav-text">双链表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#双链表删除节点"><span class="nav-number">3.1.</span> <span class="nav-text">双链表删除节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#双链表添加节点"><span class="nav-number">3.2.</span> <span class="nav-text">双链表添加节点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码实现双向链表"><span class="nav-number">4.</span> <span class="nav-text">代码实现双向链表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#节点"><span class="nav-number">4.1.</span> <span class="nav-text">节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#双链表-1"><span class="nav-number">4.2.</span> <span class="nav-text">双链表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构体和类的区分"><span class="nav-number">5.</span> <span class="nav-text">结构体和类的区分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单链表中的操作-添加-删除-修改"><span class="nav-number">6.</span> <span class="nav-text">单链表中的操作 添加 删除 修改</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/05/31/implement-of-array-signal-list-double-list/';
+        this.page.identifier = '2018/05/31/implement-of-array-signal-list-double-list/';
+        this.page.title = '数组、单链表和双链表介绍及实现';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
