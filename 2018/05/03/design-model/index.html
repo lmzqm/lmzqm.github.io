@@ -114,7 +114,7 @@
 <meta property="og:image" content="http://yoursite.com/images/composition.png">
 <meta property="og:image" content="http://yoursite.com/images/association.png">
 <meta property="og:image" content="http://yoursite.com/images/dependency.png">
-<meta property="og:updated_time" content="2018-05-17T09:40:44.000Z">
+<meta property="og:updated_time" content="2018-06-07T01:21:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式 开篇——读懂UML类图和时序图">
 <meta name="twitter:description" content="摘要：  日常的编程中我们经常能提到抽象，耦合，聚合，关联，依赖等一些专业词汇，那我们通过学习了解了其的词语解释后，我们怎么样能在代码中将它们的关系给表现出来。比如说给你一个UML的图，你能看清楚线条和箭头分别代表着什么吗？你能根据这个UML的图写出对应的代码吗？">
@@ -383,33 +383,33 @@
 <li>它有两个继承类：小汽车和自行车； 它们之间的关系为实现关系，使用带空心箭头的虚线表示</li>
 <li>小汽车和SUV之间是继承关系，它们之间的关系为泛化关系，使用带空心箭头的实线表示</li>
 <li>小汽车和发动机之间属于组合关系，使用带实心箭头的实线表示</li>
-<li>学生和班级之间属于聚合关系，使用带空心箭头的实线表示</li>
+<li>学生和班级之间属于聚合关系，使用带空心菱形箭头的实线表示</li>
 <li>学生和身份证之间是关联关系，使用一根实线表示</li>
 <li>学生上学需要自行车，与自行车是一种依赖关系，使用带箭头的虚线表示</li>
 </ul>
 <h5 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h5><h6 id="泛化关系（generalization）"><a href="#泛化关系（generalization）" class="headerlink" title="泛化关系（generalization）"></a>泛化关系（generalization）</h6><p>  类的继承结构在UML中表示为：泛化，实现</p>
 <p>  继承关系表示is-a的关系 表示是的关系</p>
 <p>  在UML中用时一个空心实线箭头表示 表示（A继承自B）</p>
-<p><img src="/images/generalization.png" alt="  generalization"></p>
-<p>  在最终的代码中，泛化关系表现为继承非抽象</p>
+<p><img src="/images/generalization.png" alt="generalization"></p>
+<p>  在最终的代码中，泛化关系表现为继承非抽象，</p>
 <h6 id="实现关系-realize"><a href="#实现关系-realize" class="headerlink" title="实现关系(realize)"></a>实现关系(realize)</h6><p>  实现关系用一条空心箭头的虚线表示</p>
-<p>  eg:”车”是一个抽象概念，在现实中无法直接用来定义对象，只有指明具体的子类才可以用来定义对象</p>
-<p><img src="/images/realize.png" alt="  realize"></p>
-<p>  在最终代码中，实现关系表现为继承抽象类</p>
+<p>  eg:”车”是一个抽象概念，在现实中无法直接用来定义对象，只有指明具体的子类才可以用来定义对象，比如下图中的’小汽车’和‘自行车’；</p>
+<p><img src="/images/realize.png" alt="realize"></p>
+<p>  在最终代码中，实现关系表现为继承抽象类 主要是实现协议或者接口的操作</p>
 <h6 id="聚合关系-aggregation"><a href="#聚合关系-aggregation" class="headerlink" title="聚合关系(aggregation)"></a>聚合关系(aggregation)</h6><p>  聚合关系用一条带空心菱形箭头直线表示，表示A聚合到B上，或者说B是由A组成的</p>
-<p>  <img src="/images/aggregation.png" alt="  aggregation"></p>
+<p>  <img src="/images/aggregation.png" alt="aggregation"></p>
 <p>  聚合关系用于表示实体对象之间的关系，表示整体由部分构成<br>  与组合关系不同的是，整体和部分不是强依赖，即使整体不存在了，部分任然粗壮</p>
-<p>  在代码中主要体现是也是类中的一个实例变量，改实例变量在程序外面可以改变，而且其的创建和销毁不是由内部来实现的，只负责使用其中的属性和方法就可以了</p>
+<p>  在代码中主要体现是也是类中的一个实例变量，改实例变量在程序外面可以改变，而且其的创建和销毁不是由内部来实现的，只负责使用其中的属性和方法就可以了。</p>
 <h6 id="组合关系-composition"><a href="#组合关系-composition" class="headerlink" title="组合关系(composition)"></a>组合关系(composition)</h6><p>  组合关系用一条带实心菱形箭头直线表示:如下图表示 A组成B 或者B 由A组成</p>
-<p>  <img src="/images/composition.png" alt="  composition"></p>
+<p>  <img src="/images/composition.png" alt="composition"></p>
 <p>  与聚合关系一样，组合关系表示整体由部分构成的语义<br>  但是组合关系是一种强依赖的特殊聚合关系，如果整体不存在了，则部分也不存在</p>
 <p>  在代码中可以体现为：首先也是一个实体的变量，但是其具体的创建应该是由构造函数来实现的，也就是说其的生命周期来源于组合进入的对象进行创建</p>
 <h6 id="关联关系-association"><a href="#关联关系-association" class="headerlink" title="关联关系(association)"></a>关联关系(association)</h6><p>  关联关系用一条直线表示 描述不同类的对象之间的结构关系，它是一种静态关系，通常与运行的状态无关，一般由常识因素决定；它一般用来定义对象之间静态的，天然的结构；所有关联关系是一种强关联的关系</p>
 <p>  关联关系默认不强调方向，表示对象件相互知道，如果特别强调方向，如下图表示A知道B,但B不知道A</p>
-<p>  <img src="/images/association.png" alt="  association"></p>
+<p>  <img src="/images/association.png" alt="association"></p>
 <p>  在最终代码中，关联对象同时是以成员变量的形式实现</p>
 <h6 id="依赖关系-dependency"><a href="#依赖关系-dependency" class="headerlink" title="依赖关系(dependency)"></a>依赖关系(dependency)</h6><p>  依赖关系是一套带箭头的虚线表示的，如下图表示A依赖于B ,它描述的是一个对象在运行的时候会用到另一个对象的关系</p>
-<p><img src="/images/dependency.png" alt="  dependency"></p>
+<p><img src="/images/dependency.png" alt="dependency"></p>
 <p>  与关联关系不同的是，他是一种临时性的关系，通常发生在运行期间产生，并且随着运行时的变化，依赖关系也可能发生改变</p>
 <p>  显然依赖也是有方向的，双向依赖是一种非常糟糕的结构，我们总是应该保持单向依赖，杜绝双向依赖的产生</p>
 <p>  在最终的代码中，依赖关系体现为类构造方法以及类方法的传入参数，箭头的指向为调用关系；依赖关系除了临时知道对方还是使用对方的方法和属性</p>
@@ -572,7 +572,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-count">31</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -623,7 +623,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

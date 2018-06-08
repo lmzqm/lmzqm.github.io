@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：  关于多线程的操作，更多是为了提高运行的效率，同时也是为了给主线程减轻负担，避免将所有的操作都归主线程来进行操作，可以将其他一些不需要界面的操作交给其他线程来进行操作。同时在针对线程进行管理的时候，不同的线程对象有不同的操作。针对不同的操作，我们还需要根据需求来进行选取正确的线程对象来进行操作。这个文章将通过对现有的线程对象进行分析，然后总结在其的用途和其提供的接口。以便在遇到需求的">
+<meta name="keywords" content="iOS 多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 多线程">
+<meta property="og:url" content="http://yoursite.com/2018/06/08/ios-threads-detail/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：  关于多线程的操作，更多是为了提高运行的效率，同时也是为了给主线程减轻负担，避免将所有的操作都归主线程来进行操作，可以将其他一些不需要界面的操作交给其他线程来进行操作。同时在针对线程进行管理的时候，不同的线程对象有不同的操作。针对不同的操作，我们还需要根据需求来进行选取正确的线程对象来进行操作。这个文章将通过对现有的线程对象进行分析，然后总结在其的用途和其提供的接口。以便在遇到需求的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-06-08T08:32:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 多线程">
+<meta name="twitter:description" content="摘要：  关于多线程的操作，更多是为了提高运行的效率，同时也是为了给主线程减轻负担，避免将所有的操作都归主线程来进行操作，可以将其他一些不需要界面的操作交给其他线程来进行操作。同时在针对线程进行管理的时候，不同的线程对象有不同的操作。针对不同的操作，我们还需要根据需求来进行选取正确的线程对象来进行操作。这个文章将通过对现有的线程对象进行分析，然后总结在其的用途和其提供的接口。以便在遇到需求的">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/08/ios-threads-detail/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS 多线程 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/08/ios-threads-detail/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS 多线程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-08T11:19:22+08:00">2018-06-08</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/08/ios-threads-detail/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/06/08/ios-threads-detail/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：<br>  关于多线程的操作，更多是为了提高运行的效率，同时也是为了给主线程减轻负担，避免将所有的操作都归主线程来进行操作，可以将其他一些不需要界面的操作交给其他线程来进行操作。同时在针对线程进行管理的时候，不同的线程对象有不同的操作。针对不同的操作，我们还需要根据需求来进行选取正确的线程对象来进行操作。这个文章将通过对现有的线程对象进行分析，然后总结在其的用途和其提供的接口。以便在遇到需求的时候更加方便的知道应该使用那些线程来进行操作。<br><a id="more"></a></p>
+<h5 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h5><p>在进行开发之前我们先了解一些基本术语，方便更好的理解文章的内容。</p>
+<blockquote>
+<p>进程：一个具有独立功能的程序，可以理解为一个运行中的应用程序<br>线程：程序执行的最小单元，线程是进程中的一个实体 (一个进程会存在一个主线程(UI线程))<br>同步：操作是按照先后顺序执行的<br>异步：操作的执行顺序是不分先后的<br>队列：控制线程的执行顺序 （FIFO）<br>并发：线程的执行顺序可以同时一起进行执行<br>串行：线程执行职能依次按照先后顺序执行的</p>
+</blockquote>
+<p>注意：</p>
+<ul>
+<li>一个进行有多个线程</li>
+<li>一个进行可以有多个队列</li>
+</ul>
+<h4 id="多线程的对比"><a href="#多线程的对比" class="headerlink" title="多线程的对比"></a>多线程的对比</h4><h5 id="1-NSThread"><a href="#1-NSThread" class="headerlink" title="1.NSThread"></a>1.NSThread</h5><p>每个NSThread对象对应一个线程，真正最原始的线程。</p>
+<blockquote>
+<p>优点：NSThread 轻量级最低，相对简单<br>缺点：手动管理所有的线程活动，如生命周期、线程同步、睡眠。</p>
+</blockquote>
+<h5 id="2-NSOperation"><a href="#2-NSOperation" class="headerlink" title="2.NSOperation"></a>2.NSOperation</h5><p>自带线程管理的抽象类</p>
+<blockquote>
+<p>优点：自带线程周期管理，操作上可以更加注重自己的逻辑<br>缺点：面向对象的抽象类，只能使用它或者它定义好的两个子类：NSInovactionOperation 和 NSBlockOperation</p>
+</blockquote>
+<h5 id="3-GCD"><a href="#3-GCD" class="headerlink" title="3.GCD"></a>3.GCD</h5><p>GCD是Apple 开发的一个多核编程的解决方法。</p>
+<blockquote>
+<p>优点： 最高效，避免并发陷阱<br>缺点: 基于C实现</p>
+</blockquote>
+<h5 id="4-选择小结"><a href="#4-选择小结" class="headerlink" title="4.选择小结"></a>4.选择小结</h5><ol>
+<li>简单而且安全的选择 NSOperation 实现多线程就可以</li>
+<li>处理大量并发数据，又追求性能效率的选择GCD</li>
+<li>NSThread本人选择基本上就是啊在做一些小测试的时候使用</li>
+</ol>
+<h5 id="NSThread"><a href="#NSThread" class="headerlink" title="NSThread"></a>NSThread</h5><p>现在我们讨论下这个对象，NSThread 从属性和方法来进一步解析这个对象，便于我们后续的使用</p>
+<h6 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h6><p>线程的获取 主要分为当前线程和主线程</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当前的线程</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">class</span>, <span class="keyword">readonly</span>, <span class="keyword">strong</span>) <span class="built_in">NSThread</span> *currentThread;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取主线程</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">class</span>, <span class="keyword">readonly</span>, <span class="keyword">strong</span>) <span class="built_in">NSThread</span> *mainThread API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断线程是否是主线程</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">BOOL</span> isMainThread;</span><br></pre></td></tr></table></figure>
+<p>线程的状态</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 是否在执行</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>, <span class="keyword">getter</span>=isExecuting) <span class="built_in">BOOL</span> executing API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"><span class="comment">// 是否已经完成</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>, <span class="keyword">getter</span>=isFinished) <span class="built_in">BOOL</span> finished API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"><span class="comment">// 是否取消</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>, <span class="keyword">getter</span>=isCancelled) <span class="built_in">BOOL</span> cancelled API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br></pre></td></tr></table></figure>
+<p>其他的属性</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 线程的优先级 0-1 越大优先级越高</span></span><br><span class="line"><span class="keyword">@property</span> <span class="keyword">double</span> threadPriority ;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程的名字</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name ;</span><br></pre></td></tr></table></figure>
+<h6 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h6><p>初始化</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#类方法</span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)detachNewThreadWithBlock:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block API_AVAILABLE(macosx(<span class="number">10.12</span>), ios(<span class="number">10.0</span>), watchos(<span class="number">3.0</span>), tvos(<span class="number">10.0</span>));</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)detachNewThreadSelector:(SEL)selector toTarget:(<span class="keyword">id</span>)target withObject:(<span class="keyword">nullable</span> <span class="keyword">id</span>)argument;</span><br><span class="line"></span><br><span class="line"><span class="meta">#实例方法</span></span><br><span class="line"><span class="comment">// 直接初始化 不带参数</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)init API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>)) <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程执行回调操作和参数的携带</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithTarget:(<span class="keyword">id</span>)target selector:(SEL)selector object:(<span class="keyword">nullable</span> <span class="keyword">id</span>)argument API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接返回回调操作</span></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithBlock:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block API_AVAILABLE(macosx(<span class="number">10.12</span>), ios(<span class="number">10.0</span>), watchos(<span class="number">3.0</span>), tvos(<span class="number">10.0</span>));</span><br></pre></td></tr></table></figure>
+<p>延迟操作</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里是延迟知道某个时间</span></span><br><span class="line">+ (<span class="keyword">void</span>)sleepUntilDate:(<span class="built_in">NSDate</span>*)date;</span><br><span class="line"><span class="comment">// 延迟多长时间</span></span><br><span class="line">+ (<span class="keyword">void</span>) sleepForTimeInterval:(<span class="built_in">NSTimeInterval</span>)ti;</span><br></pre></td></tr></table></figure>
+<p>线程管理方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 取消操作</span></span><br><span class="line">- (<span class="keyword">void</span>)cancel API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开始操作</span></span><br><span class="line">- (<span class="keyword">void</span>)start API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 退出操作</span></span><br><span class="line">+ (<span class="keyword">void</span>)exit;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取优先级</span></span><br><span class="line">+ (<span class="keyword">double</span>)threadPriority;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置优先级</span></span><br><span class="line">+ (<span class="built_in">BOOL</span>)setThreadPriority:(<span class="keyword">double</span>)p;</span><br></pre></td></tr></table></figure>
+<p>扩展方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 在主线程中执行</span></span><br><span class="line">- (<span class="keyword">void</span>)performSelectorOnMainThread:(SEL)aSelector withObject:(<span class="keyword">nullable</span> <span class="keyword">id</span>)arg waitUntilDone:(<span class="built_in">BOOL</span>)wait modes:(<span class="keyword">nullable</span> <span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)array;</span><br><span class="line"><span class="comment">// 在主线程中执行</span></span><br><span class="line">- (<span class="keyword">void</span>)performSelectorOnMainThread:(SEL)aSelector withObject:(<span class="keyword">nullable</span> <span class="keyword">id</span>)arg waitUntilDone:(<span class="built_in">BOOL</span>)wait;</span><br><span class="line">	<span class="comment">// equivalent to the first method with kCFRunLoopCommonModes</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在某个线程中执行</span></span><br><span class="line">- (<span class="keyword">void</span>)performSelector:(SEL)aSelector onThread:(<span class="built_in">NSThread</span> *)thr withObject:(<span class="keyword">nullable</span> <span class="keyword">id</span>)arg waitUntilDone:(<span class="built_in">BOOL</span>)wait modes:(<span class="keyword">nullable</span> <span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)array API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在某个线程中执行</span></span><br><span class="line">- (<span class="keyword">void</span>)performSelector:(SEL)aSelector onThread:(<span class="built_in">NSThread</span> *)thr withObject:(<span class="keyword">nullable</span> <span class="keyword">id</span>)arg waitUntilDone:(<span class="built_in">BOOL</span>)wait API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line">	<span class="comment">// equivalent to the first method with kCFRunLoopCommonModes</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在后台线程中执行</span></span><br><span class="line">- (<span class="keyword">void</span>)performSelectorInBackground:(SEL)aSelector withObject:(<span class="keyword">nullable</span> <span class="keyword">id</span>)arg API_AVAILABLE(macos(<span class="number">10.5</span>), ios(<span class="number">2.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br></pre></td></tr></table></figure>
+<h5 id="NSOperation"><a href="#NSOperation" class="headerlink" title="NSOperation"></a>NSOperation</h5><p>NSOperation</p>
+<h6 id="属性-1"><a href="#属性-1" class="headerlink" title="属性"></a>属性</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 是否已经取消</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>,getting=isCancelled) <span class="built_in">BOOL</span> cancelled;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否已经执行</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>,getting=isExecuting) <span class="built_in">BOOL</span> executing;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否已经完成</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>,getting=isFinished) <span class="built_in">BOOL</span> finished;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断队列中的任务是否是同步执行</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>,getting=isConcurrent) <span class="built_in">BOOL</span> concurrent;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断队列中的人员是否异步执行</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>,getting=isAsynchronous) <span class="built_in">BOOL</span> asynchronous;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断队列能够被执行</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>,<span class="keyword">getter</span>=isReady) <span class="built_in">BOOL</span> ready;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 队列的优先级</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">NSOperationQueuePriority</span> queuePriority;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 操作的名字</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name</span><br></pre></td></tr></table></figure>
+<h6 id="方法-1"><a href="#方法-1" class="headerlink" title="方法"></a>方法</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 开始执行</span></span><br><span class="line">-(<span class="keyword">void</span>)start;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取消执行</span></span><br><span class="line">-(<span class="keyword">void</span>)cancel;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加和移除依赖</span></span><br><span class="line">- (<span class="keyword">void</span>)addDependency:(<span class="built_in">NSOperation</span> *)op;</span><br><span class="line">- (<span class="keyword">void</span>)removeDependency:(<span class="built_in">NSOperation</span> *)op;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 直到线程中的操作全部执行完成</span></span><br><span class="line">- (<span class="keyword">void</span>)waitUntilFinished ;</span><br></pre></td></tr></table></figure>
+<p>NSBlockOperation</p>
+<p>这个对象继承 NSOperation</p>
+<h6 id="属性-2"><a href="#属性-2" class="headerlink" title="属性"></a>属性</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>, <span class="keyword">copy</span>) <span class="built_in">NSArray</span>&lt;<span class="keyword">void</span> (^)(<span class="keyword">void</span>)&gt; *executionBlocks;</span><br></pre></td></tr></table></figure>
+<h6 id="方法-2"><a href="#方法-2" class="headerlink" title="方法"></a>方法</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 类方法</span></span><br><span class="line">+ (<span class="keyword">instancetype</span>)blockOperationWithBlock:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加执行的 block 如果正在执行或者已经执行完毕后报一个异常</span></span><br><span class="line">- (<span class="keyword">void</span>)addExecutionBlock:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br></pre></td></tr></table></figure>
+<p>NSInvocation</p>
+<h6 id="属性-3"><a href="#属性-3" class="headerlink" title="属性"></a>属性</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 执行</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>, <span class="keyword">retain</span>) <span class="built_in">NSInvocation</span> *invocation;</span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">readonly</span>, <span class="keyword">retain</span>) <span class="keyword">id</span> result;</span><br></pre></td></tr></table></figure>
+<h6 id="方法-3"><a href="#方法-3" class="headerlink" title="方法"></a>方法</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-(<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithTarget:(<span class="keyword">id</span>)target selector:(SEL)sel object:(<span class="keyword">nullable</span> <span class="keyword">id</span>)arg;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">instancetype</span>)initWithInvocation:(<span class="built_in">NSInvocation</span> *)inv <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br></pre></td></tr></table></figure>
+<h5 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h5><p>队列就是我们执行操作的容器，操作只有进入队列后就会被执行</p>
+<h6 id="属性-4"><a href="#属性-4" class="headerlink" title="属性"></a>属性</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 获取当前的队列</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">class</span>, <span class="keyword">readonly</span>, <span class="keyword">strong</span>, <span class="keyword">nullable</span>) <span class="built_in">NSOperationQueue</span> *currentQueue;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取主队列</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">class</span>, <span class="keyword">readonly</span>, <span class="keyword">strong</span>) <span class="built_in">NSOperationQueue</span> *mainQueue;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  队列中的操作数组</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>, <span class="keyword">copy</span>) <span class="built_in">NSArray</span>&lt;__kindof <span class="built_in">NSOperation</span> *&gt; *operations;</span><br><span class="line"><span class="comment">//  队列中的操作数</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span> operationCount;</span><br><span class="line"><span class="comment">// 最大同步操作数目</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">NSInteger</span> maxConcurrentOperationCount;</span><br><span class="line"><span class="comment">// 是否已经暂停</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">getter</span>=isSuspended) <span class="built_in">BOOL</span> suspended;</span><br><span class="line"><span class="comment">// 队列的名字</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</span><br></pre></td></tr></table></figure>
+<h6 id="方法-4"><a href="#方法-4" class="headerlink" title="方法"></a>方法</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加操作对象</span></span><br><span class="line">- (<span class="keyword">void</span>)addOperation:(<span class="built_in">NSOperation</span> *)op;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加多个操作对象</span></span><br><span class="line">- (<span class="keyword">void</span>)addOperations:(<span class="built_in">NSArray</span>&lt;<span class="built_in">NSOperation</span> *&gt; *)ops waitUntilFinished:(<span class="built_in">BOOL</span>)wait API_AVAILABLE(macos(<span class="number">10.6</span>), ios(<span class="number">4.0</span>), watchos(<span class="number">2.0</span>), tvos(<span class="number">9.0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接操作对象的回调</span></span><br><span class="line">- (<span class="keyword">void</span>)addOperationWithBlock:(<span class="keyword">void</span> (^)(<span class="keyword">void</span>))block;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取消所有的操作</span></span><br><span class="line">- (<span class="keyword">void</span>)cancelAllOperations;</span><br><span class="line"><span class="comment">// 等所有操作完成后</span></span><br><span class="line">- (<span class="keyword">void</span>)waitUntilAllOperationsAreFinished;</span><br></pre></td></tr></table></figure>
+<h4 id="知识点和疑问"><a href="#知识点和疑问" class="headerlink" title="知识点和疑问"></a>知识点和疑问</h4><p>找到其对应的方法实现，这样才能在后期更好的查找对象的方法</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-多线程/" rel="tag"><i class ="fa fa-tag"></i> iOS 多线程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/07/ios-knowlege-items/" rel="next" title="知识点">
+                <i class="fa fa-chevron-left"></i> 知识点
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多线程的对比"><span class="nav-number"></span> <span class="nav-text">多线程的对比</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-NSThread"><span class="nav-number">1.</span> <span class="nav-text">1.NSThread</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-NSOperation"><span class="nav-number">2.</span> <span class="nav-text">2.NSOperation</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-GCD"><span class="nav-number">3.</span> <span class="nav-text">3.GCD</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-选择小结"><span class="nav-number">4.</span> <span class="nav-text">4.选择小结</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSThread"><span class="nav-number">5.</span> <span class="nav-text">NSThread</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#属性"><span class="nav-number">5.1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法"><span class="nav-number">5.2.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSOperation"><span class="nav-number">6.</span> <span class="nav-text">NSOperation</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#属性-1"><span class="nav-number">6.1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法-1"><span class="nav-number">6.2.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#属性-2"><span class="nav-number">6.3.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法-2"><span class="nav-number">6.4.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#属性-3"><span class="nav-number">6.5.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法-3"><span class="nav-number">6.6.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSOperationQueue"><span class="nav-number">7.</span> <span class="nav-text">NSOperationQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#属性-4"><span class="nav-number">7.1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#方法-4"><span class="nav-number">7.2.</span> <span class="nav-text">方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#知识点和疑问"><span class="nav-number"></span> <span class="nav-text">知识点和疑问</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div> 
+ <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/06/08/ios-threads-detail/';
+        this.page.identifier = '2018/06/08/ios-threads-detail/';
+        this.page.title = 'iOS 多线程';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
