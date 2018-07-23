@@ -112,7 +112,7 @@
 <meta property="og:image" content="http://yoursite.com/images/select_localizations.png">
 <meta property="og:image" content="http://yoursite.com/images/new_fielse.png">
 <meta property="og:image" content="http://yoursite.com/images/file_strings.png">
-<meta property="og:updated_time" content="2018-05-30T03:18:56.000Z">
+<meta property="og:updated_time" content="2018-07-23T10:53:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS iPhone X 适配">
 <meta name="twitter:description" content="摘要：">
@@ -397,8 +397,15 @@
 <p><img src="/images/file_strings.png" alt="file_strings"></p>
 <p>这样就已经大体完成了，然后就是要同步英文和中文里的信息啦！</p>
 <p>采用的是localString的操作</p>
+<h4 id="启动图片国际化"><a href="#启动图片国际化" class="headerlink" title="启动图片国际化"></a>启动图片国际化</h4><p>这里首先需要用到的是针对国际化的处理，首先保证图片的名称和格式都是一模一样的，然后分别针对图片进行国际化的处理</p>
+<p>点击图片，然后将图片看到右边栏中的国际化处理，针对不同的语言进行不同的操作，比如说中文的启动页就进行中文的国际化处理，然后在中文的图片中再增加英文的国际化处理，这时候会出现一个说已经存在了英文的相同名字的图片了，这时候将这个图片添加就可以了。</p>
+<p>然后针对plist 文件，使用Source Code 的方式进行打开，然后编辑</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;key&gt;UILaunchImages&lt;/key&gt;</span><br><span class="line">    &lt;array&gt;</span><br><span class="line">        &lt;dict&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageMinimumOSVersion&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;8.0&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageName&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;launchImage_4&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageOrientation&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;Portrait&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageSize&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;&#123;320,480&#125;&lt;/string&gt;</span><br><span class="line">        &lt;/dict&gt;</span><br><span class="line">        &lt;dict&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageMinimumOSVersion&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;8.0&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageName&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;launchImage_5&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageOrientation&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;Portrait&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageSize&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;&#123;320,568&#125;&lt;/string&gt;</span><br><span class="line">        &lt;/dict&gt;</span><br><span class="line">        &lt;dict&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageMinimumOSVersion&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;8.0&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageName&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;launchImage_6&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageOrientation&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;Portrait&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageSize&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;&#123;375,667&#125;&lt;/string&gt;</span><br><span class="line">        &lt;/dict&gt;</span><br><span class="line">        &lt;dict&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageMinimumOSVersion&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;8.0&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageName&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;launchImage_6p&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageOrientation&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;Portrait&lt;/string&gt;</span><br><span class="line">            &lt;key&gt;UILaunchImageSize&lt;/key&gt;</span><br><span class="line">            &lt;string&gt;&#123;414,736&#125;&lt;/string&gt;</span><br><span class="line">        &lt;/dict&gt;</span><br><span class="line">    &lt;/array&gt;</span><br></pre></td></tr></table></figure>
+<p>其中，需要修改的是文件名和string中图片的size的大小</p>
+<p>注意：<br>  在使用这个方法进行启动页面国际化的时候，需要通过完全删除后，才能生效也就是说即使你在使用的过程中切换语言，启动图片也是不会变化的，这点是需要注意的。</p>
 <h5 id="图片国际化"><a href="#图片国际化" class="headerlink" title="图片国际化"></a>图片国际化</h5><h5 id="时间国际化"><a href="#时间国际化" class="headerlink" title="时间国际化"></a>时间国际化</h5><h5 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h5><p><a href="https://www.jianshu.com/p/3a9ad4f0fa32">iOS11和iPhone X的适配</a></p>
 <p><a href="https://www.jianshu.com/p/88c1b65e3ddb">3分钟实现iOS语言本地化/国际化（图文详解）</a></p>
+<p><a href="https://www.jianshu.com/p/f8edd7b7a217">iOS开发技巧-国际化(Localization)，只看一篇就够了</a></p>
 
       
     </div>
@@ -538,7 +545,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">39</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -595,7 +602,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -640,7 +653,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#启动页面的适配"><span class="nav-number">1.</span> <span class="nav-text">启动页面的适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#刷新框架适配"><span class="nav-number">2.</span> <span class="nav-text">刷新框架适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码宽高比适配"><span class="nav-number">3.</span> <span class="nav-text">纯代码宽高比适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配齐刘海"><span class="nav-number">4.</span> <span class="nav-text">纯代码适配齐刘海</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配iPhone-X-脚底"><span class="nav-number">5.</span> <span class="nav-text">纯代码适配iPhone X 脚底</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#国际化操作"><span class="nav-number"></span> <span class="nav-text">国际化操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用名称国际化"><span class="nav-number">1.</span> <span class="nav-text">应用名称国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码国际化"><span class="nav-number">2.</span> <span class="nav-text">代码国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图片国际化"><span class="nav-number">3.</span> <span class="nav-text">图片国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时间国际化"><span class="nav-number">4.</span> <span class="nav-text">时间国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#启动页面的适配"><span class="nav-number">1.</span> <span class="nav-text">启动页面的适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#刷新框架适配"><span class="nav-number">2.</span> <span class="nav-text">刷新框架适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码宽高比适配"><span class="nav-number">3.</span> <span class="nav-text">纯代码宽高比适配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配齐刘海"><span class="nav-number">4.</span> <span class="nav-text">纯代码适配齐刘海</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯代码适配iPhone-X-脚底"><span class="nav-number">5.</span> <span class="nav-text">纯代码适配iPhone X 脚底</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#国际化操作"><span class="nav-number"></span> <span class="nav-text">国际化操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用名称国际化"><span class="nav-number">1.</span> <span class="nav-text">应用名称国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码国际化"><span class="nav-number">2.</span> <span class="nav-text">代码国际化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动图片国际化"><span class="nav-number"></span> <span class="nav-text">启动图片国际化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图片国际化"><span class="nav-number">1.</span> <span class="nav-text">图片国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时间国际化"><span class="nav-number">2.</span> <span class="nav-text">时间国际化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">3.</span> <span class="nav-text">感谢</span></a></li></ol></div>
             
 
           </div>

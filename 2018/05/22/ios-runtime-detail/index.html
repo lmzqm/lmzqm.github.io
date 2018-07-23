@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="lmzqm">
 <meta property="og:description" content="摘要：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-23T07:31:47.000Z">
+<meta property="og:updated_time" content="2018-07-23T10:53:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS RunTime 详解">
 <meta name="twitter:description" content="摘要：">
@@ -374,6 +374,13 @@
 <li>OC的函数调用称为消息发送。属于动态调用过程。在编译的时候并不能决定真正调用哪个函数。</li>
 <li>只有真正运行的时候才会根据函数的名称找到对应的函数来调用。</li>
 </ul>
+<h4 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h4><p>在Objc中id 代表的是一个对象，根据上面的声明，凡是首地址是*isa 的struct 指针，都可以认为是objc 对象，运行时通过isa指针，可以查找到对象属于什么类？</p>
+<ul>
+<li>运行时的实现方式</li>
+</ul>
+<p>通过对类进行反编译后我们可以更加深入的了解类的内部结构，已经元类的结构有更加深入的了解</p>
+<p>在类中是一个全局的变量，其中记录了类名，成员变量，属性变量，方法列表，协议列表等信息</p>
+<p>在类中isa 指向了全局对象 meta-class ,只记录了类名和类的方法</p>
 <h4 id="NSObject-类"><a href="#NSObject-类" class="headerlink" title="NSObject 类"></a>NSObject 类</h4><p>在iOS 开发中，我们所有的都是对象 ，那我们的对象里面包含了哪些东西呢？或者说我们的对象有什么可以提供给我们操作的呢？</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt;</span>&#123;</span><br><span class="line">  Class isa OBJC_ISA_AVALIABILITY;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在面向对象的过程中都会有 <strong>类</strong> 和 <strong>对象</strong> 的概念，对象就是类的实例。通过上面的代码中我们可以看出在对象中包含了一个 <code>Class isa</code>。 那我们接下来分析下Class</p>
@@ -538,7 +545,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">39</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -595,7 +602,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -640,7 +653,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSObject-类"><span class="nav-number">2.</span> <span class="nav-text">NSObject 类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API"><span class="nav-number">3.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#类"><span class="nav-number">3.1.</span> <span class="nav-text">类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#属性"><span class="nav-number">3.2.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法"><span class="nav-number">3.3.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运用"><span class="nav-number">4.</span> <span class="nav-text">运用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法交换"><span class="nav-number">4.1.</span> <span class="nav-text">方法交换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动归档解档"><span class="nav-number">4.2.</span> <span class="nav-text">自动归档解档</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#字典转Model"><span class="nav-number">4.3.</span> <span class="nav-text">字典转Model</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#动态的添加属性"><span class="nav-number">4.4.</span> <span class="nav-text">动态的添加属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#消息转发"><span class="nav-number">4.5.</span> <span class="nav-text">消息转发</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#感谢"><span class="nav-number">5.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类和对象"><span class="nav-number">2.</span> <span class="nav-text">类和对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSObject-类"><span class="nav-number">3.</span> <span class="nav-text">NSObject 类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API"><span class="nav-number">4.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#类"><span class="nav-number">4.1.</span> <span class="nav-text">类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#属性"><span class="nav-number">4.2.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法"><span class="nav-number">4.3.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运用"><span class="nav-number">5.</span> <span class="nav-text">运用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法交换"><span class="nav-number">5.1.</span> <span class="nav-text">方法交换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动归档解档"><span class="nav-number">5.2.</span> <span class="nav-text">自动归档解档</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#字典转Model"><span class="nav-number">5.3.</span> <span class="nav-text">字典转Model</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#动态的添加属性"><span class="nav-number">5.4.</span> <span class="nav-text">动态的添加属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#消息转发"><span class="nav-number">5.5.</span> <span class="nav-text">消息转发</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#感谢"><span class="nav-number">6.</span> <span class="nav-text">感谢</span></a></li></ol></div>
             
 
           </div>

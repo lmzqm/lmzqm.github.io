@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络基础知识">
+<meta property="og:url" content="http://yoursite.com/2018/07/09/ios-http-review/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/htts_proticol.png">
+<meta property="og:image" content="http://yoursite.com/images/https_proticol1.png">
+<meta property="og:image" content="http://yoursite.com/images/https_protocol2.png">
+<meta property="og:image" content="http://yoursite.com/images/http.png">
+<meta property="og:image" content="http://yoursite.com/images/client_hello.png">
+<meta property="og:image" content="http://yoursite.com/images/server_hello.png">
+<meta property="og:image" content="http://yoursite.com/images/server_hello2.png">
+<meta property="og:updated_time" content="2018-07-11T11:28:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络基础知识">
+<meta name="twitter:description" content="摘要：">
+<meta name="twitter:image" content="http://yoursite.com/images/htts_proticol.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/09/ios-http-review/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>网络基础知识 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/09/ios-http-review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">网络基础知识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T11:48:17+08:00">2018-07-09</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/09/ios-http-review/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/07/09/ios-http-review/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：</p>
+<a id="more"></a>
+<h4 id="HTTP-和-HTTPS-的区别"><a href="#HTTP-和-HTTPS-的区别" class="headerlink" title="HTTP 和 HTTPS 的区别"></a>HTTP 和 HTTPS 的区别</h4><p>http协议运行在TCP之上，明文传输，客户端和服务器端都无法进行验证对方的身份，HTTPS是身披SSL外壳的HTTP运行在SSL之上，SSL运行在TCP之上，是添加了加密和认证机制的HTTP，两者之间存在了如下不同：</p>
+<ol>
+<li>端口不同：HTTP与HTTPS使用不同的连接方式，用的端口分别是80和443</li>
+<li>资源消耗不同：和HTTP通信相比，HTTPS通信会由于加减密的处理消耗更多的CPU和内存的资源。</li>
+<li>开销：HTTPS 通信需要证书</li>
+</ol>
+<h4 id="TCP的三次握手"><a href="#TCP的三次握手" class="headerlink" title="TCP的三次握手"></a>TCP的三次握手</h4><p><strong>(我想要和你连接，你确定要和我连接， 是的，我要和你连接(成功))</strong></p>
+<p>第一次握手：Client 将标志位SYN置为1，随机产生一个值seq=0 然后将数据发送给Server,Client进入到SYN_SENT的状态 等待Server的确认</p>
+<p>第二次握手：Server 收到数据包后由于标志位SYN=1知道Client请求建立连接，Server将标志位SYN和ACK都置为1，ack=0+1 随机产出一个随机数seq=k 并将该数据包发送给Client 以确认连接的请求，Server进入到SYN_RCVD</p>
+<p>第三次握手：Client 收到却后，检查ack是否为0+1 ACK是否为1，如果正确则将标志位ACK置为1，ack为k+1 并将该数据包发送给Server ,Server检查ACK</p>
+<p>下面说说ACK 和 SEQ 中的关联：<br>如果我发送一个请求seq是4 那么下次返回的ACK 就必须是这个，这样我们才能确认你是针对我的这次请求的返回的操作</p>
+<h4 id="TCP的四次挥手"><a href="#TCP的四次挥手" class="headerlink" title="TCP的四次挥手"></a>TCP的四次挥手</h4><p><strong>(我要和你断开连接，好的断吧，我也要和你断开连接，好的断吧)</strong></p>
+<p>第一次挥手：Client 发送一个FIN 用来关闭Client 到 Server的数据传送，Client 进入 FIN_WAIT_1的状态<br>第二次挥手：Server 收到FIN 后，发送一个ACK给Client ,Server 进入到CLOSE_WAIT 状态，此时TCP的连接处于半关闭的状态也就是客户端已经没有要发送的数据了，但是服务器如果有数据发送的话，客户端仍要接收、<br>第三次挥手：Server 发送一个FIN 后，用来关闭Server到Client 的数据传送，Server进入到LAST_ACK 状态<br>第四次挥手：Client 收到FIN 后，Client 进入到TIME_WAIT状态，接着发送一个ACK 给Server 确认序号，这时候Server进入Close的状态，完成四次挥手</p>
+<h4 id="为什么TCP连接需要三次握手，两次不可以吗？为什么？"><a href="#为什么TCP连接需要三次握手，两次不可以吗？为什么？" class="headerlink" title="为什么TCP连接需要三次握手，两次不可以吗？为什么？"></a>为什么TCP连接需要三次握手，两次不可以吗？为什么？</h4><p>为了防止已经失效的连接请求突然又传到服务器，因而产生错误</p>
+<p>客户端发出的连接请求报文并未丢失，而是在某个网络节点长时间的滞留，从而导致延误到连接释放后的某个事件才到Server 。这是Server 误认为这是Client的一个连接请求，于是就向客户端发送一个确认请求的数据包，同意建立连接。如果不采用“三次握手的话”，那么只要Server 发出连接请求报包后，服务器就会建立一个新的连接。但是这时候Client 并没有发出请求连接的请求，所以不会理睬Server的确认，也就不会与Server进行通信了，在这个时候Server一直等待Client的请求，这样Server就白白的浪费了一定的资源，如果采用三次握手的话，服务器没有收到客户端的确认，就会知道Client 没有建立请求，就不会建立连接。</p>
+<h4 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h4><h4 id="HTTPS的流程"><a href="#HTTPS的流程" class="headerlink" title="HTTPS的流程"></a>HTTPS的流程</h4><p><img src="/images/htts_proticol.png" alt="htts_proticol"></p>
+<p>接下来看看其流程：</p>
+<p><img src="/images/https_proticol1.png" alt="https_proticol1"></p>
+<p><img src="/images/https_protocol2.png" alt="https_protocol2"></p>
+<p>然后我们再通过WireShake来进行分析：</p>
+<p><img src="/images/http.png" alt="http"></p>
+<p>这图中显示了Https的连接的流程</p>
+<h6 id="1-首先客户端发送一个Client-Hello"><a href="#1-首先客户端发送一个Client-Hello" class="headerlink" title="1.首先客户端发送一个Client Hello."></a>1.首先客户端发送一个Client Hello.</h6><p>先来看看Client Hello 中SSL层</p>
+<p><img src="/images/client_hello.png" alt=" client_hello"></p>
+<p>接下来我们分析下：</p>
+<blockquote>
+<p>在这里主要是将客户端中的支持的TLS的版本(Version ：TLS 1.2)，生成的随机数(Random)，还有就是支持的加密的算法（Cipher Suites），已经支持的压缩方式(Compressiong Methods)，还有一些扩展，发送给服务器</p>
+<p>当服务器收到客户端的请求的时候，就会向客户端发送server  Hello</p>
+</blockquote>
+<h6 id="2-服务端发送一个Server-Hello"><a href="#2-服务端发送一个Server-Hello" class="headerlink" title="2. 服务端发送一个Server Hello"></a>2. 服务端发送一个Server Hello</h6><p><img src="/images/server_hello.png" alt="server_hello"><br><img src="/images/server_hello2.png" alt="server_hello2"></p>
+<p>在这个阶段，服务主要做的事情是：</p>
+<ol>
+<li>确认使用的加密通信协议，比如：TLS 1.2 ,如果浏览器和服务器支持的版本不同，服务器将关闭加密通信</li>
+<li>一个服务器生成的随机数random2 ,稍后用于生成“对话秘钥”</li>
+<li>确认使用加密的方法</li>
+<li>服务器的证书</li>
+</ol>
+<blockquote>
+<p>展开SSL的数据段，可以看到服务器支持的TLS版本为1.2.也可以看到服务器生成的随机数用于生成对话的秘钥。下面还有加密套件的信息，这里的加密套件表示使用RSA公钥算法来验证证书已经交换秘钥，用AES加密算法对数据进行加密，使用SHA算法来校验消息内容</p>
+</blockquote>
+<h6 id="3-客户端发送一个clent-key-exchange"><a href="#3-客户端发送一个clent-key-exchange" class="headerlink" title="3.客户端发送一个clent key exchange"></a>3.客户端发送一个clent key exchange</h6><p>client_key_exchange</p>
+<p>客户端收到证书之后会首先验证</p>
+<ul>
+<li>验证流程<blockquote>
+<ol>
+<li>客户端收到服务器的相应后，首先验证服务器的证书，如果证书不是由可信任的机构颁发的，或者证书中的域名与实际的域名不一致，或者证书已经过期，就会向访问者显示一个警告，由访问者选择是否还要继续通信，如果证书没有问题，客户端就会从证书中取出服务器的公钥。然后向服务器发送一条信息，包括用服务器公钥加密的随机数，编码改变通知和客户端握手结束通知</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>生成随机数</li>
+</ul>
+<blockquote>
+<p>验证通过之后，客户端会生成一个随机数pre-master secret ,然后使用证书中的公钥进行加密，然后传递给服务器端</p>
+</blockquote>
+<h6 id="4-服务端发送一个-change-Cipher-Spec"><a href="#4-服务端发送一个-change-Cipher-Spec" class="headerlink" title="4.服务端发送一个 change Cipher Spec"></a>4.服务端发送一个 change Cipher Spec</h6><p>change_cipher_Spec</p>
+<blockquote>
+<p>在服务器端收到公钥加密的内容，在服务端使用功能私钥进行解密随后会获得随机数pre-master secret 然后根据random1,random2，pre-master secret 通过一定的算法得出session key和 MAC 算法秘钥，作为后面交互过程中使用的对称秘钥，同时客户端也会使用random1,random2，pre-master secret ，和同样的算法生成session key 和Mac 算法的信息</p>
+</blockquote>
+<p>然后结束会话。</p>
+<h6 id="5-然后在后续的交互中使用session-key-和MAC-算法的秘钥对传输的内容进行加密和解密"><a href="#5-然后在后续的交互中使用session-key-和MAC-算法的秘钥对传输的内容进行加密和解密" class="headerlink" title="5. 然后在后续的交互中使用session key 和MAC 算法的秘钥对传输的内容进行加密和解密"></a>5. 然后在后续的交互中使用session key 和MAC 算法的秘钥对传输的内容进行加密和解密</h6><blockquote>
+<p>具体的步骤是先使用MAC 秘钥对内容进行摘要，然后把摘要放在内容的后面使用sessionKey 再进行加密。对于客户端发送的数据，服务端收到之后，需要先使用client_write_key进行解密，然后使用Client_write_MAC_key对数据完整性进行校验。服务端发送的数据客户端会使用Server_write_key和Server_write_MAC_key进行相同的操作</p>
+</blockquote>
+<p>参考：<br><a href="https://www.jianshu.com/p/b0b6b88fe9fe">Https流程和原理</a><br><a href="https://www.jianshu.com/p/81cc4600447b">wireshark学习笔记(四)——HTTPS协议分析</a></p>
+<h4 id="对称加密和非对称加密"><a href="#对称加密和非对称加密" class="headerlink" title="对称加密和非对称加密"></a>对称加密和非对称加密</h4><h6 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密:"></a>对称加密:</h6><blockquote>
+<p>就是加密和解密都是用一个秘钥，这种方式优点就是速度快，缺点就是在管理和分配秘钥的时候不安全。</p>
+</blockquote>
+<h6 id="非对称加密："><a href="#非对称加密：" class="headerlink" title="非对称加密："></a>非对称加密：</h6><blockquote>
+<p>非对称加密就是一个秘钥对，叫做公钥和私钥，私钥自己持有，公钥可以发送给其他人使用，使用公钥进行加密的信息，只有何其配对的私钥可以解开。目前常见的非对称加密算法是RSA，非对称加密的优点是安全，因为它不需要把私钥暴露出去。</p>
+</blockquote>
+<p>在正式的使用场景中一般都是对称加密和非对称加密结合使用，使用非对称加密完成秘钥的传输，然后使用对称秘钥进行数据加密和解密</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/11/block-detail-configure/" rel="next" title="Block 原理分析详解">
+                <i class="fa fa-chevron-left"></i> Block 原理分析详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/10/iOS 面试/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-和-HTTPS-的区别"><span class="nav-number">1.</span> <span class="nav-text">HTTP 和 HTTPS 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP的三次握手"><span class="nav-number">2.</span> <span class="nav-text">TCP的三次握手</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP的四次挥手"><span class="nav-number">3.</span> <span class="nav-text">TCP的四次挥手</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么TCP连接需要三次握手，两次不可以吗？为什么？"><span class="nav-number">4.</span> <span class="nav-text">为什么TCP连接需要三次握手，两次不可以吗？为什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP和UDP的区别"><span class="nav-number">5.</span> <span class="nav-text">TCP和UDP的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS的流程"><span class="nav-number">6.</span> <span class="nav-text">HTTPS的流程</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-首先客户端发送一个Client-Hello"><span class="nav-number">6.0.1.</span> <span class="nav-text">1.首先客户端发送一个Client Hello.</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-服务端发送一个Server-Hello"><span class="nav-number">6.0.2.</span> <span class="nav-text">2. 服务端发送一个Server Hello</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-客户端发送一个clent-key-exchange"><span class="nav-number">6.0.3.</span> <span class="nav-text">3.客户端发送一个clent key exchange</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-服务端发送一个-change-Cipher-Spec"><span class="nav-number">6.0.4.</span> <span class="nav-text">4.服务端发送一个 change Cipher Spec</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-然后在后续的交互中使用session-key-和MAC-算法的秘钥对传输的内容进行加密和解密"><span class="nav-number">6.0.5.</span> <span class="nav-text">5. 然后在后续的交互中使用session key 和MAC 算法的秘钥对传输的内容进行加密和解密</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对称加密和非对称加密"><span class="nav-number">7.</span> <span class="nav-text">对称加密和非对称加密</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#对称加密"><span class="nav-number">7.0.1.</span> <span class="nav-text">对称加密:</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#非对称加密："><span class="nav-number">7.0.2.</span> <span class="nav-text">非对称加密：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div> 
+ <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/07/09/ios-http-review/';
+        this.page.identifier = '2018/07/09/ios-http-review/';
+        this.page.title = '网络基础知识';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
