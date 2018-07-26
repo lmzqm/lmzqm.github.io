@@ -99,12 +99,13 @@
 
 
 
-  <meta name="description" content="摘要：">
+  <meta name="description" content="摘要：  在开发过程中很多看到关于TCP/IP 还有就是HTTP 和 HTTPS 的连接过程等操作，同时也面试的过程中也会经常问到关于他们的地方，这里简单的做一个总结。">
+<meta name="keywords" content="网络基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网络基础知识">
 <meta property="og:url" content="http://yoursite.com/2018/07/09/ios-http-review/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：">
+<meta property="og:description" content="摘要：  在开发过程中很多看到关于TCP/IP 还有就是HTTP 和 HTTPS 的连接过程等操作，同时也面试的过程中也会经常问到关于他们的地方，这里简单的做一个总结。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/htts_proticol.png">
 <meta property="og:image" content="http://yoursite.com/images/https_proticol1.png">
@@ -113,10 +114,10 @@
 <meta property="og:image" content="http://yoursite.com/images/client_hello.png">
 <meta property="og:image" content="http://yoursite.com/images/server_hello.png">
 <meta property="og:image" content="http://yoursite.com/images/server_hello2.png">
-<meta property="og:updated_time" content="2018-07-11T11:28:54.000Z">
+<meta property="og:updated_time" content="2018-07-26T10:48:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络基础知识">
-<meta name="twitter:description" content="摘要：">
+<meta name="twitter:description" content="摘要：  在开发过程中很多看到关于TCP/IP 还有就是HTTP 和 HTTPS 的连接过程等操作，同时也面试的过程中也会经常问到关于他们的地方，这里简单的做一个总结。">
 <meta name="twitter:image" content="http://yoursite.com/images/htts_proticol.png">
 
 
@@ -373,7 +374,7 @@
       
 
       
-        <p>摘要：</p>
+        <p>摘要：<br>  在开发过程中很多看到关于TCP/IP 还有就是HTTP 和 HTTPS 的连接过程等操作，同时也面试的过程中也会经常问到关于他们的地方，这里简单的做一个总结。</p>
 <a id="more"></a>
 <h4 id="HTTP-和-HTTPS-的区别"><a href="#HTTP-和-HTTPS-的区别" class="headerlink" title="HTTP 和 HTTPS 的区别"></a>HTTP 和 HTTPS 的区别</h4><p>http协议运行在TCP之上，明文传输，客户端和服务器端都无法进行验证对方的身份，HTTPS是身披SSL外壳的HTTP运行在SSL之上，SSL运行在TCP之上，是添加了加密和认证机制的HTTP，两者之间存在了如下不同：</p>
 <ol>
@@ -390,7 +391,10 @@
 <p>第一次挥手：Client 发送一个FIN 用来关闭Client 到 Server的数据传送，Client 进入 FIN_WAIT_1的状态<br>第二次挥手：Server 收到FIN 后，发送一个ACK给Client ,Server 进入到CLOSE_WAIT 状态，此时TCP的连接处于半关闭的状态也就是客户端已经没有要发送的数据了，但是服务器如果有数据发送的话，客户端仍要接收、<br>第三次挥手：Server 发送一个FIN 后，用来关闭Server到Client 的数据传送，Server进入到LAST_ACK 状态<br>第四次挥手：Client 收到FIN 后，Client 进入到TIME_WAIT状态，接着发送一个ACK 给Server 确认序号，这时候Server进入Close的状态，完成四次挥手</p>
 <h4 id="为什么TCP连接需要三次握手，两次不可以吗？为什么？"><a href="#为什么TCP连接需要三次握手，两次不可以吗？为什么？" class="headerlink" title="为什么TCP连接需要三次握手，两次不可以吗？为什么？"></a>为什么TCP连接需要三次握手，两次不可以吗？为什么？</h4><p>为了防止已经失效的连接请求突然又传到服务器，因而产生错误</p>
 <p>客户端发出的连接请求报文并未丢失，而是在某个网络节点长时间的滞留，从而导致延误到连接释放后的某个事件才到Server 。这是Server 误认为这是Client的一个连接请求，于是就向客户端发送一个确认请求的数据包，同意建立连接。如果不采用“三次握手的话”，那么只要Server 发出连接请求报包后，服务器就会建立一个新的连接。但是这时候Client 并没有发出请求连接的请求，所以不会理睬Server的确认，也就不会与Server进行通信了，在这个时候Server一直等待Client的请求，这样Server就白白的浪费了一定的资源，如果采用三次握手的话，服务器没有收到客户端的确认，就会知道Client 没有建立请求，就不会建立连接。</p>
-<h4 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h4><h4 id="HTTPS的流程"><a href="#HTTPS的流程" class="headerlink" title="HTTPS的流程"></a>HTTPS的流程</h4><p><img src="/images/htts_proticol.png" alt="htts_proticol"></p>
+<h4 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h4><p>TCP 是连接状态的，而UDP 是非连接状态的</p>
+<p>TCP 对数据的传输有保障，而UDP 不会对数据传输有保障</p>
+<p>TCP 是一对一的，UDP 可以一对多，多对多传输</p>
+<h4 id="HTTPS的流程"><a href="#HTTPS的流程" class="headerlink" title="HTTPS的流程"></a>HTTPS的流程</h4><p><img src="/images/htts_proticol.png" alt="htts_proticol"></p>
 <p>接下来看看其流程：</p>
 <p><img src="/images/https_proticol1.png" alt="https_proticol1"></p>
 <p><img src="/images/https_protocol2.png" alt="https_protocol2"></p>
@@ -439,7 +443,6 @@
 <h6 id="5-然后在后续的交互中使用session-key-和MAC-算法的秘钥对传输的内容进行加密和解密"><a href="#5-然后在后续的交互中使用session-key-和MAC-算法的秘钥对传输的内容进行加密和解密" class="headerlink" title="5. 然后在后续的交互中使用session key 和MAC 算法的秘钥对传输的内容进行加密和解密"></a>5. 然后在后续的交互中使用session key 和MAC 算法的秘钥对传输的内容进行加密和解密</h6><blockquote>
 <p>具体的步骤是先使用MAC 秘钥对内容进行摘要，然后把摘要放在内容的后面使用sessionKey 再进行加密。对于客户端发送的数据，服务端收到之后，需要先使用client_write_key进行解密，然后使用Client_write_MAC_key对数据完整性进行校验。服务端发送的数据客户端会使用Server_write_key和Server_write_MAC_key进行相同的操作</p>
 </blockquote>
-<p>参考：<br><a href="https://www.jianshu.com/p/b0b6b88fe9fe">Https流程和原理</a><br><a href="https://www.jianshu.com/p/81cc4600447b">wireshark学习笔记(四)——HTTPS协议分析</a></p>
 <h4 id="对称加密和非对称加密"><a href="#对称加密和非对称加密" class="headerlink" title="对称加密和非对称加密"></a>对称加密和非对称加密</h4><h6 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密:"></a>对称加密:</h6><blockquote>
 <p>就是加密和解密都是用一个秘钥，这种方式优点就是速度快，缺点就是在管理和分配秘钥的时候不安全。</p>
 </blockquote>
@@ -447,6 +450,7 @@
 <p>非对称加密就是一个秘钥对，叫做公钥和私钥，私钥自己持有，公钥可以发送给其他人使用，使用公钥进行加密的信息，只有何其配对的私钥可以解开。目前常见的非对称加密算法是RSA，非对称加密的优点是安全，因为它不需要把私钥暴露出去。</p>
 </blockquote>
 <p>在正式的使用场景中一般都是对称加密和非对称加密结合使用，使用非对称加密完成秘钥的传输，然后使用对称秘钥进行数据加密和解密</p>
+<p>参考：<br><a href="https://www.jianshu.com/p/b0b6b88fe9fe">Https流程和原理</a><br><a href="https://www.jianshu.com/p/81cc4600447b">wireshark学习笔记(四)——HTTPS协议分析</a></p>
 
       
     </div>
@@ -474,6 +478,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/网络基础/" rel="tag"><i class ="fa fa-tag"></i> 网络基础</a>
+          
+        </div>
       
 
       
@@ -580,7 +590,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -643,7 +653,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">24</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

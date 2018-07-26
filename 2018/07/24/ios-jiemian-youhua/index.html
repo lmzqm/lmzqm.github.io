@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要： 在我们正常的开发过程中，优化是一个比较技术的活，这里只针对界面的优化，首先从屏幕的显示原理处理，然后告诉我们一般界面出现卡顿是如何产生的。然后从CPU 和GPU 的角度来分析如何更好的避免卡顿的手段。后面介绍一个开源的框架ASDK 来处理我们之前针对CPU 和 GPU 优化所做的事情。">
+<meta name="keywords" content="iOS 界面优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 界面优化">
+<meta property="og:url" content="http://yoursite.com/2018/07/24/ios-jiemian-youhua/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要： 在我们正常的开发过程中，优化是一个比较技术的活，这里只针对界面的优化，首先从屏幕的显示原理处理，然后告诉我们一般界面出现卡顿是如何产生的。然后从CPU 和GPU 的角度来分析如何更好的避免卡顿的手段。后面介绍一个开源的框架ASDK 来处理我们之前针对CPU 和 GPU 优化所做的事情。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/07/24/ios-jiemian-youhua/assets/markdown-img-paste-20180725093348770.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/24/ios-jiemian-youhua/assets/markdown-img-paste-20180725094824246.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/24/ios-jiemian-youhua/assets/markdown-img-paste-20180725100142280.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/24/ios-jiemian-youhua/assets/markdown-img-paste-20180725100428916.png">
+<meta property="og:updated_time" content="2018-07-26T10:48:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 界面优化">
+<meta name="twitter:description" content="摘要： 在我们正常的开发过程中，优化是一个比较技术的活，这里只针对界面的优化，首先从屏幕的显示原理处理，然后告诉我们一般界面出现卡顿是如何产生的。然后从CPU 和GPU 的角度来分析如何更好的避免卡顿的手段。后面介绍一个开源的框架ASDK 来处理我们之前针对CPU 和 GPU 优化所做的事情。">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/24/ios-jiemian-youhua/assets/markdown-img-paste-20180725093348770.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/24/ios-jiemian-youhua/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS 界面优化 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/24/ios-jiemian-youhua/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS 界面优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-24T15:47:59+08:00">2018-07-24</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/24/ios-jiemian-youhua/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/07/24/ios-jiemian-youhua/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：</p>
+<p>在我们正常的开发过程中，优化是一个比较技术的活，这里只针对界面的优化，首先从屏幕的显示原理处理，然后告诉我们一般界面出现卡顿是如何产生的。然后从CPU 和<br>GPU 的角度来分析如何更好的避免卡顿的手段。后面介绍一个开源的框架ASDK 来处理我们之前针对CPU 和 GPU 优化所做的事情。<br><a id="more"></a></p>
+<h4 id="屏幕显示图像的原理"><a href="#屏幕显示图像的原理" class="headerlink" title="屏幕显示图像的原理"></a>屏幕显示图像的原理</h4><p><img src="assets/markdown-img-paste-20180725093348770.png" alt="screen_image"></p>
+<p>首先从 CRT 显示器的原理说起。 CRT 的电子枪按照上面的方式，从上到下一行行扫描，扫描完成后显示器就呈现一帧画面，随后电子枪就回到初始位置继续下一次扫描。为了把显示器的显示过程和系统的视频控制器进行同步，显示器会用硬件的时钟产生一系列的定时信号。当电子枪换到新的一行的时候，准备进行扫描的时候，显示器会发出一个水平同步信号 HSync ，而当一帧画面绘制完成后，电子枪回复到原位，准备画下一帧前，显示器会发出一个垂直同步信号，简称 VSync ,通常显示器是以固定频率进行刷新，这个刷新频率就是 VSync 信号产生的频率。</p>
+<p><img src="assets/markdown-img-paste-20180725094824246.png" alt="screen_vsync"></p>
+<p>计算机系统中CPU、GPU、显示器 是以上面这种方式协同工作的。CPU 计算好要显示的内容提交到GPU ,GPU 渲染完成后将渲染的结果放入帧缓冲区，随后视频控制器会按照VSync 信号一行行的读取缓冲区的数据，经过可能的数模转换传递给显示器</p>
+<p>在最简单的情况下，一个缓冲区，这时候缓冲区的读取和刷新都会有比较大的效率问题。为了解决效率问题，可以引入双缓冲机制。这种情况下，GPU会预先渲染好的一帧放入一个缓冲区中，让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲区。如此一来效率将会有很大的提升。</p>
+<p>双缓冲虽然能解决效率的问题，但会引入一个新的问题。当视频控制器还未读取完成的时候，也就是屏幕内容显示到一半的时候，GPU 将新的一帧内容提交到帧缓冲去进行交换后，视频控制器就会把新的一帧数据的下半段显示到屏幕上，造成画面撕裂现象：</p>
+<p><img src="assets/markdown-img-paste-20180725100142280.png" alt="silie_image"></p>
+<p>为了解决这个问题，GPU 通常有一个机制叫做 垂直同步 V-Sync ，当开启垂直同步后，GPU 会等待显示器VSync 信号后发出，才进行新的一帧渲染和缓冲区更新。这样能解决画面撕裂现象，也增加了画面流畅度，但需要消耗更多的计算资源。也会带来部分延迟。</p>
+<h4 id="卡顿产生的原因和解决方案"><a href="#卡顿产生的原因和解决方案" class="headerlink" title="卡顿产生的原因和解决方案"></a>卡顿产生的原因和解决方案</h4><p><img src="assets/markdown-img-paste-20180725100428916.png" alt="kadun_reason"></p>
+<p>在 VSync 信号到来后，系统图像服务会通过 CADisplayLink 等机制通知 APP ,APP 的主线程开始在 CPU 中计算显示的内容，比如：视图的创建、布局计算、图片解码、文本绘制等<br>随后CPU 将计算好的内容提交到 GPU 中，由 GPU 进行 变换 、合成、渲染。随后GPU 把渲染结果提交到帧缓冲区去，等待下一次 VSync 信号到来的时候显示到屏幕上。由于垂直同步的机制，如果在一个VSync 时间中，CPU 或者 GPU 没有完成提交的内容，则那一帧将被丢弃。等待下一次机会再显示，而这时显示屏会保留之前的内容不变，这就是卡顿的原因</p>
+<p>从上面的图中看出，CPU 和 GPU 无论哪个阻碍了显示的流程，都会造成掉帧的现象。所以开发的时候，也需要对CPU和GPU 压力进行评估和优化</p>
+<h4 id="CPU-资源消耗原因和解决方案"><a href="#CPU-资源消耗原因和解决方案" class="headerlink" title="CPU 资源消耗原因和解决方案"></a>CPU 资源消耗原因和解决方案</h4><h5 id="对象创建"><a href="#对象创建" class="headerlink" title="对象创建"></a>对象创建</h5><p>对象的创建会 分配内存，调整属性，甚至会读取文件 等操作，比较消耗 CPU 的资源。<br>尽量用轻量的对象代替重量的对象，可以对性能有所优化。比如CALayer 比 UIView 要轻很多，那么不需要响应触摸事件的控件,用CALayer 显示会更加合适。</p>
+<p>如果对象不涉及到UI操作，则尽量放到后台线程去创建，但可惜的是包含有CALayer的控件，都只能在主线程创建和操作。<br>通过StoryBoard 创建视图对象的时候，其资源消耗会比直接通过代码创建对象要大非常多，在性能敏感的界面里，StoryBoard 并不是一个好的技术选择</p>
+<p>尽量推迟对象的创建的时间，并把对象的创建分散到多个任务中去，尽管这实现起来比较麻烦，并且带来的优势并不多，但是如果有能力做还是要尽量尝试下，如果对象可以复用，并且复用的代价比释放，创建新的对象要小，那么这个类对象应当尽量放到一个缓存池里复用</p>
+<h5 id="对象调整"><a href="#对象调整" class="headerlink" title="对象调整"></a>对象调整</h5><p>对象的调整也经常是消耗 CPU 的资源的地方。这里特别说明下CALayer ,CALayer 内部并没有属性，当你调用属性方法的时候，它内部是通过resolveInstanceMethod为对象临时添加一个方法，并把对应属性的值保存在Dictionay 里面的，同时还会创建delegate 、创建动画等等。非常消耗资源。</p>
+<p>UIView 的关于显示相关的属性比如(frame、bound、transform) 等实际上都是CALayer 映射出来的，所以对UIView 的这些属性进行调整的时候，资源的消耗要远大于一般的属性，对此你在应用中，应该尽量减少不必要的属性修改</p>
+<p>当视图层次调整的时候，UIView 和 CALayer 之间会出现很多方法调用和通知，所以在优化性能的时候，应该尽量避免视图层次、添加和移除操作。</p>
+<h5 id="对象的销毁"><a href="#对象的销毁" class="headerlink" title="对象的销毁"></a>对象的销毁</h5><p>对象的销毁虽然消耗的资源不多，但是积累起来你也是不容忽视的。通常当容器类持有大量对象的时候，其销毁的资源就非常明显。同样的，如果对象可以放到后台去是释放，那就挪到后台线程去。</p>
+<p>这里有个小Tip: 把对象捕获到 block 中，然后扔到后台队列中去随便发送一个消息1️⃣避免编译器警告，就可以让对象在后台线程销毁了</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">NSArray</span> *tmp = <span class="keyword">self</span>.array;</span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.array = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_async</span>(queue,^()&#123;</span><br><span class="line">  [tmp <span class="keyword">class</span>];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h5 id="布局计算"><a href="#布局计算" class="headerlink" title="布局计算"></a>布局计算</h5><p>视图布局的计算是APP 中最为常见的消耗 CPU 的资源的地方，如果能在后台线程提前计算好视图布局、并对视图布局进行缓存，那么这个地方基本就不会产生性能问题了。</p>
+<p>不论通过何种技术对视图进行布局，其最终都会落到对UIView.frame/bounds/centers等熟悉的调整上。上面也说过，对这些属性的调整是非常消耗资源的，所以尽量提前计算好布局，在需要的时候一次性调整好对应的属性，而不是多次、平凡的就算和调整这些属性。</p>
+<h5 id="Autolayout"><a href="#Autolayout" class="headerlink" title="Autolayout"></a>Autolayout</h5><p>Autolayout 是苹果本身提倡的技术，在大部分情况下也能很好的提升开发效率。但是Autolayout 对于复杂视图来说常常会产生严重的性能问题。随着视图数量的增长，Autolayout 带来的CPU 消耗会呈指数级的上升。如果你不想手动调整frame 等属性，你可以用到一些工具方法替代(比如常见的left/right/top/bottom/width/height 快捷属性)或者使用ComponentKit,AsyncDisplayKit等框架</p>
+<h5 id="文本计算"><a href="#文本计算" class="headerlink" title="文本计算"></a>文本计算</h5><p>如果一个界面里包含大量的文本，文本的宽高计算会占用很大一部分资源，并且不可避免。如果你对文本显示没有特殊的要求可以参考UIlabel 内部实现的方式 用<br>[NSAttrubuteString boundingRectWithSize:options:context];<br>[NSAttributeString drawWithRect:options:context];</p>
+<p>来绘制文本，尽管这两个方法的性能不错，但是仍然需要放到后台线程进行以避免阻塞主线程</p>
+<p>如果你用coreText 绘制文本，那就可以先生成CoreText 排版对象，然后自己计算了，并且CoreText 对象还保留以供稍后绘制使用</p>
+<h5 id="文本渲染"><a href="#文本渲染" class="headerlink" title="文本渲染"></a>文本渲染</h5><p>屏幕上可以看到d的所有文本内容控件，包括UIWebView 在底层都是通过CoreText 排版的，绘制为Bitmap 显示的。常见的文本控件(UILable ，UITextView等)其排版和绘制都是在主线程进行的，当显示大量文本的时候，CPU 的压力会比较大，对此解决方案只有一个，那就是自定义文本控件。用TextKit 或者最底层的CoreText 对文本异步绘制，尽管这个实现起来非常麻烦，但是其带来的优势非常大，CoreText 对象创建好后，能直接获取文本的宽高等信息，避免多次计算(调整 UILabel 大小算一遍，UILabel 绘制的时候内部算一遍);CoreText 对象占用的内存较小，可以缓存下来已被稍后多次渲染。</p>
+<h5 id="图片的解码"><a href="#图片的解码" class="headerlink" title="图片的解码"></a>图片的解码</h5><p>当你用UIImage 或 CGImageSource 的那几个方法创建图片的时候，图片数据不会立刻解码。 图片设置到 UIImageView 或者 CALayer.Contents 中去并且CALayer 被提交到GPU 前，CGImage 中的数据才会得到解码。这是一个发生在主线程的，并且不可避免。如果要绕开这个机制，常见的做法就是在后台线程先把图片绘制到CGBitmapContext 中，然后从Bitmap 直接创建图片。目前常见的网络库都自带这个功能</p>
+<h5 id="图片的绘制"><a href="#图片的绘制" class="headerlink" title="图片的绘制"></a>图片的绘制</h5><p>图像的绘制通常是指用哪些以CG 开头的方法把图像绘制到画布中，然后从画布中创建图片并显示这样一个过程。这个最常见的地方就是[UIView drawRect]里面，由于CoreGraphic 方法是线程安全的，所以可以放到后台中期。一个简单的异步绘制的过程大致如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)display&#123;</span><br><span class="line">  <span class="built_in">dispatch_async</span>(backgroundQueue,^()&#123;</span><br><span class="line">    <span class="built_in">CGContextRef</span> ctx = <span class="built_in">CGBitmapContextCreate</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// draw in context</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">CGImageRef</span> img = <span class="built_in">CGBitmapContextCreateImage</span>(ctx);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">CFRelease</span>(ctx);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dispatch_async</span>(mainQueue,^&#123;</span><br><span class="line">      layer.contents = img;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="GPU-资源消耗原因和解决方案"><a href="#GPU-资源消耗原因和解决方案" class="headerlink" title="GPU 资源消耗原因和解决方案"></a>GPU 资源消耗原因和解决方案</h4><p>相对于CPU 来说，GPU 能干的事情就比较单一；接收提交的纹理（Texture）和 顶点描述(三角形) ,应用变换(transform)，混合并渲染，然后输出到屏幕上。通常你所能看到的内容也就是纹理和形状两类</p>
+<h5 id="纹理的渲染"><a href="#纹理的渲染" class="headerlink" title="纹理的渲染"></a>纹理的渲染</h5><p>所有的Bitmap ，包括图片、文本、栅格化的内容，最终都要由内存提交到显存中，绑定为GPU Texture ，不论是提交到显存的过程还是GPU 调整和渲染 Texture 的过程，都需要消耗GPU 的资源。当在较短时间显示大量图片的时候，CPU占用率很低，GPU占用率非常高，界面仍然会掉帧，避免这种情况的方法只能是尽量减少在短时间中大量图片的展示，尽可能将多张图片合成一张进行显示</p>
+<p>当图片过大的时候，超过GPU 的最大纹理尺寸,图片先由CPU 进行预处理，这对CPU和GPU 都会带来额外的资源消耗，</p>
+<h5 id="视图的混合"><a href="#视图的混合" class="headerlink" title="视图的混合"></a>视图的混合</h5><p>当多个视图重叠在一起显示的时候，GPU 会首先把他们混合在一起。如果视图结构复杂，混合的过程也会消耗很多GPU 的资源，为了减轻这种情况的GPU 消耗，应用应当尽量减少视图数量和层次，并在不透明的视图里表明 opaque 属性来避免无用的Alpha通道喝茶。当然这也可以用上面的方法，把多个视图预先渲染为一张图片来显示。</p>
+<h5 id="图片的生成"><a href="#图片的生成" class="headerlink" title="图片的生成"></a>图片的生成</h5><p>CALyaer 的border 、圆角、阴影，遮罩，CASharpLayer 的矢量图型显示，通常都会出发离屏渲染 ，而离屏渲染通常会发生在GPU 中，当一个列表视图中出现大量圆角的CALyaer 的时候，并且快速滑动的时候，可以观察到GPU 的资源以及占满了，而CPU的资源消耗比较少，这时候界面任然可以正常的滑动，但是平均的帧数会降低，为了避免这种情况，可以尝试开启CALayer.shouldRasterize 属性，但是这样会把原本离屏渲染的操作转嫁到CPU 上去对于只需要圆角绘制的谋陷场合，也可以用一张已经绘制好的圆角图片覆盖视图来模拟相同的视觉效果。最彻底的解决办法，就是把需要显示的图像在后台绘制为图片，避免使用圆角、阴影，遮罩等属性</p>
+<h4 id="AsyncDisplayKit"><a href="#AsyncDisplayKit" class="headerlink" title="AsyncDisplayKit"></a>AsyncDisplayKit</h4><p>UIView 和 CALayer  的关系：</p>
+<p>View 持有Layer 用于显示，View 中大部分显示属性实际是从 CALayer 中映射出来的，Layer 的 delegate 是View，其属性的改变，动画的产生时，View 可以得到通知。UIView 和 CALayer 不是线程安全的，并且只能在主线程创建、访问和销毁。</p>
+<h5 id="YYFPSLabel"><a href="#YYFPSLabel" class="headerlink" title="YYFPSLabel"></a>YYFPSLabel</h5> <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> _link = [<span class="built_in">CADisplayLink</span> displayLinkWithTarget:[YYWeakProxy proxyWithTarget:<span class="keyword">self</span>] selector:<span class="keyword">@selector</span>(tick:)];</span><br><span class="line"></span><br><span class="line"> [_link addToRunLoop:[<span class="built_in">NSRunLoop</span> mainRunLoop] forMode:<span class="built_in">NSRunLoopCommonModes</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现</span></span><br><span class="line"></span><br><span class="line"> -(<span class="keyword">void</span>)tick:(<span class="built_in">CADisplayLink</span>*)link&#123;</span><br><span class="line">   <span class="keyword">if</span>(_lastTime == <span class="number">0</span>)&#123;</span><br><span class="line">     lastTime = link.timestamp;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   _count++;</span><br><span class="line"></span><br><span class="line">   <span class="built_in">NSTimerInterval</span> = delta = link.timestamp - _lastTime;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> (details &lt; <span class="number">1</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 当details &gt; 1 的时候 count 一般都是在 60 </span></span><br><span class="line"></span><br><span class="line">   _lastTime = link.timestamp;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">float</span> fp = _count/delta;</span><br><span class="line"></span><br><span class="line">   _count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">   <span class="built_in">CGFloat</span> progress = fps /<span class="number">60</span>;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-界面优化/" rel="tag"><i class ="fa fa-tag"></i> iOS 界面优化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/23/iOS-block-detail/" rel="next" title="iOS_block_detail">
+                <i class="fa fa-chevron-left"></i> iOS_block_detail
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/26/ios-sql-detail/" rel="prev" title="ios_sql_detail">
+                ios_sql_detail <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#屏幕显示图像的原理"><span class="nav-number">1.</span> <span class="nav-text">屏幕显示图像的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卡顿产生的原因和解决方案"><span class="nav-number">2.</span> <span class="nav-text">卡顿产生的原因和解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU-资源消耗原因和解决方案"><span class="nav-number">3.</span> <span class="nav-text">CPU 资源消耗原因和解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对象创建"><span class="nav-number">3.1.</span> <span class="nav-text">对象创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对象调整"><span class="nav-number">3.2.</span> <span class="nav-text">对象调整</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对象的销毁"><span class="nav-number">3.3.</span> <span class="nav-text">对象的销毁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#布局计算"><span class="nav-number">3.4.</span> <span class="nav-text">布局计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Autolayout"><span class="nav-number">3.5.</span> <span class="nav-text">Autolayout</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#文本计算"><span class="nav-number">3.6.</span> <span class="nav-text">文本计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#文本渲染"><span class="nav-number">3.7.</span> <span class="nav-text">文本渲染</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图片的解码"><span class="nav-number">3.8.</span> <span class="nav-text">图片的解码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图片的绘制"><span class="nav-number">3.9.</span> <span class="nav-text">图片的绘制</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GPU-资源消耗原因和解决方案"><span class="nav-number">4.</span> <span class="nav-text">GPU 资源消耗原因和解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#纹理的渲染"><span class="nav-number">4.1.</span> <span class="nav-text">纹理的渲染</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#视图的混合"><span class="nav-number">4.2.</span> <span class="nav-text">视图的混合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图片的生成"><span class="nav-number">4.3.</span> <span class="nav-text">图片的生成</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AsyncDisplayKit"><span class="nav-number">5.</span> <span class="nav-text">AsyncDisplayKit</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#YYFPSLabel"><span class="nav-number">5.1.</span> <span class="nav-text">YYFPSLabel</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div> 
+ <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/07/24/ios-jiemian-youhua/';
+        this.page.identifier = '2018/07/24/ios-jiemian-youhua/';
+        this.page.title = 'iOS 界面优化';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
