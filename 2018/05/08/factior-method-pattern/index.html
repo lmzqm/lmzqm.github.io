@@ -99,19 +99,19 @@
 
 
 
-  <meta name="description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。">
+  <meta name="description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。 工厂方法模式的用意是 定义一个创建产品的对象的工厂接口，将实际创建工厂推迟到子类中。">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="工厂方法模式">
 <meta property="og:url" content="http://yoursite.com/2018/05/08/factior-method-pattern/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。">
+<meta property="og:description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。 工厂方法模式的用意是 定义一个创建产品的对象的工厂接口，将实际创建工厂推迟到子类中。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/factory_methor.png">
-<meta property="og:updated_time" content="2018-05-09T01:32:37.000Z">
+<meta property="og:updated_time" content="2018-08-06T07:43:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="工厂方法模式">
-<meta name="twitter:description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。">
+<meta name="twitter:description" content="摘要：工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。 工厂方法模式的用意是 定义一个创建产品的对象的工厂接口，将实际创建工厂推迟到子类中。">
 <meta name="twitter:image" content="http://yoursite.com/images/factory_methor.png">
 
 
@@ -368,14 +368,22 @@
       
 
       
-        <p>摘要：<br>工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。<br><a id="more"></a></p>
+        <p>摘要：<br>工厂方法模式成为工厂模式，它属于类创建模式。在工厂模式中。工厂的父类负责定义创建产品对象的公共接口，而子类则负责生成具体的产品对象，这样做的目的是将产品类的实例操作延迟到工厂子类中完成，也就是通过工厂子类来创建具体的产品类。</p>
+<p>工厂方法模式的用意是 <strong>定义一个创建产品的对象的工厂接口，将实际创建工厂推迟到子类中</strong>。</p>
+<a id="more"></a>
+<h4 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h4><p>工厂方法模式是对简单工厂模式的进一步抽象的结果</p>
+<p>假如不使用反射的工厂方法模式，那么所有的if…else… 都放在工厂类中，势必造成工厂类无限臃肿</p>
+<p>这时候就需要工厂方法模式来处理这个问题，工厂方法模式中狠心的工厂类再不负责所有对象的创建，而是将具体的创建工作交给子类去做。这个类就变成了一个抽象工厂的角色了，仅仅复杂给具体的子类必须实现的接口</p>
+<p>这一步的改进，使得系统可以在不修改具体工厂角色的情况下引入新的产品。</p>
 <h4 id="模式结构"><a href="#模式结构" class="headerlink" title="模式结构"></a>模式结构</h4><p>工厂方法模式包含如下角色：</p>
-<ul>
-<li>Product ：抽象产品</li>
-<li>ConcreteProduct : 具体角色</li>
-<li>Factory : 抽象工厂</li>
-<li>ConcreteFactory : 具体工厂</li>
-</ul>
+<p>1、Product ：抽象产品</p>
+<p>工厂方法模式所场景的对象的超类</p>
+<p>2、ConcreteProduct : 具体角色</p>
+<p>该角色实现了抽象角色所声明的接口，工厂方法模式所创建的每一个对象都是具体的角色导出角色的实例</p>
+<p>3、Factory : 抽象工厂角色</p>
+<p>担任这个角色是工厂方法模式的核心，任何在模式中创建对象的工厂类必须实现这个接口</p>
+<p>4、ConcreteFactory : 具体工厂</p>
+<p>担任这个角色的是实现了工厂接口的具体类。具体的工厂角色与业务密切相关，并且随着使用者的调用以创建导出类</p>
 <p><img src="/images/factory_methor.png" alt="factory_methor"></p>
 <h4 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h4><p>需求分析：<br>  首先由一个文件导出操作，一个是导出PDF 一个是导出HTML的操作</p>
 <pre><code>// 抽象的工厂
@@ -406,12 +414,13 @@
 @implementation GYEPDFFileFactory
 
 -(id&lt;GYEProduct&gt;) creatProduct{
-  return [[GYEPDFPriduct alloc] init];
+  return [[GYEPDFProduct alloc] init];
 }
 
 @end
 </code></pre><h4 id="模式分析"><a href="#模式分析" class="headerlink" title="模式分析"></a>模式分析</h4><p>  工厂方法模式是简单工厂模式的进一步抽象和推广。由于使用面向对象的多态性，工厂方法模式保持了简单工厂模式的特点，而且也克服了它的缺点。在工厂模式中不在负责所有产品的创建而是将具体的创建交给子类去做。这个核心类仅仅负责给出具体工厂必须实现的接口，而不是负责哪一个产品被实例化的细节，这使得工厂模式可以允许系统在不修改工厂角色的情况下引进新产品</p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>  工厂方法模式的主要优点是增加了新的产品类的时候无需修改现有系统，并封装了产品对象的创建细节，系统有良好的灵活性和可扩展性；缺点在于增加新产品的同时需要增加新的工厂，导致系统类的个数成对的增加，在一定程度上增加了系统的复杂性</p>
+<p>  对于系统的设计应该足够灵活并尽降低代码直接的耦合。当修改或者增加一个新的功能的时候，使得使用者尽可能修改少的地方就可以。加入设计不够灵活，将无法面对多变的需求，可能一个极小的需求的变更，都会使代码结构发生改变。并导致其他使用的人都要修改他们的代码。牵一发而动全身，系统然后的维护将变得艰难</p>
 
       
     </div>
@@ -551,7 +560,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -624,7 +633,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">29</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -669,7 +684,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#模式结构"><span class="nav-number">1.</span> <span class="nav-text">模式结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码分析"><span class="nav-number">2.</span> <span class="nav-text">代码分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式分析"><span class="nav-number">3.</span> <span class="nav-text">模式分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#工厂方法模式"><span class="nav-number">1.</span> <span class="nav-text">工厂方法模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式结构"><span class="nav-number">2.</span> <span class="nav-text">模式结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码分析"><span class="nav-number">3.</span> <span class="nav-text">代码分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模式分析"><span class="nav-number">4.</span> <span class="nav-text">模式分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

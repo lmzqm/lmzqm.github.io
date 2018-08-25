@@ -112,7 +112,7 @@
 <meta property="og:image" content="http://yoursite.com/images/apple_true_mvc.png">
 <meta property="og:image" content="http://yoursite.com/images/mvp.png">
 <meta property="og:image" content="http://yoursite.com/images/mvvm.png">
-<meta property="og:updated_time" content="2018-05-24T10:40:29.000Z">
+<meta property="og:updated_time" content="2018-08-25T09:16:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MVC MVP MVVM">
 <meta name="twitter:description" content="摘要：   首先了解架构的设计理念，架构主要是为了让我们的代码更好的组合起来。首先针对开发者来说能够很清楚的了解具体的代码会存放在哪里？哪些部分做哪些事情？不同部分之间的关联是什么？等等。个人对架构的归纳就是如何更好的组织你的代码文件，当然对于架构的熟练能够让我们很清楚自己需要在哪些地方处理哪些事情，而不会将代码弄得错乱也不便于其他开发人员的查看和修改添加等操作。">
@@ -403,14 +403,31 @@
 <li>复用 （尤其是对View和Model）</li>
 <li>独立的测试</li>
 </ol>
+<blockquote>
+<p>这里增加下个人的理解:</p>
+<ol>
+<li><p>首先实体划分，或者说功能的划分，对于内部的操作，我们更加清晰的知道，哪些事情是要放在哪个实体里面操作的，这样对于后面修改和维护的时候，思路比较清晰，也便于扩展操作。</p>
+</li>
+<li><p>针对测试这一块来说，在Presenter 或 ViewModel 中没有界面的生命周期的影响，在测试代码中可以更加方便灵活的进行测试。 在View 中测试View 之间的逻辑也可以单独针对View 这个文件进行测试。</p>
+</li>
+<li><p>我个人针对View -&gt; Presenter -&gt; Model 之间的理解。 首先View -&gt; Presenter 这里的 action 如果是View 的内部的逻辑 其实是没有必要交给Presenter 的，因为这里不需要Presenter 做任何事情，比如 UITextField 中字符的校验，还有就是满足条件后提交按钮的显示可以点击的操作等。个人认为只有针对Model 的修改的地方或者地方才能使用到Presener 。所以还是得遵循单一原则，自己能坐的事情就自己做。</p>
+</li>
+<li><p>这里遗留下一个问题： 假如说你一个登陆界面 可能在里面涉及到很多逻辑，能够让其 满足变成 注册 忘记密码 修改密码 等界面。这时候内部的逻辑就会比较复杂，对于新增或者修改就会造成 很多逻辑的判断，一不小心就把逻辑搞乱。简而言之就是不利于后期的维护和升级的操作。(我们需要将内部的逻辑进行拆分，这里更多的是逻辑的不同，还有界面的排版不同，所以个人感觉应该添加一个协议，满足最基本的操作，1.首先需要哪些对象 （initObjects）,对象布局(layoutSubvies),数据校验（dataPrase）,数据获取(getDatas)，数据填充(configData),但是这里的页面逻辑，也就是页面是一个共有的因素，只是我们可以通过懒加载的操作来进行创建的操作，避免内存开销)</p>
+</li>
+</ol>
+</blockquote>
 <h4 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h4><h5 id="传统的-MVC"><a href="#传统的-MVC" class="headerlink" title="传统的 MVC"></a>传统的 MVC</h5><p><img src="/images/old_mvc.png" alt="old_mvc"></p>
 <p>从上图中我们可以看出 Model,View,Controller三者紧密耦合。当用户在View 有动作的时候，View发送用户的action给Controller ，然后Controller 就会调用一个直接取代整个View的操作，同时也会将Model 进行更新的操作。Model变化了以后也会向View发送通知，然后View会或者改变的状态值。</p>
 <h5 id="苹果推荐的MVC-愿景"><a href="#苹果推荐的MVC-愿景" class="headerlink" title="苹果推荐的MVC - 愿景"></a>苹果推荐的MVC - 愿景</h5><p><img src="/images/apple_mvc.png" alt="apple_mvc"></p>
 <p>由于Controller是一个介于View 和 Model之间的协调器，所以View和Model之间没有任何直接的联系，Controller是最小可重用单元，这也就是我们写逻辑复杂度比较高的代码，而这些代码又不适合放在Model中。首先当View接收到用户的动作后将消息发送到Controller，然后Controller更新Model，或者当Model有变化了以后通知Controller 有变化，然后Controller就会去更行View的视图。</p>
-<p>理论上来说这种模式看起来非常直观，然而在我们的实际开发中…</p>
+<p>这里将Controller 作为最小可重用单元，也就是可能View 会发生改变，Model 也会发生改变，但是Controller 中的逻辑变化的不是特别大，可以进行重用</p>
 <h5 id="苹果推荐的MVC-—-事实"><a href="#苹果推荐的MVC-—-事实" class="headerlink" title="苹果推荐的MVC — 事实"></a>苹果推荐的MVC — 事实</h5><p><img src="/images/apple_true_mvc.png" alt="apple_true_mvc"></p>
 <p>Cocoa的MVC 模式使我们写出了臃肿的视图控制器，因为他们经常被混杂到View的生命周期中，因此很难说View和ViewController是分离的。尽管仍可以将业务逻辑和数据切换到Model，但是大多数情况下当需要为View减负的时候我们就有些无能为力了，View的最大的任务就是向Controller传递用户的动作事件，ViewController不再承担一切代理和数据源的职责，通常指负责一些分发和取消网络请求以及一些其他任务。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>任务均摊 ： View 和 Model 确实是分开的，但是View 和 Controller 是紧密耦合的。</li>
+<li>可测试性：由于糟糕的分散性，只能对Model 进行测试</li>
+<li>易用性：与其他几种模式相比最小的代码量。熟悉的人也比较多，因而即使对于经验不是那么丰富的开发者阿里说维护起来也比较容易</li>
+</ul>
 <h4 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h4><p>MVP 实现了Cocoa的MVC 的愿景</p>
 <p><img src="/images/mvp.png" alt="mvp"></p>
 <p>通过上面的结构图可以分析下，三者之间的关系，</p>
@@ -418,7 +435,7 @@
 <li>首先View和Presenter 中View 是拥有了Presenter ,并当用户有action的时候，将消息发送给Presenter ，交给Presenter进行处理，在Presenter中也对View 进行了弱引用的操作，这样Presenter 就可以对View 进行 update 的操作了。</li>
 <li>Presenter 与 Model 之间，Presenter 拥有Model 并且可以更新Model 的操作，并且当Model变化的时候可以通知Presenter 进行更新的操作。其实这里所谓的更新个人感觉可以理解为一个网络请求，然后当请求成功后，将Model 的值传回给Presenter 的操作，这样Presenter 还可以根据有没有哪些界面需要更新操作的，库进行更新的操作</li>
 </ul>
-<p>Presenter中根本没有和布局相关的代码，但是它且复杂更新View的数据和状态</p>
+<p>Presenter中根本没有和布局相关的代码，但是它且负责更新View的数据和状态</p>
 <p>就MVP 而言，UIViewController 的子类实际上就是 Views 并不是Presenters 这点区别使得模式的可测性得到了极大的提高，付出的代价就是开发速度的一些降低，因为必须要做一些手动的数据和事件的绑定</p>
 <h5 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h5><p>这里需要确认哪些操作在哪里执行</p>
 <p>ViewS：</p>
@@ -447,6 +464,7 @@
 <h4 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h4><p><img src="/images/mvvm.png" alt="mvvm"></p>
 <p>从结构图中感觉和MVP看起来非常像：</p>
 <p>这里做了数据的绑定操作，当用户点击的时候，调用的是ViewModel 的操作，在ViewModel中操作的时候，会调用其自身的Block 来实现数据的传递，然后在View中会有ViewModel的属性，这个属性就会构造一个Blcok 来更新View中的数据，当用户点击的时候，ViewModel获取到数据，并返回给View 然后View就会给对应的视图更新界面来进行操作。</p>
+<p>这里相比较于MVP 来说：首先这里的ViewModel 直接对数据 和 用户的动作进行了绑定，也就是用户的动作直接是传给ViewModel 的，然后数据的返回直接是在用户的View里面通过block来做操作的。这样就避免了，ViewModel 需要对View 提供了函数来进行操作，View 也不需要对 ViewModel 提供一些方法给他们使用。 </p>
 <p>首先这里也分析下三者之间的关系：</p>
 <p>首先View 还是要拥有ViewModel 的 只是在ViewModel中不需要对View 进行弱引用的操作，直接采用Block的回调的操作来实现就可以了。其中涉及到的数据绑定的时候。</p>
 <p>关于三个特性的评估：</p>
@@ -597,7 +615,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -670,7 +688,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">29</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

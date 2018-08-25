@@ -99,21 +99,23 @@
 
 
 
-  <meta name="description" content="摘要：">
+  <meta name="description" content="摘要： 在开发中经常会遇到崩溃，这时候你知道崩溃的文件存放在哪里？你有什么方法来获取崩溃的日志文件？崩溃日志获取到了，你知道如何查看它吗？本文将带着以上的文件，对崩溃进行分析。">
 <meta name="keywords" content="iOS 崩溃 分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS 崩溃捕获和分析">
 <meta property="og:url" content="http://yoursite.com/2018/07/30/ios-crash-detail/index.html">
 <meta property="og:site_name" content="lmzqm">
-<meta property="og:description" content="摘要：">
+<meta property="og:description" content="摘要： 在开发中经常会遇到崩溃，这时候你知道崩溃的文件存放在哪里？你有什么方法来获取崩溃的日志文件？崩溃日志获取到了，你知道如何查看它吗？本文将带着以上的文件，对崩溃进行分析。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2018/07/30/ios-crash-detail/images/markdown-img-paste-20180731093450550.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/30/ios-crash-detail/images/markdown-img-paste-20180731093136227.png">
-<meta property="og:image" content="http://yoursite.com/2018/07/30/ios-crash-detail/images/markdown-img-paste-20180731110434982.png">
-<meta property="og:updated_time" content="2018-08-03T06:22:45.000Z">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180731110434982.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180809163158947.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180809163419743.png">
+<meta property="og:updated_time" content="2018-08-10T10:14:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 崩溃捕获和分析">
-<meta name="twitter:description" content="摘要：">
+<meta name="twitter:description" content="摘要： 在开发中经常会遇到崩溃，这时候你知道崩溃的文件存放在哪里？你有什么方法来获取崩溃的日志文件？崩溃日志获取到了，你知道如何查看它吗？本文将带着以上的文件，对崩溃进行分析。">
 <meta name="twitter:image" content="http://yoursite.com/2018/07/30/ios-crash-detail/images/markdown-img-paste-20180731093450550.png">
 
 
@@ -371,6 +373,7 @@
 
       
         <p>摘要：</p>
+<p>在开发中经常会遇到崩溃，这时候你知道崩溃的文件存放在哪里？你有什么方法来获取崩溃的日志文件？崩溃日志获取到了，你知道如何查看它吗？本文将带着以上的文件，对崩溃进行分析。</p>
 <a id="more"></a>
 <h4 id="崩溃日志"><a href="#崩溃日志" class="headerlink" title="崩溃日志"></a>崩溃日志</h4><h5 id="1-什么是崩溃日志"><a href="#1-什么是崩溃日志" class="headerlink" title="1.什么是崩溃日志"></a>1.什么是崩溃日志</h5><p>iOS 设备上的应用程序在闪退的时候，操作系统会声称一个崩溃日志，保存在设备上</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">路径：设置-&gt; 隐私 -&gt; 诊断与用量 -&gt; 诊断与用量数据</span><br><span class="line"></span><br><span class="line">在诊断与用量的界面中 有发送和不发送的操作，在这里如果选择发送的话，会自动将诊断和用量数据发送到iTunes 来帮助开发者进行崩溃日志的分析</span><br></pre></td></tr></table></figure>
@@ -382,7 +385,7 @@
 <p><img src="images/markdown-img-paste-20180731093136227.png" alt="devices_crash"></p>
 <p>这时候可以查看到所有的日志文件，可以查看到右边窗口看到对应的</p>
 <h5 id="3-通过iTunes-获取崩溃日志"><a href="#3-通过iTunes-获取崩溃日志" class="headerlink" title="3.通过iTunes 获取崩溃日志"></a>3.通过iTunes 获取崩溃日志</h5><p>通过Itunes Connect 获取使用者上传的崩溃日志，登录iTunes Connect 选中APP ，点击可供销售的APP 在额外信息中可以查看到所有iOS 版本下的崩溃日志</p>
-<h4 id="崩溃日志的分析"><a href="#崩溃日志的分析" class="headerlink" title="崩溃日志的分析"></a>崩溃日志的分析</h4><p><img src="images/markdown-img-paste-20180731110434982.png" alt="crash_logs"></p>
+<h4 id="崩溃日志的分析"><a href="#崩溃日志的分析" class="headerlink" title="崩溃日志的分析"></a>崩溃日志的分析</h4><p><img src="/images/markdown-img-paste-20180731110434982.png" alt="crash_logs"></p>
 <p>这里我们来分析下对用字段的解析：</p>
 <ul>
 <li>incident Identifier:崩溃日志的唯一标识符</li>
@@ -405,6 +408,13 @@
 </li>
 </ol>
 <p>然后再打开就看到了符号化后的明文的崩溃日志文件</p>
+<p>注意：</p>
+<blockquote>
+<p>构建版本的时候会自动生成dSYM 文件，但是debug 的时候，是没有的，需要我们手动开启，在build Setting 中搜索debug</p>
+<p><img src="/images/markdown-img-paste-20180809163158947.png" alt="debug_dsym"></p>
+<p><img src="/images/markdown-img-paste-20180809163419743.png" alt="debug_dsym1"></p>
+<p>这两个就可以产生dsym 了</p>
+</blockquote>
 <h4 id="手动捕获崩溃日志"><a href="#手动捕获崩溃日志" class="headerlink" title="手动捕获崩溃日志"></a>手动捕获崩溃日志</h4><p>首先Apple 提供了一个NSSetUncaughtExceptionHandler</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)catchCrashLogs&#123;</span><br><span class="line">  <span class="built_in">NSSetUncaughtExceptionHandler</span>(&amp;UncaughtExceptionHandler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> UncaughtExceptionHandler(<span class="built_in">NSException</span> *exception)&#123;</span><br><span class="line">  <span class="keyword">if</span>(exception == <span class="literal">nil</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">NSArray</span> *array = [exception callStacksSymbols];</span><br><span class="line">  <span class="built_in">NSString</span> *reason = [exception reason];</span><br><span class="line">  <span class="built_in">NSString</span> *name = [exception name];</span><br><span class="line"></span><br><span class="line">  <span class="comment">//然后将崩溃日志文件进行保存</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="解决崩溃收集冲突问题"><a href="#解决崩溃收集冲突问题" class="headerlink" title="解决崩溃收集冲突问题"></a>解决崩溃收集冲突问题</h4><p>在进行崩溃日志处理的时候，可能会遇到一些冲突的操作：首先因为收集崩溃日志的操作是有些第三方操作也需要实现的，所以这里我们需要先确定下处理这个冲突的流程</p>
@@ -417,7 +427,7 @@
 <h5 id="将exception-塞给第三方"><a href="#将exception-塞给第三方" class="headerlink" title="将exception 塞给第三方"></a>将exception 塞给第三方</h5><p>处理完自己的逻辑后就需要将exception 赋值给我们之前保存的handler ,否则第三方就无法统计崩溃的数据</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_previousHandler(exception);</span><br></pre></td></tr></table></figure>
 <h4 id="不足和改进"><a href="#不足和改进" class="headerlink" title="不足和改进"></a>不足和改进</h4><p>并不是所有的程序崩溃都是可以捕获的异常，有些时候引起异常的大多数原因：比如说内存错误，重复是否等错误信息就可能无能为力。这时候需要通过signal 来做处理</p>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://www.jianshu.com/p/09b6084bcd01">iOS崩溃捕捉和分析</a><br><a href="https://my.oschina.net/zhxx/blog/880909">iOS友盟和其他崩溃收集库共存时的冲突问题</a></p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://www.jianshu.com/p/09b6084bcd01">iOS崩溃捕捉和分析</a><br><a href="https://my.oschina.net/zhxx/blog/880909">iOS友盟和其他崩溃收集库共存时的冲突问题</a><br><a href="https://www.jianshu.com/p/4d32664dcfdb">iOS崩溃异常处理(使用篇)</a><br><a href="https://www.jianshu.com/p/b76b45d34532">IOS崩溃 异常处理</a></p>
 
       
     </div>
@@ -557,7 +567,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -630,7 +640,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">29</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

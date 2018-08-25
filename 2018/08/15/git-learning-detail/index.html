@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要：  这里针对的是git 命令的一些学习,慢慢深入，慢慢学习">
+<meta name="keywords" content="git 命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git学习记录">
+<meta property="og:url" content="http://yoursite.com/2018/08/15/git-learning-detail/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要：  这里针对的是git 命令的一些学习,慢慢深入，慢慢学习">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818142214450.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818142643874.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818143136629.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818143527167.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818143838501.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818144231146.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818144421385.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180818144718891.png">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-2018081814533992.png">
+<meta property="og:updated_time" content="2018-08-25T09:22:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git学习记录">
+<meta name="twitter:description" content="摘要：  这里针对的是git 命令的一些学习,慢慢深入，慢慢学习">
+<meta name="twitter:image" content="http://yoursite.com/images/markdown-img-paste-20180818142214450.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/15/git-learning-detail/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Git学习记录 | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/15/git-learning-detail/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Git学习记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-15T10:42:34+08:00">2018-08-15</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/15/git-learning-detail/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/08/15/git-learning-detail/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：<br>  这里针对的是git 命令的一些学习,慢慢深入，慢慢学习</p>
+<a id="more"></a>
+<h4 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h4><p>分支的使用，意味着你可以把你的工作从开发主线程上分离开来，以免影响开发主线。</p>
+<p>Git 保存的不是一个文件的的变化或者差异，而是一系列不同时刻的文件快照。</p>
+<h5 id="提交对象"><a href="#提交对象" class="headerlink" title="提交对象"></a>提交对象</h5><p>在进行提交操作的时候，git 会保存一个提交对象。——这个对象包含一个指定暂存内容的快照的指针。同时还包含了作者的姓名和邮箱，提交的时候输入的信息，以及指向它的父对象的指针。而由多个分支合并后产生的提交对象有多个父对象。</p>
+<h6 id="暂存操作"><a href="#暂存操作" class="headerlink" title="暂存操作"></a>暂存操作</h6><p>暂存操作会为每一个文件计算校验和，然后把当前版本的文件快照保存到git的仓库中(git 使用blob对象来保存它们)最终将校验和加入到暂存区域等待提交。</p>
+<h6 id="提交操作"><a href="#提交操作" class="headerlink" title="提交操作"></a>提交操作</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ git add README test.rb LICENSE</span><br><span class="line">$ git commit -m &quot;The initial commit of my project&quot;</span><br></pre></td></tr></table></figure>
+<p>当使用 git commit 进行提交操作后，Git 会先计算每一个子目录的校验和，然后在Git 仓库中这些校验和保存为树对象，随后创建一个提交对象，它处理包含上面提到的信息外，还包含这个树对象的指针。如此一来，Git 就可以在需要的时候重现这次保存的快照。</p>
+<p>现在Git仓库中有5个对象。三个blob对象（保存文件快照），一个树对象（记录目录结构和blob对象索引），一个提交对象（包含着执行前述树对象和所提交的信息）</p>
+<p><img src="/images/markdown-img-paste-20180818142214450.png" alt="git_commit_obj"></p>
+<p>如果在这个提交的基础上，做了些修改，那么这次提交对象就会包含上次提交对象（父对象）的指针。</p>
+<p><img src="/images/markdown-img-paste-20180818142643874.png" alt="git_commits"></p>
+<h5 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h5><p>Git 的分支就是指向提交对象的可变指针。Git 的默认分支的名称是master 。在对此提交操作后，你其实已经有一个指定最后那个提交对象的master 分支了，它会在每一次你提交的时候自动的向前移动。</p>
+<blockquote>
+<p>note: Git 的 “master” 分支不是一个特殊的分支。它只是和其他分支没有任何的区别。之所以每一个仓库都有master 的分支，是因为 git init 的时候默认创建它，并且大多数都懒得去改动。</p>
+</blockquote>
+<p><img src="/images/markdown-img-paste-20180818143136629.png" alt="git_branch_master"></p>
+<h6 id="分支创建"><a href="#分支创建" class="headerlink" title="分支创建"></a>分支创建</h6><p>既然有了分支的概念，那么我们如何新建一个分支，新建一个分支后，在git 又是如何体现的呢？</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git brach testing <span class="comment">// 在当前的基础上，创建一个testing 的分支</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/markdown-img-paste-20180818143527167.png" alt="git_branch_create"></p>
+<p>这样的话，我要做代码的修改，那是在那个分支上做了修改呢？有一个名为HEAD 的特殊指针，他是一个指向当前所在的本地分支。git branch 命令仅仅创建一个新的分支，并不会自动切换到新的分支中去。</p>
+<p><img src="/images/markdown-img-paste-20180818143838501.png" alt="git_branch_head"></p>
+<h6 id="分支切换"><a href="#分支切换" class="headerlink" title="分支切换"></a>分支切换</h6><p>要切换一个已有的分支，你需要通过 <code>git checkout testing</code> 这样 <code>HEAD</code> 就指向了 testing 分支了</p>
+<p><img src="/images/markdown-img-paste-20180818144231146.png" alt="git_branch_checkout"></p>
+<p>HEAD 指向当前所在的分支</p>
+<p>通过再次提交后，能够更清楚的看清楚</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vim test.rb</span><br><span class="line">$ git commit -a -m 'made a change'</span><br></pre></td></tr></table></figure>
+<p><img src="/images/markdown-img-paste-20180818144421385.png" alt="git_branch_add"></p>
+<p>HEAD 分支随着提交操作自动的向前移动</p>
+<p>如图所示：你的<code>testing</code>分支向前移动，当时你的 <code>master</code>分支并没有。它仍然指向当时<code>checkout</code> 时候所指的对象 然后我们切换回master 分支看看</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p><img src="/images/markdown-img-paste-20180818144718891.png" alt="git_checkout_master"></p>
+<p>可以看到 <code>HEAD</code> 又回到的 <code>Master</code> 上。</p>
+<p>这条命令做了两件事情：一是使HEAD 回到了Master 分支上，二是将工作目录恢复成 <code>master</code>分支所执行的快照内容。也即使所你现在做修改的话，项目将开始于一个比较旧的版本。本质上来说，这是忽略<code>testing</code> 分支所做的修改，便于你向另一个方向开发。</p>
+<p>如果这时候我们做一个修改并提交</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ vim test.rb</span><br><span class="line">$ git commit -a -m 'made other changes'</span><br></pre></td></tr></table></figure>
+<p><img src="/images/markdown-img-paste-2018081814533992.png" alt="git_branch_more"></p>
+<p>可以看到这时候产生了分叉，你可以在不同的分支上进行来回的切换和工作，并在时机成熟的时候，将他们合并起来，而这所有的工作，你需要的命令就是 branch checkout commit</p>
+<p>可以使用 <code>git log --oneline --decorate --graph --all</code> 来进行查看分支的操作</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">*   5f8b11d Merge branch 'master'</span><br><span class="line">|\</span><br><span class="line">| * f07063c fix bug</span><br><span class="line">| * ddd1f1b 提示语更新</span><br><span class="line">* | <span class="number">2</span>ffb4c7 修改AP接入界面和操作流程</span><br><span class="line">* | c1f3ae6 (V1<span class="number">.0</span><span class="number">.1</span>) 增加AP模式设备连接wifi的界面</span><br><span class="line">* | c51e321 增加ca.cer文件</span><br><span class="line">|/</span><br><span class="line">* <span class="number">4945881</span> (V1<span class="number">.0</span><span class="number">.0</span>) 处理加载提示无法退去的bug</span><br><span class="line">*   7af7fd1 Merge branch 'master'</span><br><span class="line">|\</span><br><span class="line">| * <span class="number">397</span>d653 更新了服务协议</span><br><span class="line">| * f77b0ee fix bug</span><br><span class="line">| * a724eeb UI调整</span><br><span class="line">* | fbc89b4 增加消除查看历史数据中一直加载的操作</span><br><span class="line">* | a9c2b0b 修改相关提示语句</span><br><span class="line">|/</span><br><span class="line">* <span class="number">92</span>df303 修改没有的提示语</span><br></pre></td></tr></table></figure>
+<h4 id="打标签"><a href="#打标签" class="headerlink" title="打标签"></a>打标签</h4><p>  打标签，在我的开发过程中主要是针对于 比如说版本发布了，然后记录下该版本的在 git 中是的时期，也就是将当时的打包的代码进行一个标定 。比如我V1.0 版本的提交，这时候的代码就是V1.0的代码，所以我需要针对这个版本放一个tag ，当然用分支处理也是可以的。tag 能更好的和分支做区分操作。</p>
+<h5 id="列出标签"><a href="#列出标签" class="headerlink" title="列出标签"></a>列出标签</h5><p>  在 Git 中列出已有的标签非常简单直观。只需要输入 <code>git tag</code>:<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br><span class="line">V1.0</span><br></pre></td></tr></table></figure></p>
+<p>  这个命令以字母的顺序列出标签；但是他们出现的顺序并不重要</p>
+<p>  也可以使用特定的模式来查找标签：git tag -l ‘V1.*’</p>
+<h5 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h5><p>  Git 有两种重要类型的标签，轻量标签和附注标签</p>
+<p>  一个轻量标签很像是一个不会改变的分支 - 它只是一个特定提交的引用</p>
+<p>  然而，附注标签是存储在Git 数据库中一个完整的对象，他们是可以被校验的。其中包含打标签的名字、电子邮件地址、日期时间。还有一个标签信息。通常建议创建附注标签，这样可以拥有以上信息，但是如果你只想用一个临时的标签或者因为某种原因不想保持那些信息，轻量标签也可以用的。</p>
+<h6 id="附注标签"><a href="#附注标签" class="headerlink" title="附注标签"></a>附注标签</h6><p>  在Git 中创建一个附注标签很简单，最简单的方式是运行 <code>tag</code>命令的时候指定 <code>-a</code>选项</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -a V1.0.1 -m <span class="string">"Apple Store 1.0.1 版本发布代码"</span></span><br><span class="line">$ git tag</span><br><span class="line">V1.0.1</span><br></pre></td></tr></table></figure>
+<p>  -m 选项是指定一条将会存储在标签中的信息。如果没有为附注标签指定一条信息，Git 会运行编辑器要求你输入</p>
+<p>  通过使用 <code>git show</code>命令可以查找到标签信息<br>  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git show V1.0.1</span><br><span class="line">tag V1.0</span><br><span class="line">Tagger: xxxxxxx &lt;xxxxxxxxxx@xxxxxx.com&gt;</span><br><span class="line">Date:   Wed Aug 15 10:13:08 2018 +0800</span><br><span class="line"></span><br><span class="line">Apple Store 发布V1.0.1</span><br></pre></td></tr></table></figure></p>
+<h6 id="轻量标签"><a href="#轻量标签" class="headerlink" title="轻量标签"></a>轻量标签</h6><p>  另一种给提交打标签的方式是使用轻量标签，轻量标签的本质是将提交校验和存储到一个文件中-没有保存任何其他信息。创建轻量标签，不需要使用 -a,-s或 -m 选项，只需要提供标签的名字：</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag V1.0.1</span><br></pre></td></tr></table></figure>
+<h6 id="后期打标签"><a href="#后期打标签" class="headerlink" title="后期打标签"></a>后期打标签</h6><p>  你可以对过去的提交打标签，假设提交历史是这样的：</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line">15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch <span class="string">'experiment'</span></span><br><span class="line">a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support</span><br><span class="line">0d52aaab4479697da7686c15f77a3d64d9165190 one more thing</span><br><span class="line">6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch <span class="string">'experiment'</span></span><br><span class="line">0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit <span class="keyword">function</span></span><br><span class="line">4682c3261057305bdd616e23b64b0857d832627b added a todo file</span><br><span class="line">166ae0c4d3f420721acbb115cc33848dfcc2121a started write support</span><br><span class="line">9fceb02d0ae598e95dc970b74767f19372d61af8 updated rakefile</span><br><span class="line">964f16d36dfccde844893cac5b347e7b3d44abbc commit the todo</span><br><span class="line">8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme</span><br></pre></td></tr></table></figure>
+<p>  现在假设你需要对 added a commit function 提交打标签，你可以在命令的尾部加上提交的校验和</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -a V1.0.2 0b7434d86 -m <span class="string">"备注信息"</span></span><br><span class="line">$ git tag -l</span><br></pre></td></tr></table></figure>
+<h5 id="共享标签"><a href="#共享标签" class="headerlink" title="共享标签"></a>共享标签</h5><p>  默认情况下，<code>git push</code>命令并不会传送标签到远程仓库服务器上。在创建完标签后你必须显示的推送标签到共享服务器上，这个过程就像共享远程分支一样 _ 你可以用<code>git push orign [tagname]</code>.</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ git push origin V1.0</span><br><span class="line">Counting objects: 1, <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (1/1), 180 bytes | 180.00 KiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 1 (delta 0), reused 0 (delta 0)</span><br><span class="line">To xxxx.xxxxx.com:apps/xxxxxxx.git</span><br><span class="line">* [new tag]         V1.0 -&gt; V1.0</span><br></pre></td></tr></table></figure>
+<p>  当然如果你想要一次性推送很多标签，可以使用 <code>--tags</code>选项的git push 命令,这将会把所有的不在远程仓库上的标签都全部传送到那里；</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin --tags</span><br></pre></td></tr></table></figure>
+<h5 id="检出标签"><a href="#检出标签" class="headerlink" title="检出标签"></a>检出标签</h5><p>  在Git 中你并不能真的检出一个标签，因为他们并不能像分支一样来回移动。如果你想要工作目录与长裤中特定的标签版本完全一样，可以使用 git checkout -b [branchname] [tagname] 在特定的标签上创建一个分支</p>
+  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">  ➜  XXXXX git:(master) ✗ git checkout -b V1.0Verson V1.0</span><br><span class="line">  M	XXXXX.xcworkspace/xcuserdata/lmzqm.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist</span><br><span class="line">  M	XXXXX/AppDelegate/AppDelegate.m</span><br><span class="line">  M	XXXXX/Login/Model/GYEExprortModel.m</span><br><span class="line">  M	XXXXX/Supporting Files/Info.plist</span><br><span class="line">  M	XXXXX/Supporting Files/en.lproj/Localizable.strings</span><br><span class="line">  Switched to a new branch <span class="string">'V1.0Verson'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  ➜  XXXXX git:(V1.0Verson) ✗ git branch</span><br><span class="line">  V1.0.0</span><br><span class="line">  V1.0.1</span><br><span class="line">* V1.0Verson</span><br><span class="line">  V1.1.0(english)</span><br><span class="line">  master</span><br></pre></td></tr></table></figure>
+<p>  当然了，如果你在之后又进行了一次提交 那么V1.0Verson 分支会因为改动先前移动了，那么V1.0Verson 就会和 V1.0 标签有些不同了</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>  关于git tag 的总结按照顺序：</p>
+<p>  首先我们要打个tag 但是tag 是不能重名的，所以可以先看下我们当前的tag<br>  <code>git tag -l</code> 可以查看到当前本地的tag ,然后我们可以通过 <code>git tag -a tagname -m &#39;message&#39;</code> 这样就是打一个附注标签。 你可以通过 <code>git show tagname</code>来查找具体的情况。这里我们已经在本地打了一个tag ，所以我们当然也需要将我们的tag 推送到 远程服务器。可以使用<code>git push origin [tagname]</code> 这时候就可以将本地的tag 给传给远程服务。当然如果远程服务器有tag,本地没有的时候，这时候你需要检出tag,可以使用<code>git checkout -b [bachName] [tagName]</code>通过针对该tag 在本地创建一个分支 ，然后可以使用 <code>git brach</code> 来查看到新建的分支了.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git-命令/" rel="tag"><i class ="fa fa-tag"></i> git 命令</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/14/iOS-Core-Graph-Learning/" rel="next" title="iOS CoreGraphis">
+                <i class="fa fa-chevron-left"></i> iOS CoreGraphis
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#分支"><span class="nav-number">1.</span> <span class="nav-text">分支</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#提交对象"><span class="nav-number">1.1.</span> <span class="nav-text">提交对象</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#暂存操作"><span class="nav-number">1.1.1.</span> <span class="nav-text">暂存操作</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#提交操作"><span class="nav-number">1.1.2.</span> <span class="nav-text">提交操作</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分支操作"><span class="nav-number">1.2.</span> <span class="nav-text">分支操作</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#分支创建"><span class="nav-number">1.2.1.</span> <span class="nav-text">分支创建</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#分支切换"><span class="nav-number">1.2.2.</span> <span class="nav-text">分支切换</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#打标签"><span class="nav-number">2.</span> <span class="nav-text">打标签</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#列出标签"><span class="nav-number">2.1.</span> <span class="nav-text">列出标签</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建标签"><span class="nav-number">2.2.</span> <span class="nav-text">创建标签</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#附注标签"><span class="nav-number">2.2.1.</span> <span class="nav-text">附注标签</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#轻量标签"><span class="nav-number">2.2.2.</span> <span class="nav-text">轻量标签</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#后期打标签"><span class="nav-number">2.2.3.</span> <span class="nav-text">后期打标签</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#共享标签"><span class="nav-number">2.3.</span> <span class="nav-text">共享标签</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#检出标签"><span class="nav-number">2.4.</span> <span class="nav-text">检出标签</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#总结"><span class="nav-number">2.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div> 
+ <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/08/15/git-learning-detail/';
+        this.page.identifier = '2018/08/15/git-learning-detail/';
+        this.page.title = 'Git学习记录';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

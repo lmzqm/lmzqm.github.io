@@ -102,7 +102,7 @@
   <meta name="description" content="摘要：  日常的编程中我们经常能提到抽象，耦合，聚合，关联，依赖等一些专业词汇，那我们通过学习了解了其的词语解释后，我们怎么样能在代码中将它们的关系给表现出来。比如说给你一个UML的图，你能看清楚线条和箭头分别代表着什么吗？你能根据这个UML的图写出对应的代码吗？">
 <meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式 开篇——读懂UML类图和时序图">
+<meta property="og:title" content="设计模式">
 <meta property="og:url" content="http://yoursite.com/2018/05/03/design-model/index.html">
 <meta property="og:site_name" content="lmzqm">
 <meta property="og:description" content="摘要：  日常的编程中我们经常能提到抽象，耦合，聚合，关联，依赖等一些专业词汇，那我们通过学习了解了其的词语解释后，我们怎么样能在代码中将它们的关系给表现出来。比如说给你一个UML的图，你能看清楚线条和箭头分别代表着什么吗？你能根据这个UML的图写出对应的代码吗？">
@@ -114,9 +114,9 @@
 <meta property="og:image" content="http://yoursite.com/images/composition.png">
 <meta property="og:image" content="http://yoursite.com/images/association.png">
 <meta property="og:image" content="http://yoursite.com/images/dependency.png">
-<meta property="og:updated_time" content="2018-06-07T01:21:33.000Z">
+<meta property="og:updated_time" content="2018-08-06T06:36:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式 开篇——读懂UML类图和时序图">
+<meta name="twitter:title" content="设计模式">
 <meta name="twitter:description" content="摘要：  日常的编程中我们经常能提到抽象，耦合，聚合，关联，依赖等一些专业词汇，那我们通过学习了解了其的词语解释后，我们怎么样能在代码中将它们的关系给表现出来。比如说给你一个UML的图，你能看清楚线条和箭头分别代表着什么吗？你能根据这个UML的图写出对应的代码吗？">
 <meta name="twitter:image" content="http://yoursite.com/images/uml.png">
 
@@ -135,7 +135,7 @@
   };
 </script>
 
-  <title>设计模式 开篇——读懂UML类图和时序图 | lmzqm</title>
+  <title>设计模式 | lmzqm</title>
   
 
 
@@ -314,7 +314,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式 开篇——读懂UML类图和时序图</h1>
+          <h1 class="post-title" itemprop="name headline">设计模式</h1>
         
 
         <div class="post-meta">
@@ -376,10 +376,41 @@
       
         <p>摘要：<br>  日常的编程中我们经常能提到抽象，耦合，聚合，关联，依赖等一些专业词汇，那我们通过学习了解了其的词语解释后，我们怎么样能在代码中将它们的关系给表现出来。比如说给你一个UML的图，你能看清楚线条和箭头分别代表着什么吗？你能根据这个UML的图写出对应的代码吗？</p>
 <a id="more"></a>
-<h5 id="首先从一个实例开始"><a href="#首先从一个实例开始" class="headerlink" title="首先从一个实例开始"></a>首先从一个实例开始</h5><p>通过下图我们将一一分析类之间的关系</p>
+<h4 id="设计模式概论"><a href="#设计模式概论" class="headerlink" title="设计模式概论"></a>设计模式概论</h4><h5 id="设计模式是什么"><a href="#设计模式是什么" class="headerlink" title="设计模式是什么"></a>设计模式是什么</h5><p>个人感觉设计模式就是一种比较成熟的，针对一些场景下所使用了代码整合的一种方案。它可以重用代码，可以更好的对代码的扩展，可以保证代码的可靠性。所以设计模式使得代码编制真正工程化，设计模式是软件工程的基石脉络。</p>
+<p>总体来说，设计模式分为3大类 ，23种</p>
+<p>1.创建型模式</p>
+<p>工厂方法模式，抽象工厂模式，单例模式、建造者模式、原型模式</p>
+<p>这些模式的最终结果都会产生一个对象，通过这些模式可以采用不同的方式来创建对象</p>
+<p>2、结构型模式</p>
+<p>适配器模式、装饰器模式、外观模式、桥接模式、组合模式、享元模式</p>
+<p>3、行为模式</p>
+<p>策略模式、模板方法模式、观察者模式、迭代器模式、责任链模式、命令模式、备忘录模式、状态模式、访问者模式、中介者模式、解释器模式</p>
+<h6 id="设计模式的六大原则"><a href="#设计模式的六大原则" class="headerlink" title="设计模式的六大原则"></a>设计模式的六大原则</h6><p>1、开闭原则OCP</p>
+<p>开闭原则就是说，<strong>对扩展开放，对修改关闭</strong> 。在程序需要扩展的时候，不能去修改原有的代码，这也是为了程序的扩展性更好，易于升级和维护。</p>
+<p>2、里氏代换原则</p>
+<p>在软件中将一个基类对象替换成它的子类对象，程序将不会产生任何的错误和异常，但是反过来就不成立。里氏代换的原则的表现就是：<strong>在程序中尽量使用基类列席来对对象进行定义，而在运行的时候回再确定其子类类型，用子类对象来替换父类</strong></p>
+<p>3、控制反转原则 IOC</p>
+<p><strong>针对接口编程，依赖于抽象而不依赖于具体</strong></p>
+<p>首先需要明白依赖在程序中的体现：只是一个参数的表示方式，而如果我们的依赖是一个具体的对象的话，这样就只能针对该具体的子类进行操作，如果依赖于一个接口或者说基类的话，这样就可以针对不同的对象做扩展了。</p>
+<p>4、接口隔离原则 ISP</p>
+<p><strong>使用多个隔离的接口，比使用单个接口要好</strong></p>
+<p>5、迪米特法则 DP</p>
+<p><strong>一个实体应当尽量少于其他实体间发生相互作用，使系统功能模块相对独立</strong></p>
+<p>6、合成复用原则</p>
+<p><strong>尽量使用组合/聚合的方式，而不是使用继承</strong></p>
+<h6 id="设计中的三个关键字"><a href="#设计中的三个关键字" class="headerlink" title="设计中的三个关键字"></a>设计中的三个关键字</h6><p>1、抽象化</p>
+<p>在众多事物中提取出共同的本质的特征，舍弃非本质的特征就是抽象化。抽象化的过程就是一个裁剪的过程，在抽象的时候同于不同取决于从什么角度上来进行抽象，抽象的角度也取决于分析问题的目的</p>
+<p>2、实现化</p>
+<p>将抽象的类给出具体的实现就是实现化</p>
+<p>一个类的实例就是这个类的实例化，一个具体子类就是抽象超类的实例化</p>
+<p>3、解耦</p>
+<p>平时经常说的高内聚低耦合，那么什么是耦合？</p>
+<p>所谓耦合就是两个实体的行为的某种强关联。而将他们之间的强关联去掉就是解耦。解耦是指将抽象化和实现化之间的耦合解开，或者说将它们之间的强关联改成弱关联</p>
+<p>所谓强关联，指的是 <strong>在编译的时期已经确定的，无法再运行时期动态改变的关联</strong>; 所谓弱关联就是 <strong>可以动态的确定并且在运行的时期动态的改变的关联</strong> 从这个定义来看，继承关系是强关联，聚合关系是弱关联。</p>
+<h4 id="开篇——读懂UML类图和时序图"><a href="#开篇——读懂UML类图和时序图" class="headerlink" title="开篇——读懂UML类图和时序图"></a>开篇——读懂UML类图和时序图</h4><h5 id="首先从一个实例开始"><a href="#首先从一个实例开始" class="headerlink" title="首先从一个实例开始"></a>首先从一个实例开始</h5><p>通过下图我们将一一分析类之间的关系</p>
 <p><img src="/images/uml.png" alt="uml"></p>
 <ul>
-<li>车的类图结构为\<abstract>,表示车是一个抽象类;</li>
+<li>车的类图结构为\&lt;abstract>,表示车是一个抽象类;</li>
 <li>它有两个继承类：小汽车和自行车； 它们之间的关系为实现关系，使用带空心箭头的虚线表示</li>
 <li>小汽车和SUV之间是继承关系，它们之间的关系为泛化关系，使用带空心箭头的实线表示</li>
 <li>小汽车和发动机之间属于组合关系，使用带实心箭头的实线表示</li>
@@ -398,8 +429,8 @@
 <p>  在最终代码中，实现关系表现为继承抽象类 主要是实现协议或者接口的操作</p>
 <h6 id="聚合关系-aggregation"><a href="#聚合关系-aggregation" class="headerlink" title="聚合关系(aggregation)"></a>聚合关系(aggregation)</h6><p>  聚合关系用一条带空心菱形箭头直线表示，表示A聚合到B上，或者说B是由A组成的</p>
 <p>  <img src="/images/aggregation.png" alt="aggregation"></p>
-<p>  聚合关系用于表示实体对象之间的关系，表示整体由部分构成<br>  与组合关系不同的是，整体和部分不是强依赖，即使整体不存在了，部分任然粗壮</p>
-<p>  在代码中主要体现是也是类中的一个实例变量，改实例变量在程序外面可以改变，而且其的创建和销毁不是由内部来实现的，只负责使用其中的属性和方法就可以了。</p>
+<p>  聚合关系用于表示实体对象之间的关系，表示整体由部分构成<br>  与组合关系不同的是，整体和部分不是强依赖，即使整体不存在了，部分仍然存在</p>
+<p>  在代码中主要体现是也是类中的一个实例变量或者属性，改实例变量在程序外面可以改变，而且其的创建和销毁不是由内部来实现的，只负责使用其中的属性和方法就可以了。</p>
 <h6 id="组合关系-composition"><a href="#组合关系-composition" class="headerlink" title="组合关系(composition)"></a>组合关系(composition)</h6><p>  组合关系用一条带实心菱形箭头直线表示:如下图表示 A组成B 或者B 由A组成</p>
 <p>  <img src="/images/composition.png" alt="composition"></p>
 <p>  与聚合关系一样，组合关系表示整体由部分构成的语义<br>  但是组合关系是一种强依赖的特殊聚合关系，如果整体不存在了，则部分也不存在</p>
@@ -432,7 +463,8 @@
 <p>关联表示类之间存在关系，不存在集体和个体，个体与组成部分之间的关系；<br>聚合表示类之间存在集体与个体的关系<br>组合表示个体与组成部分之间的关系</p>
 <h5 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h5><p>  对象之间交互的图，这些对象是按时间顺序排列的，时序图中显示的是参与交互对象以及对象之间消息交互的顺序</p>
 <p>  时序图包括对象主要有：对象（actor）生命线（Lifeline）控制焦点（Focus of control）消息（Message）等待</p>
-<h5 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h5><p><a href="http://design-patterns.readthedocs.io/zh_CN/latest/read_uml.html">看懂UML类图和时序图</a></p>
+<h5 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h5><p><a href="http://www.cnblogs.com/xrq730/p/4896125.html">Java设计模式1：设计模式概论</a></p>
+<p><a href="http://design-patterns.readthedocs.io/zh_CN/latest/read_uml.html">看懂UML类图和时序图</a></p>
 
       
     </div>
@@ -486,8 +518,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/03/design-create-model/" rel="prev" title="设计模式">
-                设计模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/08/AFNetworking-AFHTTPSessionManager/" rel="prev" title="AFNetworking-AFHTTPSessionManager 详解">
+                AFNetworking-AFHTTPSessionManager 详解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -572,7 +604,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -645,7 +677,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">29</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -690,7 +728,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先从一个实例开始"><span class="nav-number">1.</span> <span class="nav-text">首先从一个实例开始</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#类之间的关系"><span class="nav-number">2.</span> <span class="nav-text">类之间的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#泛化关系（generalization）"><span class="nav-number">2.1.</span> <span class="nav-text">泛化关系（generalization）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#实现关系-realize"><span class="nav-number">2.2.</span> <span class="nav-text">实现关系(realize)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#聚合关系-aggregation"><span class="nav-number">2.3.</span> <span class="nav-text">聚合关系(aggregation)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#组合关系-composition"><span class="nav-number">2.4.</span> <span class="nav-text">组合关系(composition)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#关联关系-association"><span class="nav-number">2.5.</span> <span class="nav-text">关联关系(association)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#依赖关系-dependency"><span class="nav-number">2.6.</span> <span class="nav-text">依赖关系(dependency)</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#讨论"><span class="nav-number">3.</span> <span class="nav-text">讨论</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#泛化和实现的对比"><span class="nav-number">3.1.</span> <span class="nav-text">泛化和实现的对比</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#关联和依赖的对比"><span class="nav-number">3.2.</span> <span class="nav-text">关联和依赖的对比</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#聚合和组合的对比"><span class="nav-number">3.3.</span> <span class="nav-text">聚合和组合的对比</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时序图"><span class="nav-number">5.</span> <span class="nav-text">时序图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">6.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计模式概论"><span class="nav-number">1.</span> <span class="nav-text">设计模式概论</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#设计模式是什么"><span class="nav-number">1.1.</span> <span class="nav-text">设计模式是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#设计模式的六大原则"><span class="nav-number">1.1.1.</span> <span class="nav-text">设计模式的六大原则</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#设计中的三个关键字"><span class="nav-number">1.1.2.</span> <span class="nav-text">设计中的三个关键字</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开篇——读懂UML类图和时序图"><span class="nav-number">2.</span> <span class="nav-text">开篇——读懂UML类图和时序图</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#首先从一个实例开始"><span class="nav-number">2.1.</span> <span class="nav-text">首先从一个实例开始</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#类之间的关系"><span class="nav-number">2.2.</span> <span class="nav-text">类之间的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#泛化关系（generalization）"><span class="nav-number">2.2.1.</span> <span class="nav-text">泛化关系（generalization）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#实现关系-realize"><span class="nav-number">2.2.2.</span> <span class="nav-text">实现关系(realize)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#聚合关系-aggregation"><span class="nav-number">2.2.3.</span> <span class="nav-text">聚合关系(aggregation)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#组合关系-composition"><span class="nav-number">2.2.4.</span> <span class="nav-text">组合关系(composition)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#关联关系-association"><span class="nav-number">2.2.5.</span> <span class="nav-text">关联关系(association)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#依赖关系-dependency"><span class="nav-number">2.2.6.</span> <span class="nav-text">依赖关系(dependency)</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#讨论"><span class="nav-number">2.3.</span> <span class="nav-text">讨论</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#泛化和实现的对比"><span class="nav-number">2.3.1.</span> <span class="nav-text">泛化和实现的对比</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#关联和依赖的对比"><span class="nav-number">2.3.2.</span> <span class="nav-text">关联和依赖的对比</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#聚合和组合的对比"><span class="nav-number">2.3.3.</span> <span class="nav-text">聚合和组合的对比</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#小结"><span class="nav-number">2.4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#时序图"><span class="nav-number">2.5.</span> <span class="nav-text">时序图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#感谢"><span class="nav-number">2.6.</span> <span class="nav-text">感谢</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -852,7 +890,7 @@
       var disqus_config = function () {
         this.page.url = 'http://yoursite.com/2018/05/03/design-model/';
         this.page.identifier = '2018/05/03/design-model/';
-        this.page.title = '设计模式 开篇——读懂UML类图和时序图';
+        this.page.title = '设计模式';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');

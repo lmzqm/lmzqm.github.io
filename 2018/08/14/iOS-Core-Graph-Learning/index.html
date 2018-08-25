@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.1.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.1.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="摘要： 在iOS 系统中，关于绘画的操作主要是通过UIKit 和 CoreGraphics 来进行的。UIKit 是针对 CoreGraphics 来进行封装的。">
+<meta name="keywords" content="iOS CoreGraphics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS CoreGraphis">
+<meta property="og:url" content="http://yoursite.com/2018/08/14/iOS-Core-Graph-Learning/index.html">
+<meta property="og:site_name" content="lmzqm">
+<meta property="og:description" content="摘要： 在iOS 系统中，关于绘画的操作主要是通过UIKit 和 CoreGraphics 来进行的。UIKit 是针对 CoreGraphics 来进行封装的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/markdown-img-paste-20180817094126546.png">
+<meta property="og:updated_time" content="2018-08-25T09:17:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS CoreGraphis">
+<meta name="twitter:description" content="摘要： 在iOS 系统中，关于绘画的操作主要是通过UIKit 和 CoreGraphics 来进行的。UIKit 是针对 CoreGraphics 来进行封装的。">
+<meta name="twitter:image" content="http://yoursite.com/images/markdown-img-paste-20180817094126546.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/14/iOS-Core-Graph-Learning/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS CoreGraphis | lmzqm</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lmzqm</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">iOS 开发者</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+</li>
+
+      
+
+      
+    </ul>
+  
+
+  
+    
+
+    
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
+
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/14/iOS-Core-Graph-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lmzqm">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lmzqm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS CoreGraphis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-14T14:38:09+08:00">2018-08-14</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/14/iOS-Core-Graph-Learning/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/08/14/iOS-Core-Graph-Learning/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：</p>
+<p>在iOS 系统中，关于绘画的操作主要是通过UIKit 和 CoreGraphics 来进行的。UIKit 是针对 CoreGraphics 来进行封装的。</p>
+<a id="more"></a>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><h5 id="iOS的绘图系统"><a href="#iOS的绘图系统" class="headerlink" title="iOS的绘图系统"></a>iOS的绘图系统</h5><p><img src="/images/markdown-img-paste-20180817094126546.png" alt="coreGraphics_1"></p>
+<p>iOS 中的绘图框架有多种，平时我们最常用的是UIKit 这是经过对CoreGraphics 封装实现的，所以这样就比较容易使用，相对简洁，所以绝大多数图形界面都可以由UIkit 来进行完成。比如</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 图片绘制操作</span></span><br><span class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@""</span>];</span><br><span class="line">    [image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">300</span>, <span class="number">100</span>)];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文字绘制操作</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *str = <span class="string">@"hello world"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UIFont</span> *font = [<span class="built_in">UIFont</span> systemFontOfSize:<span class="number">18</span>];</span><br><span class="line">    <span class="built_in">NSDictionary</span> *dict = @&#123;<span class="built_in">NSFontAttributeName</span>:font,<span class="built_in">NSForegroundColorAttributeName</span>:[<span class="built_in">UIColor</span> whiteColor]&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 给字体添加 其他描述信息</span></span><br><span class="line"></span><br><span class="line">    [str drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">20</span>) withAttributes:dict];</span><br></pre></td></tr></table></figure>
+<p>除了UIKit 还有CoreGraphics 和 CoreAnimation,Core Image,OpenGL ES 等多种框架，可以满足不同的绘画需求。</p>
+<blockquote>
+<p>UIKit:  使用频率最高，高级版的OC图形接口，它能够访问绘图、动画、字体、图片等内容 缩写前缀为UI</p>
+<p>CoreAnimation:使用频率较高，提供了强大的2D和3D动画  缩写前缀为CA</p>
+<p>coreGraphics:使用频率中 ，基于C实现的 iOS 和 MAC OS X 的2D绘图引擎 缩写前缀为CG</p>
+<p>CoreImage:使用频率较低，图片的滤镜处理，比如高斯模糊，锐化等  缩写为前缀CI</p>
+<p>OpenGL ES:使用频率低，OpenGL 针对嵌入式设备的简化版本 用于绘制高性能的2D 和 3D 图形</p>
+</blockquote>
+<p>说明： 图像的滤镜效果建议用优秀的第三方库GPUImage ，iOS 支持两套图形API族，Core Graphics和 OpenGL ES 他们都是基于C的API 框架</p>
+<h5 id="视图的绘制-和-视图的布局"><a href="#视图的绘制-和-视图的布局" class="headerlink" title="视图的绘制 和 视图的布局"></a>视图的绘制 和 视图的布局</h5><p>iOS 在RunLoop 中为图形的绘制 在BeforeWaiting 和 Exit的时候添加了Observer</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">CFRunLoopObserver</span> &#123;order = <span class="number">2000000</span> ,activities = <span class="number">0xa0</span> ,callout = _ZN2CA11Transcation17Observer_callbackEP9——<span class="built_in">CFRunLoopObservermPV</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>这个回调会遍历所有待处理的UIView/CALayer 以执行实际的绘制和调整任务，并更新UI 界面</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">_ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv()</span><br><span class="line">    QuartzCore:CA::Transaction::observer_callback:</span><br><span class="line">        CA::Transaction::commit();</span><br><span class="line">            CA::Context::commit_transaction();</span><br><span class="line">                CA::Layer::layout_and_display_if_needed();</span><br><span class="line">                    CA::Layer::layout_if_needed();</span><br><span class="line">                        [<span class="built_in">CALayer</span> layoutSublayers];</span><br><span class="line">                            [<span class="built_in">UIView</span> layoutSubviews];</span><br><span class="line">                    CA::Layer::display_if_needed();</span><br><span class="line">                        [<span class="built_in">CALayer</span> display];</span><br><span class="line">                            [<span class="built_in">UIView</span> drawRect];</span><br></pre></td></tr></table></figure>
+<p>可以看到对当进入到BeforeWaiting 或者 Exit 的时候，会将所有的CA的操作进行一个提交的操作。这时候会调用 UIView drawRect  和 UIView layoutSubViews</p>
+<p>所以这里就涉及到了：视图绘制 和 视图布局的操作</p>
+<h6 id="视图绘制"><a href="#视图绘制" class="headerlink" title="视图绘制"></a>视图绘制</h6><p>调用UIView的 drawRect 方法；如果一个视图调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *graphView = [[<span class="built_in">UIView</span> alloc] init];</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:graphView];</span><br><span class="line"></span><br><span class="line">[graphView setNeedsDisplay];</span><br><span class="line">[graphView setNeedsDisplayInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">100</span>)];</span><br></pre></td></tr></table></figure>
+<p>那么就会告诉系统该视图需要被重新绘制，真正的绘制会在下一次绘图周期的中调用drawRect的方法进行更新视图；</p>
+<h6 id="视图布局"><a href="#视图布局" class="headerlink" title="视图布局"></a>视图布局</h6><p>调用 UIView 中的layoutSubvies 方法。手动的触发可以使用 setNeedsLayout，但是如果视图中的子视图布局发生变化，需要重新排列的时候，UIKit 也会自动调用SetNeedsLayout 方法。也就是说 对于发生变化的视图</p>
+<h5 id="UIKit-相关绘图API"><a href="#UIKit-相关绘图API" class="headerlink" title="UIKit 相关绘图API"></a>UIKit 相关绘图API</h5><ul>
+<li><p>填充、描边、路径</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIRectFill</span>(&lt;<span class="meta">#CGRect rect#&gt;)// 填充矩形函数</span></span><br><span class="line"><span class="built_in">UIRectFrame</span>(&lt;<span class="meta">#CGRect rect#&gt;)// 矩形描边函数</span></span><br><span class="line"><span class="built_in">UIBezierPath</span>  <span class="comment">//绘制常见的路径类</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>UIImage 类中的绘制图像的主要方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">UIImage</span> *image =[<span class="built_in">UIImage</span> imageNamed:<span class="string">@""</span>];</span><br><span class="line"></span><br><span class="line">[image drawInRect:&lt;<span class="meta">#(CGRect)#&gt;] ;// 图片绘制在指定的矩形里</span></span><br><span class="line">[image drawAtPoint:&lt;<span class="meta">#(CGPoint)#&gt;];// 设置绘制的定点</span></span><br><span class="line">[image drawAsPatternInRect:&lt;<span class="meta">#(CGRect)#&gt;];// 指定的区域中平铺绘制图片</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>NSString 类中绘制文本的主要方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">NSString</span> *str = <span class="string">@"helloworld"</span>;</span><br><span class="line"><span class="built_in">UIFont</span> *font = [<span class="built_in">UIFont</span> systemFontOfSize:<span class="number">14.0</span>f];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSDictionary</span> *attributeDic = @&#123;<span class="built_in">NSFontAttributeName</span>:font,<span class="built_in">NSForegroundColorAttributeName</span>:[<span class="built_in">UIColor</span> redColor]&#125;;</span><br><span class="line">[str drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">100</span>) withAttributes:attributeDic];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Core-Graphics-绘图"><a href="#Core-Graphics-绘图" class="headerlink" title="Core Graphics 绘图"></a>Core Graphics 绘图</h4><p>Core Graphics 中的绘图操作都是在一个上下文中操作的，也是是我们俗称的画布，在，所以在绘图之前的时候，必须获取该上下文，这是绘图任务的第一步；</p>
+<h5 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h5><p>Core Graphics 的图形上下文是CGContextRef 对象，相当于一块画布，以堆栈的形式存放，只有在栈顶的图形上下文上面绘制才有效果，图形上下文复制存储绘图状态(如 画笔颜色CGContextSetStrokeColorWithColor ,线条粗细CGContextSetLineWidth)和 绘制内容所存放的区域，获取上下文的方式有：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 根据指定的参数 获取图片上下文</span></span><br><span class="line">  <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="built_in">CGSizeMake</span>(<span class="number">100</span>, <span class="number">100</span>), <span class="literal">YES</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//获取当前的图形上下文</span></span><br><span class="line">  <span class="built_in">CGContextRef</span> ctx =  <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 从图片上下文中获取图片</span></span><br><span class="line">  <span class="built_in">UIImage</span> *image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">//结束图片上下文的操作</span></span><br><span class="line">  <span class="built_in">UIGraphicsEndImageContext</span>()：</span><br><span class="line">  下面提供一个将View 转变为 Image的操作</span><br><span class="line"></span><br><span class="line">  - (<span class="built_in">UIImage</span> *)snapshotImage &#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="keyword">self</span>.bounds.size, <span class="keyword">self</span>.opaque, <span class="number">0</span>);</span><br><span class="line">    [<span class="keyword">self</span>.layer renderInContext:<span class="built_in">UIGraphicsGetCurrentContext</span>()];</span><br><span class="line">    <span class="built_in">UIImage</span> *snap = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> snap;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>UIGraphicsBeginImageContextWithOptions</p>
+<blockquote>
+<p>将旧的上下文入栈，为新的上下文分配内存，创建新的上下文，翻转坐标系统，并将其设置为当前上下文。（简洁的说：创建一个图形上下文，并将其设置为当前的上下文）</p>
+<p>参数说明：<br>size :新创建位图的尺寸<br>opaque: 代表透明通道的开关，指定所生产的图片背景是否为不透明，YES 表示为不透明，图片背景是黑色。NO 表示透明；<br>scale 表示缩放比例。传0 表示让图片的缩放因子等于屏幕的分辨率</p>
+</blockquote>
+<p>UIGraphicsBeginImageContext(CGSize size)</p>
+<blockquote>
+<p>创建一个基于位图的上下文，并将其设置为当前的上下文。效果相当于UIGraphicsBeginImageContextWithOptions(size,NO,0);</p>
+</blockquote>
+<p>UIGraphicsGetImageFromCurrentImageContext(void)</p>
+<blockquote>
+<p>从当前上下中获取一个UIImage 对象，一般用于获取最终的绘制结果</p>
+</blockquote>
+<p>UIGraphicsEndImageContext(void)</p>
+<blockquote>
+<p>关闭图形上下文，一般在调用UIGraphicsGetImageFormCurrentImageContext之后调用</p>
+</blockquote>
+<p>UIGraphicsGetCurrentContext</p>
+<blockquote>
+<p>获得当前的图形上下文，可以在UIGraphicsBeginImageContextWithOptions/UIGraphicsBeginImageContext 或者在 UIView 的 drawRect：使用，以获取当前的图形上下文</p>
+</blockquote>
+<p>iOS 的绘图必须再一个上下文中绘制，所以在绘图之前一定要获取一个上下文，如果是绘制图片，就要获取一个图片的上下文，如果是绘制其他视图，就需要一个非图片上下文。对于上下文的理解，可以认为即使一个画布，然后在上面进行绘图操作</p>
+<p>context:图形上下文，可以通过UIGraphicsGetCurrentContext 获取当前的视图上下文</p>
+<p>imageContext：图片上下文，可以通过UIGraphicsBeginImgeContextWithOptions:获取一个图形上下文，然后绘制完成后，调用UIGrapahicsGetImageFromCurrentImageContext获取绘制的图片，最后要记得关闭上下文UIGraphicsEndImageContext;</p>
+<h5 id="绘图状态切换-和-上下文切换"><a href="#绘图状态切换-和-上下文切换" class="headerlink" title="绘图状态切换 和 上下文切换"></a>绘图状态切换 和 上下文切换</h5><p>在绘图的过程中，有绘图状态的切换和上下文的切换，对应两组不同的函数</p>
+<h6 id="绘图状态切换"><a href="#绘图状态切换" class="headerlink" title="绘图状态切换"></a>绘图状态切换</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">CGContextSaveGState</span>(ctc); <span class="comment">// 存储当前上下文的绘图状态</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">CGContextRestoreGState</span>(ctc);<span class="comment">// 返回之前上下文的绘图状态</span></span><br></pre></td></tr></table></figure>
+<p>在创建Core Graphics 图形上下文的时候，图形上下文中持有一个绘图状态的堆栈，这时候绘图状态堆栈是空的。通过 <code>CGContextSaveGState</code> 与 <code>CGContextRestoreGState</code>可以推入和弹出绘图的状态，实现绘图状态的切换，但是没有改变其图形上下文。</p>
+<blockquote>
+<p>CGContextSaveGState<br>将当前上下文的绘图状态，压入绘图状态堆栈中，而CGContextReStoreGState 是将绘图状态堆栈顶部的状态弹出，返回到之前的状态</p>
+</blockquote>
+<p>那么这就有疑问了，那我这样做有什么用呢？</p>
+<p><strong>首先需要看清楚，这里只是对绘图状态进行了压栈，但是并没有对上下文进行压栈，所以上下文还是可以用的，所以照样你还可以绘制操作，并不会有影响，只是出来这个状态后，绘制的状态变成了原来的入栈之前的状态而已</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 绘图状态A</span></span><br><span class="line"><span class="built_in">CGContextSaveGState</span>(ctc); <span class="comment">// 存储当前上下文的绘图状态</span></span><br><span class="line"><span class="comment">//绘图状态B</span></span><br><span class="line"><span class="built_in">CGContextRestoreGState</span>(ctc);<span class="comment">// 返回之前上下文的绘图状态</span></span><br><span class="line"><span class="comment">//绘图状态A</span></span><br></pre></td></tr></table></figure>
+<p>这种推入和弹出的方式是回到之前状态的快速方法。避免一个一个撤销所有的状态。</p>
+<h6 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">UIGraphicsPushContext</span>(&lt;<span class="meta">#CGContextRef  _Nonnull context#&gt;)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIGraphicsPopContext</span>()</span><br></pre></td></tr></table></figure>
+<p>通过上面的两个方法可以实现图形上下文的切换</p>
+<p>UIGraphicsPushContext 将图形上下文压入图形上下文堆栈；当需要新建一个上下文做绘制工作的话，使用UIGraphicdPushContext 保存当前的图形上下文，在新的绘制图形上下文完成绘制工作后，私用UIGraphicsPopContext 恢复之前的图形上下文。</p>
+<p>push:  将Context 压入栈中，并把context 设置为当前绘图上下文<br>pop:  将栈顶的上下文弹出，恢复先前的上下文，但是绘图状态不变</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这时候绘制出来的是蓝色的</span></span><br><span class="line">  [[<span class="built_in">UIColor</span> redColor] setFill];</span><br><span class="line">  <span class="built_in">UIGraphicsPushContext</span>(<span class="built_in">UIGraphicsGetCurrentContext</span>());</span><br><span class="line">  [[<span class="built_in">UIColor</span> blueColor] setFill];</span><br><span class="line">  <span class="built_in">UIGraphicsPopContext</span>();</span><br><span class="line">  <span class="built_in">UIRectFill</span>(<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">100</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">CGContextRef</span>  ctc = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">[[<span class="built_in">UIColor</span> redColor] setFill];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIGraphicsPushContext</span>(ctc);</span><br><span class="line">[[<span class="built_in">UIColor</span> blueColor] setFill]; <span class="comment">// 这里绘制出来的是蓝色的方块</span></span><br><span class="line"><span class="built_in">UIGraphicsPopContext</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这时候是保留了上下文的状态</span></span><br><span class="line"><span class="built_in">UIRectFill</span>(<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">200</span>, <span class="number">100</span>, <span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 压入当前的绘画状态，仅仅是绘画状态不是绘图上下文</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">CGContextSaveGState</span>(ctc);</span><br><span class="line"></span><br><span class="line">[[<span class="built_in">UIColor</span> yellowColor] setFill];</span><br><span class="line"><span class="built_in">UIRectFill</span>(<span class="built_in">CGRectMake</span>(<span class="number">150</span>, <span class="number">200</span>, <span class="number">100</span>, <span class="number">100</span>)); <span class="comment">// 这里绘制出来的是黄色的方块</span></span><br><span class="line"><span class="built_in">CGContextRestoreGState</span>(ctc);</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIRectFill</span>(<span class="built_in">CGRectMake</span>(<span class="number">300</span>, <span class="number">200</span>, <span class="number">100</span>, <span class="number">100</span>)); <span class="comment">// 这里绘制出来的是蓝色的方块</span></span><br></pre></td></tr></table></figure>
+<p>下面添加一个绘制圆形头像的操作 这是一个针对UIImage 的 Category</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="built_in">CGSizeMake</span>(<span class="number">100</span>, <span class="number">100</span>), <span class="literal">NO</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGContextRef</span> ctx = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGContextScaleCTM</span>(ctx, <span class="number">1</span>, <span class="number">-1</span>);</span><br><span class="line"><span class="built_in">CGContextTranslateCTM</span>(ctx, <span class="number">0</span>, <span class="keyword">self</span>.height);</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect: byRoundingCorners:<span class="built_in">UIRectCornerAllCorners</span> cornerRadii:];<span class="comment">// 绘制一个圆形</span></span><br><span class="line">[path closePath];</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGContextSaveGState</span>(ctx);</span><br><span class="line"></span><br><span class="line">[path addClip];</span><br><span class="line"><span class="built_in">CGContextDrawImage</span>(ctx, rect, <span class="keyword">self</span>.CGImage);</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGContextRestoreGState</span>(ctx);</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIImage</span> *image =  <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line"><span class="built_in">UIGraphicsEndImageContext</span>();</span><br></pre></td></tr></table></figure>
+<h4 id="iOS-绘图基础"><a href="#iOS-绘图基础" class="headerlink" title="iOS 绘图基础"></a>iOS 绘图基础</h4><p>在绘图之前，需要先来了解下几个基本的概念</p>
+<ul>
+<li><p>context</p>
+<blockquote>
+<p>上下文 ，iOS 绘图的方法都乣传一个上下文 Context ,这个Context 在重写UIView 的drawRect的方法里面调用UIGraphicsGetCurrentContext()获取</p>
+</blockquote>
+</li>
+<li><p>path</p>
+<blockquote>
+<p>路径，iOS 绘图可以想象为你拿着一支笔去画图，画几条线或者几个点从而形成一个路径，之后可以利用路径去填充或者描边</p>
+</blockquote>
+</li>
+<li><p>stroke,fill</p>
+<blockquote>
+<p>描边 和 填充。每个路径都需要填充或者描边 才能在视图中看见，他们都各自有很多样式可以设置，常见的有颜色、粗细、渐变、连接样式等等；</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>画图可以使用默认的路径来话，也可以单独创建path 画图，对应画图的API 并不完全相同，是两组名称相似的API,两组api 常用的方法如下：</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGContextMoveToPoint</span> <span class="comment">//</span></span><br></pre></td></tr></table></figure>
+<h4 id="画图的一般步骤"><a href="#画图的一般步骤" class="headerlink" title="画图的一般步骤"></a>画图的一般步骤</h4><p>  获取上下文<br>  绘制路径<br>  描写或者填充路径</p>
+<h5 id="获取上下文"><a href="#获取上下文" class="headerlink" title="获取上下文"></a>获取上下文</h5><p>  上下文 分为图片上下文，图形上下文 图片上下文，主要是针对图片进行处理的，图形上下文，中可以进行绘制，这样我们需要分开处理</p>
+<h5 id="路径绘制"><a href="#路径绘制" class="headerlink" title="路径绘制"></a>路径绘制</h5><p>  这里需要调用针对路径的获取的操作</p>
+<p>  画线</p>
+<p>  画圆形</p>
+<p>  画弧线 画曲线</p>
+<h5 id="描写和填充路径"><a href="#描写和填充路径" class="headerlink" title="描写和填充路径"></a>描写和填充路径</h5><p>  填充的方案</p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="http://www.cocoachina.com/ios/20170809/20187.html">iOS绘图框架CoreGraphics分析</a><br><a href="https://www.jianshu.com/p/2bbb84570f12">iOS 札记2：Core Graphics小记</a><br><a href="https://www.jianshu.com/p/fcf350eae255">iOS开发——Core Graphics绘图</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+    <div>
+     
+	<div>
+   
+ 	<div style="text-align:center;color:#ccc;font-size:14px;">----------本文结束<i class="fa fa-paw"></i>感谢您的阅读----------</div>
+   
+</div>
+
+     
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-CoreGraphics/" rel="tag"><i class ="fa fa-tag"></i> iOS CoreGraphics</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/10/ios-runtime-detail/" rel="next" title="iOS RunTime 详解">
+                <i class="fa fa-chevron-left"></i> iOS RunTime 详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/15/git-learning-detail/" rel="prev" title="Git学习记录">
+                Git学习记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lmzqm</p>
+              <p class="site-description motion-element" itemprop="description">just do it</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lmzqm" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#iOS的绘图系统"><span class="nav-number">1.1.</span> <span class="nav-text">iOS的绘图系统</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#视图的绘制-和-视图的布局"><span class="nav-number">1.2.</span> <span class="nav-text">视图的绘制 和 视图的布局</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#视图绘制"><span class="nav-number">1.2.1.</span> <span class="nav-text">视图绘制</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#视图布局"><span class="nav-number">1.2.2.</span> <span class="nav-text">视图布局</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UIKit-相关绘图API"><span class="nav-number">1.3.</span> <span class="nav-text">UIKit 相关绘图API</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Core-Graphics-绘图"><span class="nav-number">2.</span> <span class="nav-text">Core Graphics 绘图</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#概述-1"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#绘图状态切换-和-上下文切换"><span class="nav-number">2.2.</span> <span class="nav-text">绘图状态切换 和 上下文切换</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#绘图状态切换"><span class="nav-number">2.2.1.</span> <span class="nav-text">绘图状态切换</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#上下文切换"><span class="nav-number">2.2.2.</span> <span class="nav-text">上下文切换</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#总结："><span class="nav-number">2.2.3.</span> <span class="nav-text">总结：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iOS-绘图基础"><span class="nav-number">3.</span> <span class="nav-text">iOS 绘图基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#画图的一般步骤"><span class="nav-number">4.</span> <span class="nav-text">画图的一般步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#获取上下文"><span class="nav-number">4.1.</span> <span class="nav-text">获取上下文</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#路径绘制"><span class="nav-number">4.2.</span> <span class="nav-text">路径绘制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#描写和填充路径"><span class="nav-number">4.3.</span> <span class="nav-text">描写和填充路径</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate"> 
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lmzqm</span>
+
+  
+
+  
+</div>
+
+
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div> 
+ <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.1.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://lmzqm.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/08/14/iOS-Core-Graph-Learning/';
+        this.page.identifier = '2018/08/14/iOS-Core-Graph-Learning/';
+        this.page.title = 'iOS CoreGraphis';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lmzqm.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
